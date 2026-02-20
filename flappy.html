@@ -34,12 +34,14 @@ h1 {
 const canvas = document.getElementById("game");
 const ctx = canvas.getContext("2d");
 
+let gameStarted = false;
+let gameOver = false;
+
 let bird = {
     x: 80,
     y: 250,
-    size: 20,
-    gravity: 0.4,   // aeglasem kukkumine
-    lift: -7,       // väiksem hüpe
+    gravity: 0.4,
+    lift: -7,
     velocity: 0
 };
 
@@ -52,7 +54,7 @@ function drawBird() {
 }
 
 function createPipe() {
-    let gap = 180; // suurem vahe (lihtsam)
+    let gap = 180;
     let topHeight = Math.random() * 250 + 50;
 
     pipes.push({
@@ -74,7 +76,7 @@ function drawPipes() {
 
 function updatePipes() {
     pipes.forEach(pipe => {
-        pipe.x -= 2; // aeglasem liikumine
+        pipe.x -= 2;
     });
 
     pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
@@ -87,41 +89,64 @@ function checkCollision() {
             bird.x < pipe.x + pipe.width &&
             (bird.y < pipe.top || bird.y > pipe.bottom)
         ) {
-            alert("Game Over! Score: " + score);
-            document.location.reload();
+            endGame();
         }
     }
 
     if (bird.y > canvas.height || bird.y < 0) {
-        alert("Game Over! Score: " + score);
-        document.location.reload();
+        endGame();
     }
+}
+
+function endGame() {
+    gameOver = true;
+    alert("Game Over! Score: " + score);
+    document.location.reload();
+}
+
+function drawStartScreen() {
+    ctx.fillStyle = "white";
+    ctx.font = "30px Arial";
+    ctx.fillText("Click to Start", 110, 300);
 }
 
 function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    bird.velocity += bird.gravity;
-    bird.y += bird.velocity;
-
     drawBird();
     drawPipes();
-    updatePipes();
-    checkCollision();
 
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score: " + score, 10, 30);
+    if (!gameStarted) {
+        drawStartScreen();
+        requestAnimationFrame(update);
+        return;
+    }
+
+    if (!gameOver) {
+        bird.velocity += bird.gravity;
+        bird.y += bird.velocity;
+
+        updatePipes();
+        checkCollision();
+
+        ctx.fillStyle = "white";
+        ctx.font = "20px Arial";
+        ctx.fillText("Score: " + score, 10, 30);
+    }
 
     requestAnimationFrame(update);
 }
 
 document.addEventListener("click", () => {
+    if (!gameStarted) {
+        gameStarted = true;
+        setInterval(createPipe, 2000);
+        return;
+    }
+
     bird.velocity = bird.lift;
-    score++;
 });
 
-setInterval(createPipe, 2000); // torud harvemini
 update();
 </script>
 

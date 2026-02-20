@@ -3,33 +3,107 @@
 <head>
     <meta charset="UTF-8">
     <title>Freezy Mini Games 💗</title>
-    <link rel="stylesheet" href="style.css">
+
+    <style>
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #ff9ecf, #ffcce6);
+            margin: 0;
+            padding: 0;
+            text-align: center;
+            color: #4a004f;
+        }
+
+        header {
+            padding: 30px;
+        }
+
+        h1 {
+            font-size: 40px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 18px;
+            margin-bottom: 20px;
+        }
+
+        nav button {
+            margin: 5px;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            background-color: #ff4da6;
+            color: white;
+            font-weight: bold;
+            cursor: pointer;
+            transition: 0.3s;
+        }
+
+        nav button:hover {
+            background-color: #e60073;
+            transform: scale(1.05);
+        }
+
+        .page {
+            padding: 20px;
+        }
+
+        .games {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 25px;
+            margin-top: 30px;
+        }
+
+        .game-card {
+            display: block;
+            background: white;
+            padding: 25px;
+            width: 200px;
+            border-radius: 20px;
+            text-decoration: none;
+            color: #ff1493;
+            font-weight: bold;
+            font-size: 18px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+            transition: 0.3s;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
+        }
+    </style>
 </head>
 <body>
 
-    <header>
-        <h1>🎀 Freezy Mini Games 🎀</h1>
-        <p class="subtitle">Made with love 💕</p>
-        <nav>
-            <button onclick="showPage('main')">Mängud</button>
-            <button onclick="showPage('settings')">Settings</button>
-        </nav>
-    </header>
+<header>
+    <h1>🎀 Freezy Mini Games 🎀</h1>
+    <p class="subtitle">Made with love 💕</p>
+    <nav>
+        <button onclick="showPage('main')">Mängud</button>
+        <button onclick="showPage('settings')">Settings</button>
+    </nav>
+</header>
 
-    <main id="main" class="page">
-        <h2>Vali mäng 💗</h2>
-        <div class="games">
-            <a href="game1.html" class="game-card">🎲 Number Guess</a>
-            <a href="game2.html" class="game-card">🖱️ Clicker</a>
-            <a href="game3.html" class="game-card">❌⭕ Tic Tac Toe</a>
-        </div>
-    </main>
+<main id="main" class="page">
+    <h2>Vali mäng 💗</h2>
 
-    <main id="settings" class="page" style="display:none;">
-        <h2>Settings 🎨</h2>
-        <p>Muuda taustavärvi:</p>
-        <input type="color" onchange="changeBgColor(this.value)">
-    </main>
+    <div class="games">
+        <a href="game1.html" class="game-card">🎲 Number Guess</a>
+        <a href="game2.html" class="game-card">🖱️ Clicker</a>
+        <a href="game3.html" class="game-card">❌⭕ Tic Tac Toe</a>
+        <a href="flappy.html" class="game-card">🕊️ Flappy Bird</a>
+    </div>
+</main>
+
+<main id="settings" class="page" style="display:none;">
+    <h2>Settings 🎨</h2>
+    <p>Muuda taustavärvi:</p>
+    <input type="color" onchange="changeBgColor(this.value)">
+</main>
 
 <script>
 function showPage(pageId) {

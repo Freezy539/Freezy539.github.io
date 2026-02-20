@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>Flappy Bird 💗</title>
+<style>
+body{
+    margin:0;
+    background:#ffb6d9;
+    text-align:center;
+    font-family:sans-serif;
+}
+canvas{
+    background:#70c5ce;
+    display:block;
+    margin:20px auto;
+    border-radius:15px;
+}
+h1{
+    color:#d1006f;
+}
+button{
+    padding:10px 20px;
+    border:none;
+    border-radius:20px;
+    background:#ff4da6;
+    color:white;
+    font-weight:bold;
+    cursor:pointer;
+}
+button:hover{
+    background:#e60073;
+}
+</style>
+</head>
+<body>
+
+<h1>🕊️ Flappy Bird</h1>
+<canvas id="game" width="320" height="480"></canvas>
+<br>
+<button onclick="resetGame()">Restart</button>
+<br><br>
+<a href="index.html">⬅ Tagasi</a>
+
+<script>
+const cvs = document.getElementById("game");
+const ctx = cvs.getContext("2d");
+
+let bird = {
+    x:50,
+    y:150,
+    radius:12,
+    gravity:0.6,
+    velocity:0,
+    jump:-10
+};
+
+let pipes = [];
+let frame = 0;
+let score = 0;
+let gameOver = false;
+
+function drawBird(){
+    ctx.fillStyle="#ff1493";
+    ctx.beginPath();
+    ctx.arc(bird.x,bird.y,bird.radius,0,Math.PI*2);
+    ctx.fill();
+}
+
+function drawPipes(){
+    ctx.fillStyle="#008000";
+    pipes.forEach(pipe=>{
+        ctx.fillRect(pipe.x,0,40,pipe.top);
+        ctx.fillRect(pipe.x,pipe.bottom,40,cvs.height);
+    });
+}
+
+function update(){
+    if(gameOver) return;
+
+    bird.velocity += bird.gravity;
+    bird.y += bird.velocity;
+
+    if(frame % 90 === 0){
+        let gap = 120;
+        let top = Math.random()*200 + 20;
+        pipes.push({
+            x:cvs.width,
+            top:top,
+            bottom:top+gap,
+            passed:false
+        });
+    }
+
+    pipes.forEach(pipe=>{
+        pipe.x -= 2;
+
+        if(
+            bird.x + bird.radius > pipe.x &&
+            bird.x - bird.radius < pipe.x + 40 &&
+            (bird.y - bird.radius < pipe.top ||
+             bird.y + bird.radius > pipe.bottom)
+        ){
+            gameOver = true;
+        }
+
+        if(!pipe.passed && pipe.x + 40 < bird.x){
+            score++;
+            pipe.passed = true;
+        }
+    });
+
+    if(bird.y + bird.radius > cvs.height || bird.y - bird.radius < 0){
+        gameOver = true;
+    }
+
+    frame++;
+}
+
+function draw(){
+    ctx.clearRect(0,0,cvs.width,cvs.height);
+
+    drawBird();
+    drawPipes();
+
+    ctx.fillStyle="white";
+    ctx.font="20px Arial";
+    ctx.fillText("Score: "+score,10,25);
+
+    if(gameOver){
+        ctx.fillStyle="red";
+        ctx.font="30px Arial";
+        ctx.fillText("GAME OVER",70,240);
+    }
+}
+
+function loop(){
+    update();
+    draw();
+    requestAnimationFrame(loop);
+}
+
+document.addEventListener("click",()=>{
+    if(!gameOver){
+        bird.velocity = bird.jump;
+    }
+});
+
+function resetGame(){
+    bird.y=150;
+    bird.velocity=0;
+    pipes=[];
+    score=0;
+    frame=0;
+    gameOver=false;
+}
+
+loop();
+</script>
+
+</body>
+</html>

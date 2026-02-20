@@ -14,3 +14,11 @@ function changeBgColor(color) {
 function adrianaSurprise() {
     alert("Tere, Adriana! 🎉 Sul on üllatus Freezy Mini Games lehel! 🕹️");
 }
+
+// Veendu, et nuppu leiab ja lisame event listeneri
+document.addEventListener('DOMContentLoaded', function() {
+    const adrianBtn = document.getElementById('adrianButton');
+    if(adrianBtn){
+        adrianBtn.addEventListener('click', adrianaSurprise);
+    }
+});

@@ -9,3 +9,8 @@ function showPage(pageId) {
 function changeBgColor(color) {
     document.body.style.backgroundColor = color;
 }
+
+// Üllatus Adrianale
+function adrianaSurprise() {
+    alert("Tere, Adriana! 🎉 Sul on üllatus Freezy Mini Games lehel! 🕹️");
+}

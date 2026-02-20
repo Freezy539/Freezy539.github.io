@@ -51,6 +51,8 @@ nav button:hover {
     font-weight: bold;
     border-radius: 10px;
     width: 200px;
+    cursor: pointer;
+    text-align: center;
 }
 
 .game-card:hover {

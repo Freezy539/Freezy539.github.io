@@ -2,160 +2,127 @@
 <html lang="et">
 <head>
 <meta charset="UTF-8">
-<title>Flappy Bird 💗</title>
+<title>Flappy Bird 🐦</title>
+
 <style>
-body{
-    margin:0;
-    background:#ffb6d9;
-    text-align:center;
-    font-family:sans-serif;
+body {
+    margin: 0;
+    background: linear-gradient(#87ceeb, #ffcce6);
+    overflow: hidden;
+    text-align: center;
+    font-family: Arial, sans-serif;
 }
-canvas{
-    background:#70c5ce;
-    display:block;
-    margin:20px auto;
-    border-radius:15px;
+
+canvas {
+    background: #87ceeb;
+    display: block;
+    margin: auto;
+    border: 3px solid white;
 }
-h1{
-    color:#d1006f;
-}
-button{
-    padding:10px 20px;
-    border:none;
-    border-radius:20px;
-    background:#ff4da6;
-    color:white;
-    font-weight:bold;
-    cursor:pointer;
-}
-button:hover{
-    background:#e60073;
+
+h1 {
+    color: white;
 }
 </style>
 </head>
 <body>
 
-<h1>🕊️ Flappy Bird</h1>
-<canvas id="game" width="320" height="480"></canvas>
-<br>
-<button onclick="resetGame()">Restart</button>
-<br><br>
-<a href="index.html">⬅ Tagasi</a>
+<h1>🐦 Flappy Bird 🐦</h1>
+<canvas id="game" width="400" height="600"></canvas>
 
 <script>
-const cvs = document.getElementById("game");
-const ctx = cvs.getContext("2d");
+const canvas = document.getElementById("game");
+const ctx = canvas.getContext("2d");
 
 let bird = {
-    x:50,
-    y:150,
-    radius:12,
-    gravity:0.6,
-    velocity:0,
-    jump:-10
+    x: 80,
+    y: 250,
+    size: 20,
+    gravity: 0.4,   // aeglasem kukkumine
+    lift: -7,       // väiksem hüpe
+    velocity: 0
 };
 
 let pipes = [];
-let frame = 0;
 let score = 0;
-let gameOver = false;
 
-function drawBird(){
-    ctx.fillStyle="#ff1493";
-    ctx.beginPath();
-    ctx.arc(bird.x,bird.y,bird.radius,0,Math.PI*2);
-    ctx.fill();
+function drawBird() {
+    ctx.font = "30px Arial";
+    ctx.fillText("🐦", bird.x, bird.y);
 }
 
-function drawPipes(){
-    ctx.fillStyle="#008000";
-    pipes.forEach(pipe=>{
-        ctx.fillRect(pipe.x,0,40,pipe.top);
-        ctx.fillRect(pipe.x,pipe.bottom,40,cvs.height);
+function createPipe() {
+    let gap = 180; // suurem vahe (lihtsam)
+    let topHeight = Math.random() * 250 + 50;
+
+    pipes.push({
+        x: canvas.width,
+        top: topHeight,
+        bottom: topHeight + gap,
+        width: 50
     });
 }
 
-function update(){
-    if(gameOver) return;
+function drawPipes() {
+    ctx.fillStyle = "green";
+
+    pipes.forEach(pipe => {
+        ctx.fillRect(pipe.x, 0, pipe.width, pipe.top);
+        ctx.fillRect(pipe.x, pipe.bottom, pipe.width, canvas.height);
+    });
+}
+
+function updatePipes() {
+    pipes.forEach(pipe => {
+        pipe.x -= 2; // aeglasem liikumine
+    });
+
+    pipes = pipes.filter(pipe => pipe.x + pipe.width > 0);
+}
+
+function checkCollision() {
+    for (let pipe of pipes) {
+        if (
+            bird.x + 20 > pipe.x &&
+            bird.x < pipe.x + pipe.width &&
+            (bird.y < pipe.top || bird.y > pipe.bottom)
+        ) {
+            alert("Game Over! Score: " + score);
+            document.location.reload();
+        }
+    }
+
+    if (bird.y > canvas.height || bird.y < 0) {
+        alert("Game Over! Score: " + score);
+        document.location.reload();
+    }
+}
+
+function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
     bird.velocity += bird.gravity;
     bird.y += bird.velocity;
 
-    if(frame % 90 === 0){
-        let gap = 120;
-        let top = Math.random()*200 + 20;
-        pipes.push({
-            x:cvs.width,
-            top:top,
-            bottom:top+gap,
-            passed:false
-        });
-    }
-
-    pipes.forEach(pipe=>{
-        pipe.x -= 2;
-
-        if(
-            bird.x + bird.radius > pipe.x &&
-            bird.x - bird.radius < pipe.x + 40 &&
-            (bird.y - bird.radius < pipe.top ||
-             bird.y + bird.radius > pipe.bottom)
-        ){
-            gameOver = true;
-        }
-
-        if(!pipe.passed && pipe.x + 40 < bird.x){
-            score++;
-            pipe.passed = true;
-        }
-    });
-
-    if(bird.y + bird.radius > cvs.height || bird.y - bird.radius < 0){
-        gameOver = true;
-    }
-
-    frame++;
-}
-
-function draw(){
-    ctx.clearRect(0,0,cvs.width,cvs.height);
-
     drawBird();
     drawPipes();
+    updatePipes();
+    checkCollision();
 
-    ctx.fillStyle="white";
-    ctx.font="20px Arial";
-    ctx.fillText("Score: "+score,10,25);
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + score, 10, 30);
 
-    if(gameOver){
-        ctx.fillStyle="red";
-        ctx.font="30px Arial";
-        ctx.fillText("GAME OVER",70,240);
-    }
+    requestAnimationFrame(update);
 }
 
-function loop(){
-    update();
-    draw();
-    requestAnimationFrame(loop);
-}
-
-document.addEventListener("click",()=>{
-    if(!gameOver){
-        bird.velocity = bird.jump;
-    }
+document.addEventListener("click", () => {
+    bird.velocity = bird.lift;
+    score++;
 });
 
-function resetGame(){
-    bird.y=150;
-    bird.velocity=0;
-    pipes=[];
-    score=0;
-    frame=0;
-    gameOver=false;
-}
-
-loop();
+setInterval(createPipe, 2000); // torud harvemini
+update();
 </script>
 
 </body>

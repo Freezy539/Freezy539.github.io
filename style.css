@@ -1,23 +1,59 @@
 body {
+    font-family: Arial, sans-serif;
     background-color: #1e1e2f;
     color: white;
-    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
     text-align: center;
-    padding: 50px;
 }
 
-h1 {
+header {
+    background-color: #282846;
+    padding: 20px;
+}
+
+header h1 {
+    margin: 0;
     color: #00ffcc;
 }
 
-button {
+nav button {
+    margin: 5px;
+    padding: 10px 20px;
+    cursor: pointer;
     background-color: #00ffcc;
     border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
+    font-weight: bold;
+    border-radius: 5px;
 }
 
-button:hover {
+nav button:hover {
     background-color: #00ccaa;
+}
+
+.page {
+    padding: 20px;
+}
+
+.games {
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.game-card {
+    display: block;
+    background-color: #00ffcc;
+    color: #000;
+    padding: 20px;
+    text-decoration: none;
+    font-weight: bold;
+    border-radius: 10px;
+    width: 200px;
+}
+
+.game-card:hover {
+    background-color: #00ccaa;
+    color: white;
 }

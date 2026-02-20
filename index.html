@@ -2,12 +2,35 @@
 <html lang="et">
 <head>
     <meta charset="UTF-8">
-    <title>Minu veebileht</title>
+    <title>Freezy Mini Games</title>
     <link rel="stylesheet" href="style.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
-    <h1>Tere tulemast minu veebilehele!</h1>
-    <p>tere tere tere tere.</p>
-    <button>Vajuta siia</button>
+    <header>
+        <h1>Freezy Mini Games</h1>
+        <nav>
+            <button onclick="showPage('main')">Main</button>
+            <button onclick="showPage('settings')">Settings</button>
+        </nav>
+    </header>
+
+    <main id="main" class="page">
+        <h2>Vali mäng</h2>
+        <div class="games">
+            <a href="game1.html" class="game-card">Mäng 1: Number Guess</a>
+            <a href="game2.html" class="game-card">Mäng 2: Clicker</a>
+            <a href="game3.html" class="game-card">Mäng 3: Lihtne Tic Tac Toe</a>
+        </div>
+    </main>
+
+    <main id="settings" class="page" style="display:none;">
+        <h2>Settings</h2>
+        <p>Siin saab hiljem muuta sätteid, näiteks värve või helisid.</p>
+        <label>
+            Taustavärv:
+            <input type="color" id="bgColor" onchange="changeBgColor(this.value)">
+        </label>
+    </main>
 </body>
 </html>

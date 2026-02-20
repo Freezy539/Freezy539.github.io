@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>Tic Tac Toe</title>
+<link rel="stylesheet" href="style.css">
+<style>
+#board { display:grid; grid-template-columns: repeat(3,100px); grid-gap:5px; justify-content:center; margin:20px auto; }
+.cell { width:100px; height:100px; background:#00ffcc; display:flex; justify-content:center; align-items:center; font-size:50px; cursor:pointer; }
+</style>
+<script>
+let board = ["","","","","","","","",""];
+let turn = "X";
+function makeMove(i, el){
+    if(board[i]===""){
+        board[i]=turn;
+        el.textContent=turn;
+        turn = turn==="X"?"O":"X";
+    }
+}
+</script>
+</head>
+<body>
+<h1>Tic Tac Toe</h1>
+<div id="board">
+<div class="cell" onclick="makeMove(0,this)"></div>
+<div class="cell" onclick="makeMove(1,this)"></div>
+<div class="cell" onclick="makeMove(2,this)"></div>
+<div class="cell" onclick="makeMove(3,this)"></div>
+<div class="cell" onclick="makeMove(4,this)"></div>
+<div class="cell" onclick="makeMove(5,this)"></div>
+<div class="cell" onclick="makeMove(6,this)"></div>
+<div class="cell" onclick="makeMove(7,this)"></div>
+<div class="cell" onclick="makeMove(8,this)"></div>
+</div>
+<a href="index.html">Tagasi menüüsse</a>
+</body>
+</html>

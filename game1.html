@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>Number Guess</title>
+<link rel="stylesheet" href="style.css">
+<script>
+let number = Math.floor(Math.random() * 100) + 1;
+
+function checkGuess() {
+    let guess = parseInt(document.getElementById('guess').value);
+    let result = document.getElementById('result');
+    if (guess === number) {
+        result.textContent = 'Õige! 🎉';
+    } else if (guess < number) {
+        result.textContent = 'Lihtsalt suurem!';
+    } else {
+        result.textContent = 'Lihtsalt väiksem!';
+    }
+}
+</script>
+</head>
+<body>
+<h1>Number Guess Game</h1>
+<p>Arva number 1-100</p>
+<input type="number" id="guess">
+<button onclick="checkGuess()">Kontrolli</button>
+<p id="result"></p>
+<a href="index.html">Tagasi menüüsse</a>
+</body>
+</html>

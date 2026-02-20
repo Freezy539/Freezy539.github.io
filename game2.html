@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+<meta charset="UTF-8">
+<title>Clicker</title>
+<link rel="stylesheet" href="style.css">
+<script>
+let count = 0;
+function clickMe() {
+    count++;
+    document.getElementById('counter').textContent = count;
+}
+</script>
+</head>
+<body>
+<h1>Clicker Game</h1>
+<button onclick="clickMe()">Klikka mind!</button>
+<p>Punkte: <span id="counter">0</span></p>
+<a href="index.html">Tagasi menüüsse</a>
+</body>
+</html>

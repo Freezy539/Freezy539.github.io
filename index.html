@@ -2,40 +2,46 @@
 <html lang="et">
 <head>
     <meta charset="UTF-8">
-    <title>Freezy Mini Games</title>
+    <title>Freezy Mini Games 💗</title>
     <link rel="stylesheet" href="style.css">
-    <script src="script.js" defer></script>
 </head>
 <body>
+
     <header>
-        <h1>Freezy Mini Games</h1>
+        <h1>🎀 Freezy Mini Games 🎀</h1>
+        <p class="subtitle">Made with love 💕</p>
         <nav>
-            <button onclick="showPage('main')">Main</button>
+            <button onclick="showPage('main')">Mängud</button>
             <button onclick="showPage('settings')">Settings</button>
         </nav>
     </header>
 
     <main id="main" class="page">
-        <h2>Vali mäng</h2>
+        <h2>Vali mäng 💗</h2>
         <div class="games">
-            <a href="game1.html" class="game-card">Mäng 1: Number Guess</a>
-            <a href="game2.html" class="game-card">Mäng 2: Clicker</a>
-            <a href="game3.html" class="game-card">Mäng 3: Tic Tac Toe</a>
+            <a href="game1.html" class="game-card">🎲 Number Guess</a>
+            <a href="game2.html" class="game-card">🖱️ Clicker</a>
+            <a href="game3.html" class="game-card">❌⭕ Tic Tac Toe</a>
         </div>
-
-        <!-- Üllatus nupuga Adrianale -->
-        <button id="adrianButton" class="game-card" style="margin-top:20px;">
-            Üllatus Adrianale 🎁
-        </button>
     </main>
 
     <main id="settings" class="page" style="display:none;">
-        <h2>Settings</h2>
-        <p>Siin saab hiljem muuta sätteid, näiteks värve või helisid.</p>
-        <label>
-            Taustavärv:
-            <input type="color" id="bgColor" onchange="changeBgColor(this.value)">
-        </label>
+        <h2>Settings 🎨</h2>
+        <p>Muuda taustavärvi:</p>
+        <input type="color" onchange="changeBgColor(this.value)">
     </main>
+
+<script>
+function showPage(pageId) {
+    const pages = document.querySelectorAll('.page');
+    pages.forEach(p => p.style.display = 'none');
+    document.getElementById(pageId).style.display = 'block';
+}
+
+function changeBgColor(color) {
+    document.body.style.background = color;
+}
+</script>
+
 </body>
 </html>

@@ -1,121 +1,158 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-    <meta charset="UTF-8">
-    <title>Freezy Mini Games 💗</title>
-
-    <style>
-        body {
-            font-family: 'Segoe UI', sans-serif;
-            background: linear-gradient(135deg, #ff9ecf, #ffcce6);
-            margin: 0;
-            padding: 0;
-            text-align: center;
-            color: #4a004f;
-        }
-
-        header {
-            padding: 30px;
-        }
-
-        h1 {
-            font-size: 40px;
-            margin-bottom: 10px;
-        }
-
-        .subtitle {
-            font-size: 18px;
-            margin-bottom: 20px;
-        }
-
-        nav button {
-            margin: 5px;
-            padding: 12px 25px;
-            border: none;
-            border-radius: 25px;
-            background-color: #ff4da6;
-            color: white;
-            font-weight: bold;
-            cursor: pointer;
-            transition: 0.3s;
-        }
-
-        nav button:hover {
-            background-color: #e60073;
-            transform: scale(1.05);
-        }
-
-        .page {
-            padding: 20px;
-        }
-
-        .games {
-            display: flex;
-            justify-content: center;
-            flex-wrap: wrap;
-            gap: 25px;
-            margin-top: 30px;
-        }
-
-        .game-card {
-            display: block;
-            background: white;
-            padding: 25px;
-            width: 200px;
-            border-radius: 20px;
-            text-decoration: none;
-            color: #ff1493;
-            font-weight: bold;
-            font-size: 18px;
-            box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-            transition: 0.3s;
-        }
-
-        .game-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 12px 25px rgba(0,0,0,0.3);
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freezy Money Dashboard</title>
+  <meta name="theme-color" content="#101522" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
 
-<header>
-    <h1>🎀 Freezy Mini Games 🎀</h1>
-    <p class="subtitle">Made with love 💕</p>
-    <nav>
-        <button onclick="showPage('main')">Mängud</button>
-        <button onclick="showPage('settings')">Settings</button>
-    </nav>
-</header>
+  <div class="container">
+    <header class="topbar glass">
+      <div class="brand-wrap">
+        <div class="logo-box">
+          <img id="siteLogo" src="assets/logo.png" alt="Logo" onerror="this.style.display='none'; this.parentElement.classList.add('logo-fallback')">
+          <span class="logo-fallback-text">F</span>
+        </div>
+        <div>
+          <p class="eyebrow">FREEZY539.GITHUB.IO</p>
+          <h1>FiveM Money Dashboard</h1>
+        </div>
+      </div>
 
-<main id="main" class="page">
-    <h2>Vali mäng 💗</h2>
+      <div class="topbar-right">
+        <button id="refreshBtn" class="ghost-btn" type="button">Uuenda</button>
+        <div class="status-chip">
+          <span class="status-dot"></span>
+          <span id="updatedAt">Laen andmeid...</span>
+        </div>
+      </div>
+    </header>
 
-    <div class="games">
-        <a href="game1.html" class="game-card">🎲 Number Guess</a>
-        <a href="game2.html" class="game-card">🖱️ Clicker</a>
-        <a href="game3.html" class="game-card">❌⭕ Tic Tac Toe</a>
-        <a href="flappy.html" class="game-card">🕊️ Flappy Bird</a>
-    </div>
-</main>
+    <section class="hero glass">
+      <div>
+        <p class="eyebrow">MISSION</p>
+        <h2>Road to $1,000,000</h2>
+        <p class="hero-text">Sisestad raha Google Sheetsi. Sinu GitHub leht näitab automaatselt progressi, hoiatusi, graafikut ja viimaseid kirjeid.</p>
+      </div>
+      <div class="hero-side">
+        <div class="mini-stat">
+          <span class="mini-label">Goal</span>
+          <strong id="goalAmount">$1,000,000</strong>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-label">Grind streak</span>
+          <strong id="streakMini">0 päeva</strong>
+        </div>
+      </div>
+    </section>
 
-<main id="settings" class="page" style="display:none;">
-    <h2>Settings 🎨</h2>
-    <p>Muuda taustavärvi:</p>
-    <input type="color" onchange="changeBgColor(this.value)">
-</main>
+    <section class="stats-grid">
+      <article class="card stat-card glass accent-green">
+        <span class="card-label">Current Balance</span>
+        <h3 id="currentBalance">$0</h3>
+        <p id="todayChangeText" class="muted">Täna muutus: $0</p>
+      </article>
 
-<script>
-function showPage(pageId) {
-    const pages = document.querySelectorAll('.page');
-    pages.forEach(p => p.style.display = 'none');
-    document.getElementById(pageId).style.display = 'block';
-}
+      <article class="card stat-card glass accent-blue">
+        <span class="card-label">Remaining</span>
+        <h3 id="remaining">$0</h3>
+        <p class="muted">Veel koguda eesmärgini</p>
+      </article>
 
-function changeBgColor(color) {
-    document.body.style.background = color;
-}
-</script>
+      <article class="card stat-card glass accent-orange">
+        <span class="card-label">Progress</span>
+        <h3 id="progressText">0%</h3>
+        <p id="milestoneText" class="muted">Järgmine milestone: -</p>
+      </article>
 
+      <article class="card stat-card glass accent-purple">
+        <span class="card-label">Projected Goal Date</span>
+        <h3 id="projectedDate">-</h3>
+        <p id="projectedDays" class="muted">Tempo puudub</p>
+      </article>
+    </section>
+
+    <section class="grid-main">
+      <article class="card glass main-chart-card">
+        <div class="card-head">
+          <div>
+            <span class="card-label">Balance History</span>
+            <h3>Raha kasv ajas</h3>
+          </div>
+        </div>
+
+        <div class="progress-block">
+          <div class="progress-row">
+            <span>Target Progress</span>
+            <strong id="progressInline">0%</strong>
+          </div>
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+
+        <div id="milestones" class="milestones"></div>
+
+        <div class="chart-wrap">
+          <canvas id="balanceChart"></canvas>
+        </div>
+      </article>
+
+      <aside class="side-stack">
+        <article class="card glass">
+          <span class="card-label">Stats</span>
+          <h3>Quick Stats</h3>
+          <div class="stats-list">
+            <div><span>Avg Daily Growth</span><strong id="avgGrowth">$0</strong></div>
+            <div><span>Best Day</span><strong id="bestDay">-</strong></div>
+            <div><span>Worst Day</span><strong id="worstDay">-</strong></div>
+            <div><span>Profit Streak</span><strong id="streak">0</strong></div>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <span class="card-label">Warnings</span>
+          <h3>Alerts</h3>
+          <div id="warnings" class="warnings"></div>
+        </article>
+      </aside>
+    </section>
+
+    <section class="table-section card glass">
+      <div class="card-head">
+        <div>
+          <span class="card-label">Latest Entries</span>
+          <h3>Viimased kirjed</h3>
+        </div>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>Kuupäev</th>
+              <th>Balance</th>
+              <th>Muutus</th>
+              <th>Allikas</th>
+              <th>Märkus</th>
+            </tr>
+          </thead>
+          <tbody id="entriesBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
 </body>
 </html>

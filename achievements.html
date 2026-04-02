@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freezy Achievements</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body data-page="achievements">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+      <div>
+        <div class="eyebrow">FREEZY539</div>
+        <h1>Money Hub</h1>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="stats.html" class="nav-link">Stats Lab</a>
+      <a href="achievements.html" class="nav-link active">Achievements</a>
+      <a href="events.html" class="nav-link">Fun Zone</a>
+    </nav>
+    <div class="side-card">
+      <div class="small-label">Unlocked</div>
+      <div id="achievementCount" class="huge-text">0</div>
+      <p class="muted">Trophies earned on the road to 1M.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar glass">
+      <div>
+        <div class="eyebrow">TROPHY ROOM</div>
+        <h2>Achievements & milestones</h2>
+      </div>
+      <div class="topbar-right">
+        <div class="ticker-wrap">
+          <span class="ticker-label">Updated</span>
+          <span id="updatedAt">Loading...</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="card glass">
+      <div class="section-head"><div><div class="eyebrow">COLLECTION</div><h3>Unlocked & locked achievements</h3></div></div>
+      <div id="achievementsGrid" class="achievements-grid"></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card glass">
+        <div class="section-head"><div><div class="eyebrow">NEXT TARGET</div><h3>Coming up</h3></div></div>
+        <div id="nextTargets" class="mini-list"></div>
+      </div>
+      <div class="card glass">
+        <div class="section-head"><div><div class="eyebrow">MILESTONES</div><h3>Balance checkpoints</h3></div></div>
+        <div id="milestoneTimeline" class="mini-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="et">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Freezy Stats Lab</title>
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body data-page="stats">
+  <div class="bg-orb orb-1"></div>
+  <div class="bg-orb orb-2"></div>
+
+  <aside class="sidebar">
+    <div class="brand">
+      <img src="assets/logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
+      <div>
+        <div class="eyebrow">FREEZY539</div>
+        <h1>Money Hub</h1>
+      </div>
+    </div>
+    <nav class="nav">
+      <a href="index.html" class="nav-link">Dashboard</a>
+      <a href="stats.html" class="nav-link active">Stats Lab</a>
+      <a href="achievements.html" class="nav-link">Achievements</a>
+      <a href="events.html" class="nav-link">Fun Zone</a>
+    </nav>
+    <div class="side-card">
+      <div class="small-label">Data Engine</div>
+      <div class="huge-text">Stats Lab</div>
+      <p class="muted">Kõik breakdownid ühes kohas.</p>
+    </div>
+  </aside>
+
+  <main class="main">
+    <header class="topbar glass">
+      <div>
+        <div class="eyebrow">ANALYTICS</div>
+        <h2>Deep stats & patterns</h2>
+      </div>
+      <div class="topbar-right">
+        <div class="ticker-wrap">
+          <span class="ticker-label">Updated</span>
+          <span id="updatedAt">Loading...</span>
+        </div>
+      </div>
+    </header>
+
+    <section class="stats-grid wide-4">
+      <div class="card glass stat-card"><div class="small-label">Positive Days</div><div id="positiveDays" class="stat-value">0</div></div>
+      <div class="card glass stat-card"><div class="small-label">Negative Days</div><div id="negativeDays" class="stat-value">0</div></div>
+      <div class="card glass stat-card"><div class="small-label">Hit Rate</div><div id="hitRate" class="stat-value">0%</div></div>
+      <div class="card glass stat-card"><div class="small-label">Biggest Jump</div><div id="biggestJump" class="stat-value">$0</div></div>
+    </section>
+
+    <section class="grid-2">
+      <div class="card glass chart-card">
+        <div class="section-head"><div><div class="eyebrow">GAIN VS LOSS</div><h3>Change Distribution</h3></div></div>
+        <div class="chart-holder"><canvas id="changeChart"></canvas></div>
+      </div>
+      <div class="card glass chart-card">
+        <div class="section-head"><div><div class="eyebrow">MONEY FLOW</div><h3>Source Breakdown</h3></div></div>
+        <div class="chart-holder"><canvas id="sourceChart"></canvas></div>
+      </div>
+    </section>
+
+    <section class="card glass">
+      <div class="section-head"><div><div class="eyebrow">TOP DAYS</div><h3>Best & Worst Runs</h3></div></div>
+      <div class="dual-lists">
+        <div>
+          <h4>Top 5 best days</h4>
+          <div id="bestRuns" class="mini-list"></div>
+        </div>
+        <div>
+          <h4>Top 5 worst days</h4>
+          <div id="worstRuns" class="mini-list"></div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>

@@ -13,8 +13,6 @@ function formatDate(dateStr) {
     day: "numeric",
     month: "long",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"  
   });
 }
 
@@ -26,8 +24,6 @@ function formatDateTime(dateStr) {
     day: "numeric",
     month: "long",
     year: "numeric",
-    hour: "2-digit",
-    minute: "2-digit"
   });
 }
 

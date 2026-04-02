@@ -3,148 +3,138 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Freezy Dashboard</title>
+  <title>Freezy Money Dashboard</title>
+  <meta name="theme-color" content="#101522" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
-<body data-page="dashboard">
+<body>
   <div class="bg-orb orb-1"></div>
   <div class="bg-orb orb-2"></div>
 
-  <aside class="sidebar">
-    <div class="brand">
-      <img src="assets/logo.png" alt="Logo" class="brand-logo" onerror="this.style.display='none'">
-      <div>
-        <div class="eyebrow">FREEZY539</div>
-        <h1>Money Hub</h1>
-      </div>
-    </div>
-
-    <nav class="nav">
-      <a href="index.html" class="nav-link active">Dashboard</a>
-      <a href="stats.html" class="nav-link">Stats Lab</a>
-      <a href="achievements.html" class="nav-link">Achievements</a>
-      <a href="events.html" class="nav-link">Fun Zone</a>
-    </nav>
-
-    <div class="side-card">
-      <div class="small-label">Wealth Level</div>
-      <div id="wealthLevel" class="huge-text">Loading...</div>
-      <p id="wealthDescription" class="muted">Analyzing current empire...</p>
-    </div>
-
-    <div class="side-card">
-      <div class="small-label">Today's Mission</div>
-      <div id="dailyMission" class="mission-box">Loading mission...</div>
-    </div>
-  </aside>
-
-  <main class="main">
+  <div class="container">
     <header class="topbar glass">
-      <div>
-        <div class="eyebrow">LIVE MONEY TRACKER</div>
-        <h2>Road to the first million</h2>
-      </div>
-      <div class="topbar-right">
-        <div class="ticker-wrap">
-          <span class="ticker-label">Status</span>
-          <span id="grindStatusBadge" class="status-badge">Loading...</span>
+      <div class="brand-wrap">
+        <div class="logo-box">
+          <img id="siteLogo" src="assets/logo.png" alt="Logo" onerror="this.style.display='none'; this.parentElement.classList.add('logo-fallback')">
+          <span class="logo-fallback-text">F</span>
         </div>
-        <div class="ticker-wrap">
-          <span class="ticker-label">Updated</span>
-          <span id="updatedAt">Loading...</span>
+        <div>
+          <p class="eyebrow">FREEZY539.GITHUB.IO</p>
+          <h1>FiveM Money Dashboard</h1>
+        </div>
+      </div>
+
+      <div class="topbar-right">
+        <button id="refreshBtn" class="ghost-btn" type="button">Uuenda</button>
+        <div class="status-chip">
+          <span class="status-dot"></span>
+          <span id="updatedAt">Laen andmeid...</span>
         </div>
       </div>
     </header>
 
-    <section class="hero-grid">
-      <div class="hero-card glass span-2">
-        <div class="eyebrow">Current Balance</div>
-        <div id="currentBalance" class="money-big">$0</div>
-        <div class="progress-meta-row">
-          <span>Target Progress</span>
-          <span id="progressText">0%</span>
-        </div>
-        <div class="progress-wrap large">
-          <div id="progressBar" class="progress-bar"></div>
-        </div>
-        <div id="milestones" class="milestones"></div>
+    <section class="hero glass">
+      <div>
+        <p class="eyebrow">MISSION</p>
+        <h2>Road to $1,000,000</h2>
+        <p class="hero-text">Sisestad raha Google Sheetsi. Sinu GitHub leht näitab automaatselt progressi, hoiatusi, graafikut ja viimaseid kirjeid.</p>
       </div>
-
-      <div class="hero-card glass">
-        <div class="eyebrow">Remaining</div>
-        <div id="remaining" class="stat-value">$0</div>
-        <p class="muted">Veel vaja grindida enne esimest milli.</p>
-      </div>
-
-      <div class="hero-card glass">
-        <div class="eyebrow">Projected 1M Date</div>
-        <div id="projectedDate" class="stat-value">—</div>
-        <p id="paceText" class="muted">Tempo arvutatakse automaatselt.</p>
+      <div class="hero-side">
+        <div class="mini-stat">
+          <span class="mini-label">Goal</span>
+          <strong id="goalAmount">$1,000,000</strong>
+        </div>
+        <div class="mini-stat">
+          <span class="mini-label">Grind streak</span>
+          <strong id="streakMini">0 päeva</strong>
+        </div>
       </div>
     </section>
 
-    <section class="stats-grid dashboard-stats">
-      <div class="card glass stat-card">
-        <div class="small-label">Avg Daily Growth</div>
-        <div id="avgGrowth" class="stat-value">$0</div>
-      </div>
-      <div class="card glass stat-card">
-        <div class="small-label">Profit Streak</div>
-        <div id="streak" class="stat-value">0</div>
-      </div>
-      <div class="card glass stat-card">
-        <div class="small-label">Best Day</div>
-        <div id="bestDay" class="stat-subvalue">—</div>
-      </div>
-      <div class="card glass stat-card">
-        <div class="small-label">Worst Hit</div>
-        <div id="worstDay" class="stat-subvalue">—</div>
-      </div>
+    <section class="stats-grid">
+      <article class="card stat-card glass accent-green">
+        <span class="card-label">Current Balance</span>
+        <h3 id="currentBalance">$0</h3>
+        <p id="todayChangeText" class="muted">Täna muutus: $0</p>
+      </article>
+
+      <article class="card stat-card glass accent-blue">
+        <span class="card-label">Remaining</span>
+        <h3 id="remaining">$0</h3>
+        <p class="muted">Veel koguda eesmärgini</p>
+      </article>
+
+      <article class="card stat-card glass accent-orange">
+        <span class="card-label">Progress</span>
+        <h3 id="progressText">0%</h3>
+        <p id="milestoneText" class="muted">Järgmine milestone: -</p>
+      </article>
+
+      <article class="card stat-card glass accent-purple">
+        <span class="card-label">Projected Goal Date</span>
+        <h3 id="projectedDate">-</h3>
+        <p id="projectedDays" class="muted">Tempo puudub</p>
+      </article>
     </section>
 
-    <section class="grid-2 main-charts">
-      <div class="card glass chart-card tall">
-        <div class="section-head">
+    <section class="grid-main">
+      <article class="card glass main-chart-card">
+        <div class="card-head">
           <div>
-            <div class="eyebrow">TREND</div>
-            <h3>Balance History</h3>
+            <span class="card-label">Balance History</span>
+            <h3>Raha kasv ajas</h3>
           </div>
-          <span class="muted">Last 30 entries</span>
         </div>
-        <div class="chart-holder large-chart"><canvas id="balanceChart"></canvas></div>
-      </div>
 
-      <div class="stack-col">
-        <div class="card glass">
-          <div class="section-head">
-            <div>
-              <div class="eyebrow">ALERT CENTER</div>
-              <h3>Warnings</h3>
-            </div>
+        <div class="progress-block">
+          <div class="progress-row">
+            <span>Target Progress</span>
+            <strong id="progressInline">0%</strong>
           </div>
+          <div class="progress-track">
+            <div id="progressBar" class="progress-bar"></div>
+          </div>
+        </div>
+
+        <div id="milestones" class="milestones"></div>
+
+        <div class="chart-wrap">
+          <canvas id="balanceChart"></canvas>
+        </div>
+      </article>
+
+      <aside class="side-stack">
+        <article class="card glass">
+          <span class="card-label">Stats</span>
+          <h3>Quick Stats</h3>
+          <div class="stats-list">
+            <div><span>Avg Daily Growth</span><strong id="avgGrowth">$0</strong></div>
+            <div><span>Best Day</span><strong id="bestDay">-</strong></div>
+            <div><span>Worst Day</span><strong id="worstDay">-</strong></div>
+            <div><span>Profit Streak</span><strong id="streak">0</strong></div>
+          </div>
+        </article>
+
+        <article class="card glass">
+          <span class="card-label">Warnings</span>
+          <h3>Alerts</h3>
           <div id="warnings" class="warnings"></div>
-        </div>
-
-        <div class="card glass">
-          <div class="section-head">
-            <div>
-              <div class="eyebrow">SESSION SUMMARY</div>
-              <h3>Quick Read</h3>
-            </div>
-          </div>
-          <div id="sessionSummary" class="summary-box">Loading summary...</div>
-        </div>
-      </div>
+        </article>
+      </aside>
     </section>
 
-    <section class="card glass">
-      <div class="section-head">
+    <section class="table-section card glass">
+      <div class="card-head">
         <div>
-          <div class="eyebrow">LATEST ENTRIES</div>
+          <span class="card-label">Latest Entries</span>
           <h3>Viimased kirjed</h3>
         </div>
       </div>
+
       <div class="table-wrap">
         <table>
           <thead>
@@ -160,7 +150,7 @@
         </table>
       </div>
     </section>
-  </main>
+  </div>
 
   <script src="config.js"></script>
   <script src="app.js"></script>

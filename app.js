@@ -8,13 +8,27 @@ function formatMoney(value) {
 function formatDate(dateStr) {
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return "-";
-  return date.toLocaleDateString("et-EE");
+
+  return date.toLocaleDateString("et-EE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"  
+  });
 }
 
 function formatDateTime(dateStr) {
   const date = new Date(dateStr);
   if (Number.isNaN(date.getTime())) return "Värskendus puudub";
-  return date.toLocaleString("et-EE");
+
+  return date.toLocaleString("et-EE", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit"
+  });
 }
 
 function findNextMilestone(milestones) {

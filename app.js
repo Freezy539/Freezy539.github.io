@@ -5,28 +5,46 @@ function formatMoney(value) {
   return "$" + num.toLocaleString("en-US", { maximumFractionDigits: 0 });
 }
 
-function formatDate(dateStr) {
+function parseDate(dateStr) {
+  if (!dateStr) return null;
+
+  if (dateStr.includes(".")) {
+    const parts = dateStr.split(".");
+    const day = Number(parts[0]);
+    const month = Number(parts[1]) - 1;
+    const year = Number(parts[2]);
+
+    const date = new Date(year, month, day);
+    if (!Number.isNaN(date.getTime())) return date;
+  }
+
   const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime())) return "-";
+  if (!Number.isNaN(date.getTime())) return date;
+
+  return null;
+}
+
+function formatDate(dateStr) {
+  const date = parseDate(dateStr);
+  if (!date) return "-";
 
   return date.toLocaleDateString("et-EE", {
     day: "numeric",
     month: "long",
-    year: "numeric",
+    year: "numeric"
   });
 }
 
 function formatDateTime(dateStr) {
-  const date = new Date(dateStr);
-  if (Number.isNaN(date.getTime())) return "Värskendus puudub";
+  const date = parseDate(dateStr);
+  if (!date) return "Värskendus puudub";
 
-  return date.toLocaleString("et-EE", {
+  return date.toLocaleDateString("et-EE", {
     day: "numeric",
     month: "long",
-    year: "numeric",
+    year: "numeric"
   });
 }
-
 function findNextMilestone(milestones) {
   return milestones.find(item => !item.reached);
 }

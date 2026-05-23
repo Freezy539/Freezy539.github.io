@@ -14,6 +14,7 @@
   <header class="hero" id="avaleht">
     <nav class="navbar">
       <a href="#avaleht" class="logo">Outdoor<span>sauna</span></a>
+      <button class="menu-toggle" type="button" aria-label="Ava menüü" aria-expanded="false"><span></span><span></span><span></span></button>
       <div class="navlinks">
         <a href="#valik" data-i18n="navSelection">Valik</a>
         <a href="#mudelid">Mudelid ja hinnad</a>
@@ -331,6 +332,11 @@
     <span data-i18n="footerText">Toru-, ovaal- ja kandilised saunad otse tootjalt. Transport üle Euroopa.</span>
   </footer>
 
+  <div class="mobile-sticky-cta">
+    <a href="tel:+37256666076">Helista</a>
+    <a href="#kontakt">Küsi pakkumist</a>
+  </div>
+
   <script>
     const translations = {
       et: {
@@ -369,6 +375,21 @@
     };
     translations.fi = {...translations.en, navSelection:"Valikoima", navMaterials:"Materiaalit", navCustom:"Mittatilaus", navGallery:"Galleria", navOffer:"Pyydä tarjous", heroTitle:"Tynnyri-, ovaali- ja neliösaunat", heroBtn1:"Pyydä tarjous", heroBtn2:"Katso valikoima", contactTitle:"Pyydä tarjous", sendBtn:"Lähetä"};
     translations.sv = {...translations.en, navSelection:"Utbud", navMaterials:"Material", navCustom:"Specialbeställning", navGallery:"Galleri", navOffer:"Be om offert", heroTitle:"Tunn-, oval- och fyrkantiga bastur", heroBtn1:"Be om offert", heroBtn2:"Se utbud", contactTitle:"Be om offert", sendBtn:"Skicka"};
+
+    const menuToggle = document.querySelector('.menu-toggle');
+    const navbar = document.querySelector('.navbar');
+    if (menuToggle && navbar) {
+      menuToggle.addEventListener('click', () => {
+        const isOpen = navbar.classList.toggle('menu-open');
+        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+      document.querySelectorAll('.navlinks a').forEach(link => {
+        link.addEventListener('click', () => {
+          navbar.classList.remove('menu-open');
+          menuToggle.setAttribute('aria-expanded', 'false');
+        });
+      });
+    }
 
     document.querySelectorAll('.lang').forEach(btn => {
       btn.addEventListener('click', () => {

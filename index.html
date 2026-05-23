@@ -1,491 +1,233 @@
 <!DOCTYPE html>
 <html lang="et">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
-<title>Eesti äpp</title>
-
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css"/>
-
-<style>
-
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display",sans-serif;
-  -webkit-tap-highlight-color:transparent;
-}
-
-body{
-  background:#020202;
-  min-height:100vh;
-  overflow-x:hidden;
-  color:white;
-}
-
-/* taust */
-body::before{
-  content:"";
-  position:fixed;
-  inset:0;
-  background:
-    radial-gradient(circle at top,#242733 0%,transparent 45%),
-    radial-gradient(circle at bottom,#002f9f33 0%,transparent 40%);
-  opacity:.9;
-  z-index:-2;
-}
-
-/* pattern */
-body::after{
-  content:"";
-  position:fixed;
-  inset:0;
-  background-image:
-    radial-gradient(rgba(255,255,255,.035) 1px, transparent 1px);
-  background-size:22px 22px;
-  opacity:.25;
-  z-index:-1;
-}
-
-.app{
-  max-width:430px;
-  margin:auto;
-  min-height:100vh;
-  position:relative;
-  padding:22px 22px 120px;
-}
-
-/* STATUS BAR */
-
-.topbar{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-top:10px;
-  margin-bottom:30px;
-}
-
-.time{
-  font-size:20px;
-  font-weight:700;
-  letter-spacing:-0.3px;
-}
-
-.status{
-  display:flex;
-  align-items:center;
-  gap:8px;
-  font-size:14px;
-}
-
-.dynamic-island{
-  position:absolute;
-  top:0;
-  left:50%;
-  transform:translateX(-50%);
-  width:160px;
-  height:36px;
-  border-radius:30px;
-  background:black;
-}
-
-/* SEARCH */
-
-.search{
-  height:58px;
-  border-radius:16px;
-  background:rgba(0,0,0,.82);
-  border:2px solid rgba(255,255,255,.75);
-  display:flex;
-  align-items:center;
-  padding:0 18px;
-  margin-bottom:34px;
-}
-
-.search input{
-  width:100%;
-  background:transparent;
-  border:none;
-  outline:none;
-  color:white;
-  font-size:18px;
-  font-weight:600;
-}
-
-.search input::placeholder{
-  color:#a4a4a4;
-}
-
-.search i{
-  font-size:21px;
-}
-
-/* TITLE */
-
-h1{
-  font-size:66px;
-  line-height:1;
-  margin-bottom:34px;
-  letter-spacing:-2px;
-  font-weight:800;
-}
-
-/* STACK */
-
-.stack-wrap{
-  position:relative;
-  height:560px;
-  background:rgba(0,0,0,.72);
-  border-radius:38px;
-  overflow:hidden;
-  padding-top:28px;
-  box-shadow:
-    inset 0 1px 0 rgba(255,255,255,.03),
-    0 30px 60px rgba(0,0,0,.55);
-}
-
-.stack-card{
-  position:absolute;
-  left:30px;
-  right:30px;
-  height:220px;
-  border-radius:34px;
-  overflow:hidden;
-  padding:34px;
-  box-shadow:0 18px 45px rgba(0,0,0,.45);
-}
-
-.stack-card::before{
-  content:"";
-  position:absolute;
-  width:150%;
-  height:110px;
-  background:rgba(255,255,255,.22);
-  transform:rotate(-8deg);
-  left:-60px;
-  top:92px;
-}
-
-.card-content{
-  position:relative;
-  z-index:2;
-  display:flex;
-  justify-content:space-between;
-  align-items:flex-start;
-  height:100%;
-}
-
-.card-title{
-  font-size:30px;
-  font-weight:800;
-  letter-spacing:-0.8px;
-}
-
-.license{
-  top:34px;
-  z-index:1;
-  background:linear-gradient(135deg,#ffb6a0,#ff958b);
-  color:#0041b5;
-}
-
-.passport{
-  top:160px;
-  z-index:2;
-  background:linear-gradient(135deg,#8f0039,#cf0d58);
-}
-
-.idcard{
-  top:290px;
-  z-index:3;
-  background:linear-gradient(135deg,#e8e8ea,#cfcfd3);
-  color:#2b54b8;
-}
-
-/* FLAGS */
-
-.flag{
-  width:58px;
-  height:38px;
-  border-radius:9px;
-  overflow:hidden;
-  box-shadow:0 4px 12px rgba(0,0,0,.2);
-}
-
-.estonia div:nth-child(1){
-  background:#1971ff;
-  height:33%;
-}
-
-.estonia div:nth-child(2){
-  background:black;
-  height:33%;
-}
-
-.estonia div:nth-child(3){
-  background:white;
-  height:34%;
-}
-
-.eu{
-  background:#0046cc;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#ffdb00;
-  font-size:11px;
-}
-
-/* PASS ICON */
-
-.pass-icon{
-  width:58px;
-  height:38px;
-  border-radius:8px;
-  background:#f6f2ef;
-  position:relative;
-}
-
-.pass-icon::before{
-  content:"";
-  position:absolute;
-  width:18px;
-  height:18px;
-  border:4px solid #b10048;
-  border-radius:50%;
-  top:50%;
-  left:50%;
-  transform:translate(-50%,-50%);
-}
-
-.pass-icon::after{
-  content:"";
-  position:absolute;
-  width:100%;
-  height:4px;
-  background:#b10048;
-  top:50%;
-  left:0;
-  transform:translateY(-50%);
-}
-
-/* SCAN */
-
-.scan{
-  margin-top:34px;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  gap:14px;
-  font-size:22px;
-  font-weight:700;
-  color:#ececec;
-}
-
-.scan i{
-  font-size:28px;
-}
-
-/* NAVBAR */
-
-.navbar{
-  position:fixed;
-  left:0;
-  right:0;
-  bottom:0;
-  height:118px;
-  background:rgba(0,0,0,.94);
-  border-top:1px solid rgba(255,255,255,.08);
-  display:flex;
-  justify-content:space-around;
-  align-items:flex-start;
-  padding-top:18px;
-  z-index:999;
-}
-
-.nav-item{
-  display:flex;
-  flex-direction:column;
-  align-items:center;
-  gap:8px;
-  color:white;
-  opacity:.95;
-  font-size:13px;
-  font-weight:700;
-}
-
-.nav-item i{
-  font-size:28px;
-}
-
-.home-active{
-  transform:translateY(-34px);
-}
-
-.home-circle{
-  width:92px;
-  height:92px;
-  border-radius:50%;
-  background:linear-gradient(180deg,#2164ff,#1452ea);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  box-shadow:
-    0 0 35px rgba(33,100,255,.55),
-    inset 0 1px 2px rgba(255,255,255,.3);
-  margin-bottom:10px;
-}
-
-.home-circle img{
-  width:40px;
-}
-
-.home-label{
-  margin-top:-2px;
-}
-
-.small-avatar{
-  width:44px;
-  height:44px;
-  border-radius:50%;
-  background:#003f9b;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:20px;
-  font-weight:800;
-}
-
-.bottom-indicator{
-  position:fixed;
-  bottom:8px;
-  left:50%;
-  transform:translateX(-50%);
-  width:145px;
-  height:5px;
-  border-radius:20px;
-  background:white;
-  opacity:.9;
-}
-
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Outdoorsauna | Toru- ja ovaalsaunad otse tootjalt</title>
+  <meta name="description" content="Outdoorsauna valmistab kvaliteetseid toru- ja ovaalsaunu otse tootjalt. Transport Eestis ja üle Euroopa. Küsi pakkumist WhatsAppis +372 56666076." />
+  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-
-
-<div class="app">
-
-
-  <!-- SEARCH -->
-  <div class="search">
-    <input type="text" placeholder="Otsin">
-    <i class="fa-solid fa-magnifying-glass"></i>
+  <div class="topbar">
+    <span>🇪🇪 Toru- ja ovaalsaunad otse tootjalt</span>
+    <span>Transport üle Euroopa</span>
+    <a href="https://wa.me/37256666076">WhatsApp: +372 56666076</a>
   </div>
 
-  <!-- TITLE -->
-  <h1>Dokumendid</h1>
+  <header class="hero" id="avaleht">
+    <nav class="navbar">
+      <a class="logo" href="#avaleht">Outdoor<span>sauna</span></a>
+      <div class="navlinks">
+        <a href="#mudelid">Mudelid</a>
+        <a href="#sisu">Sisu</a>
+        <a href="#tootmine">Tootmine</a>
+        <a href="#galerii">Galerii</a>
+        <a class="nav-cta" href="#kontakt">Küsi pakkumist</a>
+      </div>
+    </nav>
 
-  <!-- CARD STACK -->
-  <div class="stack-wrap">
-
-    <!-- JUHILUBA -->
-    <div class="stack-card license">
-
-      <div class="card-content">
-
-        <div class="card-title">
-          Juhiluba
+    <div class="hero-inner">
+      <div class="hero-copy">
+        <p class="label">🔥 Valmis saunad ja eritellimused</p>
+        <h1>Kvaliteetsed toru- ja ovaalsaunad sinu koju, suvilasse või majutuskohta</h1>
+        <p class="lead">Valmistame puidust välisaunu Eestis. Meilt saad kompaktse 2x2 sauna, 2-ruumilise torusauna või eritellimusel ovaalsauna koos transpordiga üle Euroopa.</p>
+        <div class="hero-actions">
+          <a class="btn primary" href="#kontakt">Kirjuta ja küsi pakkumist</a>
+          <a class="btn glass" href="#galerii">Vaata tehtud töid</a>
         </div>
-
-        <div class="flag eu">
-          ★ ★ ★
-        </div>
-
       </div>
 
-    </div>
-
-    <!-- PASS -->
-    <div class="stack-card passport">
-
-      <div class="card-content">
-
-        <div class="card-title" style="color:white;">
-          Pass
+      <div class="hero-card">
+        <img src="assets/exterior-brown-barrel.jpg" alt="Valmis Outdoorsauna torusaun" />
+        <div class="hero-card-content">
+          <strong>Kohe saadaval</strong>
+          <span>2-ruumiline torusaun 4.2m x Ø2.1m</span>
         </div>
+      </div>
+    </div>
+  </header>
 
-        <div class="pass-icon"></div>
+  <main>
+    <section class="stats-section">
+      <div class="stat"><strong>2–4</strong><span>inimest kompaktsaunas</span></div>
+      <div class="stat"><strong>4.2m</strong><span>populaarne 2-ruumiline torusaun</span></div>
+      <div class="stat"><strong>EU</strong><span>transport üle Euroopa</span></div>
+      <div class="stat"><strong>Harvia</strong><span>kerise võimalus</span></div>
+    </section>
 
+    <section class="intro">
+      <div>
+        <p class="eyebrow">Outdoorsauna</p>
+        <h2>Saunad, mis on tehtud päris kasutamiseks, mitte ainult pildistamiseks.</h2>
+      </div>
+      <p>Meie saunad valmivad töökojas päris puidust, korraliku konstruktsiooni ja läbimõeldud sisulahendusega. Näitame lehel ka pooleliolevaid projekte, sest klient näeb nii ausalt, kuidas saun sünnib.</p>
+    </section>
+
+    <section class="models" id="mudelid">
+      <div class="section-head center">
+        <p class="eyebrow">Mudelid</p>
+        <h2>Vali valmis lahendus või telli täpselt enda soovide järgi</h2>
+        <p>Allolevad mudelid on näidised. Mõõdud, värv, ruumide arv, uksed, aknad ja lisad saab teha kokkuleppel.</p>
       </div>
 
-    </div>
+      <div class="model-grid">
+        <article class="model-card big">
+          <img src="assets/exterior-brown-barrel.jpg" alt="Pruun valmis torusaun" />
+          <div class="model-content">
+            <span class="badge">Populaarne</span>
+            <h3>2-ruumiline torusaun</h3>
+            <p>Valmis koheseks kasutamiseks. Eesruum + leiliruum, must katus, klaasuks ja korralik puidust siseviimistlus.</p>
+            <ul>
+              <li>4.2m pikkus / Ø 2.1m</li>
+              <li>Täielikult komplekteeritud</li>
+              <li>Transport võimalik</li>
+            </ul>
+            <strong class="price">4400€ + km</strong>
+          </div>
+        </article>
 
-    <!-- ID -->
-    <div class="stack-card idcard">
+        <article class="model-card">
+          <img src="assets/exterior-oval-green.jpg" alt="Roheline ovaalsaun" />
+          <div class="model-content">
+            <span class="badge green">Ovaalsaun</span>
+            <h3>Eritellimusel ovaalsaun</h3>
+            <p>Rohkem ruumi, erilisem välimus ja võimalik teha täpselt sinu kinnistule sobiva tooniga.</p>
+            <strong class="price small">Hind kokkuleppel</strong>
+          </div>
+        </article>
 
-      <div class="card-content">
+        <article class="model-card">
+          <img src="assets/barrel-ready.png" alt="Väike torusaun" />
+          <div class="model-content">
+            <span class="badge">Kompaktne</span>
+            <h3>2x2 termopuidust saun</h3>
+            <p>Väike ja mugav lahendus 2–4 inimesele. Sobib hästi suvilasse või väiksemasse hoovi.</p>
+            <strong class="price small">Küsi pakkumist</strong>
+          </div>
+        </article>
+      </div>
+    </section>
 
-        <div class="card-title">
-          ID-kaart
-        </div>
-
-        <div class="flag estonia">
-          <div></div>
-          <div></div>
-          <div></div>
-        </div>
-
+    <section class="interior" id="sisu">
+      <div class="section-head">
+        <p class="eyebrow">Sisu ja mugavus</p>
+        <h2>Puhas puidust sisemus, tugevad lavad ja korralik keris</h2>
+        <p>Sauna sees on soe ja naturaalne puidutunne. Lavad tehakse mugava istumiskõrgusega ning kerise ümbrus lahendatakse turvaliselt.</p>
       </div>
 
-    </div>
+      <div class="interior-layout">
+        <div class="interior-main">
+          <img src="assets/interior-harvia-front.jpg" alt="Harvia keris torusaunas" />
+        </div>
+        <div class="feature-list">
+          <div class="feature">
+            <h3>Harvia keris</h3>
+            <p>Võimalik komplekteerida kvaliteetse Harvia kerise ja korstnasüsteemiga.</p>
+          </div>
+          <div class="feature">
+            <h3>Mugavad lavad</h3>
+            <p>Laiad lavad ja astmed, et saunas oleks päriselt mugav istuda ja leili võtta.</p>
+          </div>
+          <div class="feature">
+            <h3>Valgusküllane ruum</h3>
+            <p>Akna või klaasuksega saab sauna sisemuse teha avaramaks ja hubasemaks.</p>
+          </div>
+        </div>
+      </div>
 
-  </div>
+      <div class="interior-gallery">
+        <img src="assets/interior-benches-wide.jpg" alt="Sauna puidust lavad" />
+        <img src="assets/interior-light-benches.jpg" alt="Heledast puidust sauna sisemus" />
+        <img src="assets/interior-corner-benches.jpg" alt="Nurgalavadega sauna sisemus" />
+        <img src="assets/interior-harvia-side.jpg" alt="Harvia keris sauna sees" />
+      </div>
+    </section>
 
-  <!-- SCAN -->
-  <div class="scan">
-    <i class="fa-solid fa-qrcode"></i>
-    <span>Skanneeri dokumenti</span>
-  </div>
+    <section class="production" id="tootmine">
+      <div class="production-copy">
+        <p class="eyebrow">Tootmine</p>
+        <h2>Näed ka seda, kuidas saun valmib</h2>
+        <p>Poolikud projektid annavad kliendile kindluse, et saun valmib päris töökojas ja korraliku käsitööna. Valmistame karkassi, seinad, katuse, sisemuse ja komplekteerime sauna tellimuse järgi.</p>
+        <div class="steps">
+          <div><span>01</span><strong>Planeerime mõõdud ja lahenduse</strong></div>
+          <div><span>02</span><strong>Valmistame sauna töökojas</strong></div>
+          <div><span>03</span><strong>Komplekteerime ja tarnime kliendini</strong></div>
+        </div>
+      </div>
+      <div class="production-images">
+        <img src="assets/workshop-frame.png" alt="Toru sauna karkass töökojas" />
+        <img src="assets/workshop-build.png" alt="Poolik torusaun töökojas" />
+      </div>
+    </section>
 
-</div>
+    <section class="delivery">
+      <img src="assets/delivery-crane.png" alt="Sauna transport kraanaga" />
+      <div>
+        <p class="eyebrow">Transport</p>
+        <h2>Transport Eestis ja üle Euroopa</h2>
+        <p>Saame aidata transpordi korraldamisega. Meie saunad on jõudnud klientideni ka väljaspool Eestit — näiteks Rootsi.</p>
+        <a class="btn primary" href="#kontakt">Küsi transpordi hinda</a>
+      </div>
+    </section>
 
-<!-- NAVBAR -->
+    <section class="available">
+      <div>
+        <span class="badge hot">Kohe saadaval 🔥</span>
+        <h2>2-ruumiline torusaun</h2>
+        <p>Valmis kasutamiseks ja täielikult komplekteeritud.</p>
+        <ul>
+          <li>4.2m x Ø2.1m</li>
+          <li>2 ruumi: eesruum + leiliruum</li>
+          <li>Must katus ja klaasuks</li>
+          <li>Transport kokkuleppel</li>
+        </ul>
+        <strong>4400€ + km</strong>
+        <a class="btn primary" href="#kontakt">Soovin seda sauna</a>
+      </div>
+      <img src="assets/exterior-brown-barrel.jpg" alt="Kohe saadaval torusaun" />
+    </section>
 
-<div class="navbar">
+    <section class="gallery-section" id="galerii">
+      <div class="section-head center">
+        <p class="eyebrow">Galerii</p>
+        <h2>Valmis saunad, sisevaated, tootmine ja transport</h2>
+      </div>
+      <div class="gallery-grid">
+        <img src="assets/exterior-brown-barrel.jpg" alt="Pruun torusaun" />
+        <img src="assets/exterior-oval-green.jpg" alt="Roheline ovaalsaun" />
+        <img src="assets/interior-harvia-front.jpg" alt="Sauna keris" />
+        <img src="assets/interior-benches-wide.jpg" alt="Sauna lavad" />
+        <img src="assets/interior-light-benches.jpg" alt="Sauna sisemus" />
+        <img src="assets/interior-corner-benches.jpg" alt="Sauna nurgalava" />
+        <img src="assets/workshop-frame.png" alt="Saun tootmises" />
+        <img src="assets/delivery-crane.png" alt="Sauna tarne" />
+      </div>
+    </section>
 
-  <div class="nav-item">
-    <div class="small-avatar">KT</div>
-    <span>Rollid</span>
-  </div>
+    <section class="contact" id="kontakt">
+      <div class="contact-box">
+        <p class="eyebrow">Kontakt</p>
+        <h2>Kirjuta ja küsi pakkumist</h2>
+        <p>Saada meile soovitud mõõt, ruumide arv, asukoht ja kas vajad transporti.</p>
+        <div class="contact-actions">
+          <a class="btn primary" href="https://wa.me/37256666076">WhatsApp: +372 56666076</a>
+          <a class="btn darkbtn" href="mailto:info@outdoorsauna.ee">info@outdoorsauna.ee</a>
+        </div>
+        <form>
+          <input type="text" placeholder="Sinu nimi" />
+          <input type="tel" placeholder="Telefon" />
+          <input type="email" placeholder="E-mail" />
+          <input type="text" placeholder="Asukoht / riik" />
+          <textarea placeholder="Millist sauna soovid?"></textarea>
+          <button class="btn primary" type="submit">Saada päring</button>
+        </form>
+      </div>
+    </section>
+  </main>
 
-  <div class="nav-item">
-    <i class="fa-solid fa-table-cells-large"></i>
-    <span>Teenused</span>
-  </div>
-
-  <div class="nav-item home-active">
-
-    <div class="home-circle">
-      <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/5/5f/Coat_of_arms_of_Estonia.svg/512px-Coat_of_arms_of_Estonia.svg.png">
-    </div>
-
-    <span class="home-label">Töölaud</span>
-
-  </div>
-
-  <div class="nav-item">
-    <i class="fa-regular fa-envelope"></i>
-    <span>Postkast</span>
-  </div>
-
-  <div class="nav-item">
-    <i class="fa-solid fa-gear"></i>
-    <span>Seaded</span>
-  </div>
-
-</div>
-
-<div class="bottom-indicator"></div>
-
+  <footer>
+    <strong>Outdoorsauna</strong>
+    <span>Toru- ja ovaalsaunad otse tootjalt • Transport üle Euroopa</span>
+  </footer>
 </body>
 </html>

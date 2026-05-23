@@ -3,410 +3,300 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Outdoorsauna | Toru-, ovaal- ja kandilised saunad</title>
+  <title>OutDoorSauna | Toru-, ovaal- ja kandilised saunad</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div class="topbar">
-    <span data-i18n="topbar">🇪🇪 Toru-, ovaal- ja kandilised saunad otse tootjalt • Transport üle Euroopa • WhatsApp: +372 56666076</span>
+    <span data-i18n="topbar">🇪🇪 Toru-, ovaal- ja kandilised saunad otse tootjalt • Transport üle Eesti ja Euroopa</span>
   </div>
 
-  <header class="hero" id="avaleht">
-    <nav class="navbar">
-      <a href="#avaleht" class="logo">Outdoor<span>sauna</span></a>
-      <button class="menu-toggle" type="button" aria-label="Ava menüü" aria-expanded="false"><span></span><span></span><span></span></button>
-      <div class="navlinks">
-        <a href="#valik" data-i18n="navSelection">Valik</a>
-        <a href="#mudelid">Mudelid ja hinnad</a>
-        <a href="#materjalid" data-i18n="navMaterials">Materjalid</a>
-        <a href="#eritellimus" data-i18n="navCustom">Eritellimus</a>
-        <a href="#galerii" data-i18n="navGallery">Galerii</a>
-        <a href="#kontakt" class="nav-cta" data-i18n="navOffer">Küsi pakkumist</a>
-      </div>
-      <div class="language-switch">
-        <button class="lang active" data-lang="et">ET</button>
-        <button class="lang" data-lang="en">EN</button>
-        <button class="lang" data-lang="fi">FI</button>
-        <button class="lang" data-lang="sv">SV</button>
-      </div>
+  <header class="site-header">
+    <button class="brand" onclick="showPage('home')" aria-label="OutDoorSauna avaleht">
+      <span>OutDoor</span>Sauna
+    </button>
+
+    <button class="mobile-menu" onclick="toggleMenu()">☰</button>
+
+    <nav id="mainNav">
+      <button class="nav-link active" onclick="showPage('home')" data-page="home" data-i18n="nav_home">Avaleht</button>
+      <button class="nav-link" onclick="showPage('products')" data-page="products" data-i18n="nav_products">Valik</button>
+      <button class="nav-link" onclick="showPage('gallery')" data-page="gallery" data-i18n="nav_gallery">Galerii</button>
+      <button class="nav-link" onclick="showPage('production')" data-page="production" data-i18n="nav_production">Tootmine</button>
+      <button class="nav-link nav-cta" onclick="showPage('contact')" data-page="contact" data-i18n="nav_contact">Küsi pakkumist</button>
     </nav>
 
-    <div class="hero-content">
-      <p class="badge" data-i18n="badge">🔥 Otse tootjalt Eestist</p>
-      <h1 data-i18n="heroTitle">Toru-, ovaal- ja kandilised välisaunad</h1>
-      <p class="hero-text" data-i18n="heroText">Valmistame termopuidust ja kuusepuust toru-, ovaal- ja kandilisi saunu vastavalt sinu soovile. Saunu saab Tartus/Reolas kohapeal vaadata ning vajadusel aitame transpordiga üle Eesti ja Euroopa.</p>
-      <div class="hero-buttons">
-        <a href="#kontakt" class="btn primary" data-i18n="heroBtn1">Küsi pakkumist</a>
-        <a href="#valik" class="btn ghost" data-i18n="heroBtn2">Vaata valikut</a>
-      </div>
+    <div class="language">
+      <button onclick="setLanguage('et')" id="langEt" class="lang active">ET</button>
+      <button onclick="setLanguage('en')" id="langEn" class="lang">EN</button>
     </div>
   </header>
 
   <main>
-    <section class="quick-cards">
-      <div class="quick-card"><strong>3</strong><span data-i18n="q1">saunatüüpi: toru, ovaal, kandiline</span></div>
-      <div class="quick-card"><strong>2</strong><span data-i18n="q2">materjali: termopuit või kuusepuit</span></div>
-      <div class="quick-card"><strong>EU</strong><span data-i18n="q3">transport üle Euroopa</span></div>
-      <div class="quick-card"><strong>Custom</strong><span data-i18n="q4">eritellimus ja värvivalik</span></div>
+    <!-- AVALEHT -->
+    <section id="home" class="page active">
+      <div class="hero">
+        <div class="hero-overlay"></div>
+        <div class="hero-content">
+          <div class="pill" data-i18n="hero_pill">🔥 Otse tootjalt Tartumaalt</div>
+          <h1 data-i18n="hero_title">Toru-, ovaal- ja kandilised saunad</h1>
+          <p data-i18n="hero_text">Valmistame kvaliteetseid termopuidust ja kuusepuust välisaunu. Saunad tarnitakse kokkupanduna ning vajadusel aitame transpordiga üle Eesti ja Euroopa.</p>
+          <div class="hero-actions">
+            <button class="btn primary" onclick="showPage('products')" data-i18n="hero_btn1">Vaata valikut</button>
+            <button class="btn ghost" onclick="showPage('contact')" data-i18n="hero_btn2">Küsi pakkumist</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="quick-cards">
+        <div class="quick-card">
+          <div class="icon">🌲</div>
+          <h3 data-i18n="quick_1_title">Termopuit või kuusk</h3>
+          <p data-i18n="quick_1_text">Valikus termomänd ja kvaliteetne kuusepuit.</p>
+        </div>
+        <div class="quick-card">
+          <div class="icon">🏡</div>
+          <h3 data-i18n="quick_2_title">Erinevad mudelid</h3>
+          <p data-i18n="quick_2_text">Toru-, ovaal- ja kandilised saunad.</p>
+        </div>
+        <div class="quick-card">
+          <div class="icon">🎨</div>
+          <h3 data-i18n="quick_3_title">Värvivalikud</h3>
+          <p data-i18n="quick_3_text">Välisviimistlus ja katusekate kliendi soovil.</p>
+        </div>
+        <div class="quick-card">
+          <div class="icon">🚚</div>
+          <h3 data-i18n="quick_4_title">Transport</h3>
+          <p data-i18n="quick_4_text">Aitame transpordiga sobivasse asukohta.</p>
+        </div>
+      </div>
+
+      <section class="intro-split">
+        <div>
+          <span class="eyebrow" data-i18n="home_eyebrow">Miks OutDoorSauna?</span>
+          <h2 data-i18n="home_title">Saunad, mis on päriselt valmis kasutamiseks</h2>
+          <p data-i18n="home_text">Meie eesmärk on pakkuda praktilisi ja ilusa disainiga välisaunu, mis sobivad nii koduhoovi, suvilasse, veekogu äärde kui ka majutusettevõttele.</p>
+          <ul class="check-list">
+            <li data-i18n="home_li1">Keris, korsten ja kerisekivid saadaval komplektis</li>
+            <li data-i18n="home_li2">Lepast lavalauad ja põrandarestid</li>
+            <li data-i18n="home_li3">Karastatud pronksitooni klaasid</li>
+            <li data-i18n="home_li4">Võimalik tellida eritellimusel mõõtude ja värvidega</li>
+          </ul>
+        </div>
+        <img src="assets/keris-sisu.jpg" alt="OutDoorSauna sauna leiliruum Harvia kerisega">
+      </section>
     </section>
 
-    <section class="section intro">
-      <div class="section-text-block">
-        <p class="eyebrow" data-i18n="introEye">Outdoorsauna</p>
-        <h2 data-i18n="introTitle">Saun, mis sobib täpselt sinu hoovi, suvilasse või majutuskohta.</h2>
-        <p data-i18n="introText">Meie saunad ei ole ainult valmis mudelid. Saad valida kuju, materjali, värvi, ruumilahenduse, uksed, aknad, kerise ja muud lisad. Teeme nii kompaktseid 2–4 inimese saunu kui ka suuremaid lahendusi.</p>
+    <!-- VALIK -->
+    <section id="products" class="page">
+      <div class="page-head">
+        <span class="eyebrow" data-i18n="products_eyebrow">Valik</span>
+        <h1 data-i18n="products_title">Vali sobiv saun või küsi eritellimust</h1>
+        <p data-i18n="products_text">Allolevad mudelid annavad ülevaate meie põhilistest lahendustest. Kõiki saunu saab kohandada vastavalt soovile.</p>
       </div>
-      <div class="intro-image">
-        <img src="assets/torusaun.jpg" alt="Outdoorsauna torusaun" />
-      </div>
-    </section>
 
-    <section class="section" id="valik">
-      <div class="center-head">
-        <p class="eyebrow" data-i18n="selectionEye">Valik</p>
-        <h2 data-i18n="selectionTitle">Vali endale sobiv sauna kuju</h2>
-        <p data-i18n="selectionText">Kõiki mudeleid saab teha erinevates mõõtudes, toonides ja komplektsuses.</p>
-      </div>
       <div class="product-grid">
         <article class="product-card featured">
-          <img src="assets/torusaun.jpg" alt="Torusaun" />
-          <div class="product-content">
-            <h3 data-i18n="barrelTitle">Torusaun</h3>
-            <p data-i18n="barrelText">Klassikaline ja populaarne lahendus. Kiire soojenemine, tugev konstruktsioon ja mõnus ümar sisetunne.</p>
-            <div class="tags"><span>2–4 inimest</span><span>4.2m × Ø2.1m</span><span>2 ruumi</span></div>
+          <img src="assets/torusaun-valmis.jpg" alt="Valmis torusaun">
+          <div class="product-body">
+            <div class="badge" data-i18n="product1_badge">Populaarne</div>
+            <h2 data-i18n="product1_title">2-ruumiline torusaun</h2>
+            <p data-i18n="product1_text">Ruumikas torusaun praktilise eesruumi ja leiliruumiga. Sobib hästi perele või sõprade seltskonnale.</p>
+            <div class="specs">
+              <span>📏 4.1 m × Ø 2.1 m</span>
+              <span>🔥 Harvia M3 / Stoveman 13M</span>
+              <span>💧 22L või 35L veepaak</span>
+              <span>🚪 Lukustatav välisuks</span>
+            </div>
+            <div class="price">4400€</div>
+            <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
+
         <article class="product-card">
-          <img src="assets/exterior-oval-green.jpg" alt="Ovaalsaun" />
-          <div class="product-content">
-            <h3 data-i18n="ovalTitle">Ovaalsaun</h3>
-            <p data-i18n="ovalText">Rohkem ruumi ja modernsem välimus. Sobib hästi perele, puhkemajale või majutusärile.</p>
-            <div class="tags"><span data-i18n="roomy">Ruumikam</span><span data-i18n="modern">Modernne</span><span data-i18n="customColors">Värvivalik</span></div>
+          <img src="assets/ovaalsaun-valmis.jpg" alt="Ovaalsaun">
+          <div class="product-body">
+            <div class="badge" data-i18n="product2_badge">Väga ruumikas</div>
+            <h2 data-i18n="product2_title">Ovaalsaun</h2>
+            <p data-i18n="product2_text">Hea disainiga ovaalsaun, millel on praktiline eesruum ja mugav leiliruum.</p>
+            <div class="specs">
+              <span>📏 4 m × 2.4 m</span>
+              <span>🌲 Kuusepuit või termopuit</span>
+              <span>💧 35L veepaak</span>
+              <span>🪵 Lepast lavad</span>
+            </div>
+            <div class="price">4600€</div>
+            <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
+
         <article class="product-card">
-          <img src="assets/interior-light-benches.jpg" alt="Kandiline saun" />
-          <div class="product-content">
-            <h3 data-i18n="squareTitle">Kandiline saun</h3>
-            <p data-i18n="squareText">Sirgete seintega praktiline saun, kus on lihtne planeerida lavad, eesruum ja lisad.</p>
-            <div class="tags"><span data-i18n="practical">Praktiline</span><span data-i18n="spacious">Avar</span><span data-i18n="customOrder">Eritellimus</span></div>
+          <img src="assets/hero-torusaun.jpg" alt="Väiksem termopuidust torusaun">
+          <div class="product-body">
+            <div class="badge" data-i18n="product3_badge">Kompaktne</div>
+            <h2 data-i18n="product3_title">Terrassiga torusaun</h2>
+            <p data-i18n="product3_text">Kompaktne termopuidust torusaun väiksemasse aeda, veekogu äärde või haagisele paigaldamiseks.</p>
+            <div class="specs">
+              <span>📏 2500 mm × Ø 2100 mm</span>
+              <span>🪵 Termopuit</span>
+              <span>🔥 Seest või väljast köetav</span>
+              <span>🏕 Sobib haagisele</span>
+            </div>
+            <div class="price">3300–3400€</div>
+            <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
+          </div>
+        </article>
+
+        <article class="product-card">
+          <img src="assets/tootmine-kandiline.jpg" alt="Kandiline saun tootmises">
+          <div class="product-body">
+            <div class="badge" data-i18n="product4_badge">Eritellimus</div>
+            <h2 data-i18n="product4_title">Kandiline saun</h2>
+            <p data-i18n="product4_text">Kandiline saun neile, kes soovivad modernsemat välimust ja sirgema vormiga lahendust.</p>
+            <div class="specs">
+              <span>📐 Mõõdud vastavalt soovile</span>
+              <span>🎨 Erinevad toonid</span>
+              <span>⚡ Võimalik elektriküte</span>
+              <span>🚚 Transport kokkuleppel</span>
+            </div>
+            <div class="price" data-i18n="custom_price">Küsi hinda</div>
+            <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
       </div>
-    </section>
 
-    <section class="section models" id="mudelid">
-      <div class="center-head">
-        <p class="eyebrow">Mudelid ja hinnad</p>
-        <h2>Populaarsed valmis lahendused</h2>
-        <p>All olevad mudelid on näited. Kui mõõt, materjal või keris ei sobi, valmistame sauna ka eritellimusena.</p>
-      </div>
-
-      <div class="model-grid">
-        <article class="model-card premium-model">
-          <div class="model-image"><img src="assets/torusaun.jpg" alt="Torusaun kahe ruumiga"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Torusaun</span><strong>3800 mm</strong></div>
-            <h3>Kahe ruumiga termomännist torusaun</h3>
-            <p>40 mm termomännist põhiring, 26 mm otsaseinad, lepast lavalauad ja lukustatav liimpuidust välisuks.</p>
-            <ul>
-              <li>Kõrgus 2100 mm</li>
-              <li>Harvia M3 keris, kerisekivid, korsten ja 35L veepaak hinna sees</li>
-              <li>Icopal katusekate ja roostevabast terasest vitsad</li>
-              <li>Karastatud pronks tooniga akna- ja ukseklaasid</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Küsi pakkumist</a>
-          </div>
-        </article>
-
-        <article class="model-card">
-          <div class="model-image"><img src="assets/barrel-ready.png" alt="4.1m torusaun"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Torusaun</span><strong>4400€</strong></div>
-            <h3>Ruumikas 4.1 m torusaun eesruumiga</h3>
-            <p>Kvaliteetsest kuusepuust saun, mis tarnitakse 100% kokkupanduna. Ideaalne perele või sõpradele.</p>
-            <ul>
-              <li>Mõõdud: pikkus 4.1 m, läbimõõt 2.1 m</li>
-              <li>Harvia M3 või Stoveman 13M + kerisekivid</li>
-              <li>22L roostevabast terasest veepaak ja isoleeritud korsten</li>
-              <li>Saunakibu ja kulp hinna sees</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Soovin seda sauna</a>
-          </div>
-        </article>
-
-        <article class="model-card">
-          <div class="model-image"><img src="assets/exterior-oval-green.jpg" alt="Ovaalsaun eesruumiga"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Ovaalsaun</span><strong>4600€</strong></div>
-            <h3>Ruumikas ovaalsaun praktilise eesruumiga</h3>
-            <p>Hea disainiga ovaalsaun kogu perele või majutuskohta. Tarnitakse kokkupanduna.</p>
-            <ul>
-              <li>Mõõdud: 4 m × 2.4 m</li>
-              <li>Kuusepuit, lepast lavad, istumispink ja põrandarestid</li>
-              <li>Harvia M3 või Stoveman 13M + 35L veepaak</li>
-              <li>3 ventilatsiooniava, neist 2 reguleeritavad</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Küsi lisa</a>
-          </div>
-        </article>
-
-        <article class="model-card">
-          <div class="model-image"><img src="assets/exterior-brown-barrel.jpg" alt="Terrassiga torusaun"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Terrassiga torusaun</span><strong>3300–3400€</strong></div>
-            <h3>2.5 m termopuidust torusaun terrassiga</h3>
-            <p>Kompaktne mudel 500 mm terrassiga. Sobib ka haagisele paigaldamiseks.</p>
-            <ul>
-              <li>Kogupikkus 2500 mm, läbimõõt 2100 mm</li>
-              <li>Leiliruumi pikkus 1850 mm, jalgade laius 1500 mm</li>
-              <li>Seest köetav keris 3300€, väljast köetav 3400€</li>
-              <li>Magnetlukuga karastatud klaasuks ja pronks tooniga aken</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Küsi pakkumist</a>
-          </div>
-        </article>
-
-        <article class="model-card">
-          <div class="model-image"><img src="assets/interior-light-benches.jpg" alt="Eksklusiivne väike saun"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Kompaktne saun</span><strong>3000€</strong></div>
-            <h3>Eksklusiivne kuusepuust väike saun</h3>
-            <p>Hea soojapidavusega kompaktne saun väiksemasse aeda, veekogu äärde või kümblustünni kõrvale.</p>
-            <ul>
-              <li>Pikkus 2000 mm, kõrgus 2100 mm</li>
-              <li>Pikkust saab tellida vahemikus 1600–2400 mm</li>
-              <li>40 mm seinapaksus ja 28 mm otsaseinad</li>
-              <li>Keris valikul: Harvia M2, Harvia M3 või Stoveman 13</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Võta ühendust</a>
-          </div>
-        </article>
-
-        <article class="model-card">
-          <div class="model-image"><img src="assets/interior-harvia-front.jpg" alt="1700mm termopuidust saun"></div>
-          <div class="model-info">
-            <div class="model-top"><span class="model-type">Kohe olemas</span><strong>1700 mm</strong></div>
-            <h3>Termopuidust kompaktne torusaun</h3>
-            <p>Valmis saun pikkusega 1700 mm ja läbimõõduga 2100 mm. Keris ja korsten hinna sees.</p>
-            <ul>
-              <li>40 mm põhiring ja 28 mm otsaseinad</li>
-              <li>Harvia M3 keris ja isoleeritud roostevaba korsten</li>
-              <li>Karastatud pronks klaasuks ja aken</li>
-              <li>Lava laius 1450 mm, kõik välispinnad töödeldud</li>
-            </ul>
-            <a href="#kontakt" class="mini-btn">Küsi saadavust</a>
-          </div>
-        </article>
-      </div>
-    </section>
-
-    <section class="section included-section">
-      <div class="included-card">
-        <div>
-          <p class="eyebrow">Komplektis ja lisavalikud</p>
-          <h2>Saun tuleb valmis kujul — kõik põhiline on juba kaasas.</h2>
-          <p>Saame pakkuda ka kraanaautoga transporti. Asume Tartu kandis Reolas ning kohapeal saab erinevaid mudeleid vaadata.</p>
-        </div>
-        <div class="included-lists">
-          <div>
-            <h3>Komplektis</h3>
-            <ul>
-              <li>Harvia M3 või Stoveman keris</li>
-              <li>Kerisekivid</li>
-              <li>Isoleeritud roostevaba korsten</li>
-              <li>Tulekindlad plaadid</li>
-              <li>Ventilatsiooniavad</li>
-              <li>Saunakibu ja kulp valitud mudelitel</li>
-            </ul>
-          </div>
-          <div>
-            <h3>Lisavõimalused</h3>
-            <ul>
-              <li>Elektriküttega saun</li>
-              <li>Termopuidust või kuusepuust variant</li>
-              <li>Erinevad värvikombinatsioonid</li>
-              <li>Veepaak valitud mudelitel</li>
-              <li>Kraanatransport ja pealetõstmine</li>
-              <li>Eritellimus soovitud mõõdus</li>
-            </ul>
-          </div>
+      <div class="details-panel">
+        <h2 data-i18n="included_title">Komplektis võimalik</h2>
+        <div class="included-grid">
+          <span>🔥 Harvia M3, Harvia M2 või Stoveman 13M</span>
+          <span>🪨 Kerisekivid</span>
+          <span>💧 Roostevabast terasest veepaak</span>
+          <span>🧱 Tulekindlad plaadid</span>
+          <span>🪟 Karastatud pronksitooni klaasid</span>
+          <span>🏠 Icopal / kärgruberoid katusekate</span>
+          <span>🔐 Lukustatav välisuks, 3 võtit</span>
+          <span>🌬 Ventilatsiooniavad</span>
+          <span>🪣 Saunakibu ja kulp</span>
         </div>
       </div>
     </section>
 
-    <section class="section materials" id="materjalid">
-      <div class="materials-copy">
-        <p class="eyebrow" data-i18n="materialsEye">Materjalid ja värvid</p>
-        <h2 data-i18n="materialsTitle">Termopuit või kuusepuit — sina valid.</h2>
-        <p data-i18n="materialsText">Pakume nii termopuidust kui ka kuusepuust saunu. Lisaks saab valida erinevaid värvikombinatsioone: naturaalne puidutoon, tume katus, hele või tume viimistlus, kontrastsed ääred ja aknaraamid.</p>
-        <div class="material-list">
-          <div><b data-i18n="thermoTitle">Termopuit</b><span data-i18n="thermoText">Stabiilne, vastupidav ja ilusa tumedama tooniga.</span></div>
-          <div><b data-i18n="spruceTitle">Kuusepuit</b><span data-i18n="spruceText">Hele, puhas ja klassikaline põhjamaine välimus.</span></div>
-          <div><b data-i18n="colorsTitle">Värvikombinatsioonid</b><span data-i18n="colorsText">Vali toon, katus, ääred, uksed ja aknaraamid.</span></div>
-        </div>
+    <!-- GALERII -->
+    <section id="gallery" class="page">
+      <div class="page-head">
+        <span class="eyebrow" data-i18n="gallery_eyebrow">Galerii</span>
+        <h1 data-i18n="gallery_title">Valmis saunad ja sisevaated</h1>
+        <p data-i18n="gallery_text">Siin on pildid valmis saunadest ja detailidest, mida klient enne tellimist näha soovib.</p>
       </div>
-      <div class="materials-gallery">
-        <img src="assets/exterior-brown-barrel.jpg" alt="Pruun torusaun" />
-        <img src="assets/exterior-oval-green.jpg" alt="Roheline ovaalsaun" />
-      </div>
-    </section>
 
-    <section class="section dark-section" id="eritellimus">
-      <div class="custom-layout">
-        <div>
-          <p class="eyebrow" data-i18n="customEye">Eritellimus</p>
-          <h2 data-i18n="customTitle">Teeme sauna sinu mõõdu, värvi ja lahenduse järgi.</h2>
-          <p data-i18n="customText">Saad valida, kas soovid ühe- või kahe ruumiga sauna, millised aknad ja uksed tulevad, milline keris sobib ning kas vajad transporti ja paigaldust.</p>
-          <div class="steps">
-            <div><span>01</span><p data-i18n="step1">Kirjuta oma soov ja asukoht</p></div>
-            <div><span>02</span><p data-i18n="step2">Pakume sobiva lahenduse ja hinna</p></div>
-            <div><span>03</span><p data-i18n="step3">Valmistame sauna ja korraldame transpordi</p></div>
-          </div>
-        </div>
-        <img src="assets/workshop-frame.png" alt="Saun tootmises" />
-      </div>
-    </section>
-
-    <section class="section available-box">
-      <div class="available-card">
-        <div>
-          <p class="eyebrow" data-i18n="availableEye">Kohe saadaval</p>
-          <h2 data-i18n="availableTitle">2-ruumiline torusaun</h2>
-          <p data-i18n="availableText">Ruumikas 4.1 m torusaun, mis sobib ideaalselt perele või sõprade seltskonnale.</p>
-          <ul>
-            <li>✔️ Mõõdud: 4.1m pikkus / Ø 2.1m</li>
-            <li>✔️ Eesruum + leiliruum, 100% kokkupandud kujul</li>
-            <li>✔️ Harvia M3 või Stoveman 13M + kerisekivid</li>
-            <li>✔️ 22L roostevaba veepaak ja isoleeritud korsten</li>
-            <li>✔️ Saunakibu ja kulp hinna sees</li>
-          </ul>
-          <strong class="price">4400€</strong>
-          <a href="#kontakt" class="btn primary" data-i18n="availableBtn">Soovin pakkumist</a>
-        </div>
-        <img src="assets/barrel-ready.png" alt="Valmis torusaun" />
-      </div>
-    </section>
-
-    <section class="section" id="galerii">
-      <div class="center-head">
-        <p class="eyebrow" data-i18n="galleryEye">Galerii</p>
-        <h2 data-i18n="galleryTitle">Päris pildid meie saunadest</h2>
-        <p data-i18n="galleryText">Väljast, seest, tootmisest ja transpordist.</p>
-      </div>
       <div class="gallery-grid">
-        <img src="assets/interior-harvia-front.jpg" alt="Harvia keris" />
-        <img src="assets/interior-benches-wide.jpg" alt="Sauna lavad" />
-        <img src="assets/torusaun.jpg" alt="Torusaun" />
-        <img src="assets/exterior-brown-barrel.jpg" alt="Valmis torusaun" />
-        <img src="assets/interior-harvia-side.jpg" alt="Keris" />
-        <img src="assets/exterior-oval-green.jpg" alt="Ovaalsaun" />
-        <img src="assets/delivery-crane.png" alt="Transport" />
-        <img src="assets/workshop-build.png" alt="Tootmine" />
+        <figure><img src="assets/torusaun-valmis.jpg" alt="Valmis torusaun"><figcaption data-i18n="gal1">Valmis torusaun</figcaption></figure>
+        <figure><img src="assets/ovaalsaun-valmis.jpg" alt="Ovaalsaun"><figcaption data-i18n="gal2">Ovaalsaun</figcaption></figure>
+        <figure><img src="assets/keris-sisu.jpg" alt="Leiliruum Harvia kerisega"><figcaption data-i18n="gal3">Leiliruum Harvia kerisega</figcaption></figure>
+        <figure><img src="assets/sisu-lavad.jpg" alt="Sauna lavad"><figcaption data-i18n="gal4">Lepast lavad</figcaption></figure>
+        <figure><img src="assets/harvia-keris.jpg" alt="Harvia keris"><figcaption data-i18n="gal5">Keris ja veepaak</figcaption></figure>
+        <figure><img src="assets/sisu-lavad2.jpg" alt="Sauna sisemus"><figcaption data-i18n="gal6">Puhas ja praktiline sisemus</figcaption></figure>
+        <figure><img src="assets/saun-ohtul.jpg" alt="Saun õhtul"><figcaption data-i18n="gal7">Saun kliendi juures</figcaption></figure>
       </div>
     </section>
 
-    <section class="contact-section" id="kontakt">
-      <div class="contact-card">
-        <p class="eyebrow" data-i18n="contactEye">Kontakt</p>
-        <h2 data-i18n="contactTitle">Küsi pakkumist</h2>
-        <p data-i18n="contactText">Kirjuta, millist sauna soovid: toru, ovaal või kandiline; termopuit või kuusepuit; soovitud mõõdud, keris, värvid ja asukoht. Tartus/Reolas saab saunu ka kohapeal vaadata.</p>
-        <form>
-          <input type="text" placeholder="Sinu nimi" data-i18n-placeholder="namePh" />
-          <input type="tel" placeholder="Telefon" data-i18n-placeholder="phonePh" />
-          <input type="email" placeholder="E-mail" data-i18n-placeholder="emailPh" />
-          <input type="text" placeholder="Asukoht / riik" data-i18n-placeholder="locationPh" />
-          <textarea placeholder="Kirjuta oma soovist..." data-i18n-placeholder="messagePh"></textarea>
-          <button type="submit" class="btn primary" data-i18n="sendBtn">Saada päring</button>
-        </form>
-        <div class="contact-links">
-          <a href="tel:+37256666076">📲 +372 56666076</a>
-          <a href="https://wa.me/37256666076">WhatsApp</a>
+    <!-- TOOTMINE -->
+    <section id="production" class="page">
+      <div class="page-head">
+        <span class="eyebrow" data-i18n="prod_eyebrow">Tootmine ja transport</span>
+        <h1 data-i18n="prod_title">Näeme iga sauna valmimisega vaeva algusest lõpuni</h1>
+        <p data-i18n="prod_text">Siia on paigutatud töökoja, pooleliolevate saunade ja transpordi pildid, et klient näeks päris tootmist.</p>
+      </div>
+
+      <div class="timeline">
+        <div class="timeline-card">
+          <img src="assets/tootmine-puidust-korpus.jpg" alt="Torusaun tootmises">
+          <div>
+            <span class="step">01</span>
+            <h2 data-i18n="prod1_title">Puit ja korpus</h2>
+            <p data-i18n="prod1_text">Sauna põhikorpus valmib 40 mm puidust. Otsaseinad ja vaheseinad tehakse mudeli järgi.</p>
+          </div>
         </div>
+        <div class="timeline-card reverse">
+          <img src="assets/tootmine-sisu.jpg" alt="Sauna sisemuse ehitus">
+          <div>
+            <span class="step">02</span>
+            <h2 data-i18n="prod2_title">Sisemus ja lavad</h2>
+            <p data-i18n="prod2_text">Lavad, istumispingid ja põrandarestid valmistatakse lepast, mis sobib hästi sauna sisemusse.</p>
+          </div>
+        </div>
+        <div class="timeline-card">
+          <img src="assets/tootmine-karkass.jpg" alt="Kandilise sauna karkass">
+          <div>
+            <span class="step">03</span>
+            <h2 data-i18n="prod3_title">Eritellimused</h2>
+            <p data-i18n="prod3_text">Lisaks toru- ja ovaalsaunadele valmistame ka kandilisi lahendusi ning erimõõdus saunu.</p>
+          </div>
+        </div>
+        <div class="timeline-card reverse">
+          <img src="assets/transport-paigaldus.jpg" alt="Sauna transport kraanaga">
+          <div>
+            <span class="step">04</span>
+            <h2 data-i18n="prod4_title">Transport kliendini</h2>
+            <p data-i18n="prod4_text">Saun tarnitakse kokkupandud kujul. Vajadusel aitame transpordi ja tõstega sobivasse kohta.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- KONTAKT -->
+    <section id="contact" class="page">
+      <div class="contact-layout">
+        <div class="contact-info">
+          <span class="eyebrow" data-i18n="contact_eyebrow">Pakkumine</span>
+          <h1 data-i18n="contact_title">Esita taotlus või küsi pakkumist</h1>
+          <p data-i18n="contact_text">Kirjuta, millist sauna soovid. Märgi võimalusel mudel, mõõdud, puidutüüp, värv, asukoht ja kas vajad transporti.</p>
+
+          <div class="contact-cards">
+            <div><strong>📍</strong><span data-i18n="contact_loc">Asume Tartu kandis, Reolas</span></div>
+            <div><strong>📲</strong><span>WhatsApp: +372 56666076</span></div>
+            <div><strong>🚚</strong><span data-i18n="contact_transport">Transport üle Eesti ja Euroopa</span></div>
+          </div>
+        </div>
+
+        <form class="quote-form" onsubmit="handleForm(event)">
+          <h2 data-i18n="form_title">Taotluse vorm</h2>
+          <label>
+            <span data-i18n="form_name">Nimi</span>
+            <input type="text" name="name" required>
+          </label>
+          <label>
+            <span data-i18n="form_phone">Telefon / WhatsApp</span>
+            <input type="tel" name="phone" required>
+          </label>
+          <label>
+            <span data-i18n="form_email">E-mail</span>
+            <input type="email" name="email">
+          </label>
+          <label>
+            <span data-i18n="form_model">Soovitud saun</span>
+            <select name="model">
+              <option data-i18n="opt_barrel">Torusaun</option>
+              <option data-i18n="opt_oval">Ovaalsaun</option>
+              <option data-i18n="opt_square">Kandiline saun</option>
+              <option data-i18n="opt_custom">Eritellimus</option>
+            </select>
+          </label>
+          <label>
+            <span data-i18n="form_location">Asukoht</span>
+            <input type="text" name="location">
+          </label>
+          <label>
+            <span data-i18n="form_message">Kirjelda soovi</span>
+            <textarea name="message" rows="6" placeholder="Näiteks: soovin 2-ruumilist torusauna, termopuidust, transpordiga Harjumaale."></textarea>
+          </label>
+          <button class="btn primary full" type="submit" data-i18n="form_submit">Saada taotlus</button>
+          <p class="form-note" data-i18n="form_note">Vorm avab e-kirja sinu seadmes. Soovi korral saad selle hiljem päris serveriga ühendada.</p>
+        </form>
       </div>
     </section>
   </main>
 
-  <footer>
-    <b>Outdoorsauna</b>
-    <span data-i18n="footerText">Toru-, ovaal- ja kandilised saunad otse tootjalt. Transport üle Euroopa.</span>
-  </footer>
-
-  <div class="mobile-sticky-cta">
-    <a href="tel:+37256666076">Helista</a>
-    <a href="#kontakt">Küsi pakkumist</a>
-  </div>
-
-  <script>
-    const translations = {
-      et: {
-        topbar: "🇪🇪 Toru-, ovaal- ja kandilised saunad otse tootjalt • Transport üle Euroopa • WhatsApp: +372 56666076",
-        navSelection: "Valik", navMaterials: "Materjalid", navCustom: "Eritellimus", navGallery: "Galerii", navOffer: "Küsi pakkumist",
-        badge: "🔥 Otse tootjalt Eestist", heroTitle: "Toru-, ovaal- ja kandilised välisaunad", heroText: "Valmistame termopuidust ja kuusepuust toru-, ovaal- ja kandilisi saunu vastavalt sinu soovile. Saunu saab Tartus/Reolas kohapeal vaadata ning vajadusel aitame transpordiga üle Eesti ja Euroopa.", heroBtn1: "Küsi pakkumist", heroBtn2: "Vaata valikut",
-        q1: "saunatüüpi: toru, ovaal, kandiline", q2: "materjali: termopuit või kuusepuit", q3: "transport üle Euroopa", q4: "eritellimus ja värvivalik",
-        introEye: "Outdoorsauna", introTitle: "Saun, mis sobib täpselt sinu hoovi, suvilasse või majutuskohta.", introText: "Meie saunad ei ole ainult valmis mudelid. Saad valida kuju, materjali, värvi, ruumilahenduse, uksed, aknad, kerise ja muud lisad. Teeme nii kompaktseid 2–4 inimese saunu kui ka suuremaid lahendusi.",
-        selectionEye: "Valik", selectionTitle: "Vali endale sobiv sauna kuju", selectionText: "Kõiki mudeleid saab teha erinevates mõõtudes, toonides ja komplektsuses.",
-        barrelTitle: "Torusaun", barrelText: "Klassikaline ja populaarne lahendus. Kiire soojenemine, tugev konstruktsioon ja mõnus ümar sisetunne.", ovalTitle: "Ovaalsaun", ovalText: "Rohkem ruumi ja modernsem välimus. Sobib hästi perele, puhkemajale või majutusärile.", squareTitle: "Kandiline saun", squareText: "Sirgete seintega praktiline saun, kus on lihtne planeerida lavad, eesruum ja lisad.",
-        roomy: "Ruumikam", modern: "Modernne", customColors: "Värvivalik", practical: "Praktiline", spacious: "Avar", customOrder: "Eritellimus",
-        materialsEye: "Materjalid ja värvid", materialsTitle: "Termopuit või kuusepuit — sina valid.", materialsText: "Pakume nii termopuidust kui ka kuusepuust saunu. Lisaks saab valida erinevaid värvikombinatsioone: naturaalne puidutoon, tume katus, hele või tume viimistlus, kontrastsed ääred ja aknaraamid.", thermoTitle: "Termopuit", thermoText: "Stabiilne, vastupidav ja ilusa tumedama tooniga.", spruceTitle: "Kuusepuit", spruceText: "Hele, puhas ja klassikaline põhjamaine välimus.", colorsTitle: "Värvikombinatsioonid", colorsText: "Vali toon, katus, ääred, uksed ja aknaraamid.",
-        customEye: "Eritellimus", customTitle: "Teeme sauna sinu mõõdu, värvi ja lahenduse järgi.", customText: "Saad valida, kas soovid ühe- või kahe ruumiga sauna, millised aknad ja uksed tulevad, milline keris sobib ning kas vajad transporti ja paigaldust.", step1: "Kirjuta oma soov ja asukoht", step2: "Pakume sobiva lahenduse ja hinna", step3: "Valmistame sauna ja korraldame transpordi",
-        availableEye: "Kohe saadaval", availableTitle: "2-ruumiline torusaun", availableText: "Täielikult komplekteeritud ja valmis koheseks kasutamiseks.", a1: "✔️ Mõõdud: 4.2m pikkus / Ø 2.1m", a2: "✔️ Eesruum + leiliruum", a3: "✔️ Harvia keris", a4: "✔️ Transport võimalik üle Euroopa", availableBtn: "Soovin pakkumist",
-        galleryEye: "Galerii", galleryTitle: "Päris pildid meie saunadest", galleryText: "Väljast, seest, tootmisest ja transpordist.",
-        contactEye: "Kontakt", contactTitle: "Küsi pakkumist", contactText: "Kirjuta, millist sauna soovid: toru, ovaal või kandiline; termopuit või kuusepuit; soovitud mõõdud, keris, värvid ja asukoht. Tartus/Reolas saab saunu ka kohapeal vaadata.", sendBtn: "Saada päring", footerText: "Toru-, ovaal- ja kandilised saunad otse tootjalt. Transport üle Euroopa.",
-        namePh: "Sinu nimi", phonePh: "Telefon", emailPh: "E-mail", locationPh: "Asukoht / riik", messagePh: "Kirjuta oma soovist..."
-      },
-      en: {
-        topbar: "🇪🇪 Barrel, oval and square saunas direct from manufacturer • Delivery across Europe • WhatsApp: +372 56666076",
-        navSelection: "Selection", navMaterials: "Materials", navCustom: "Custom", navGallery: "Gallery", navOffer: "Request offer",
-        badge: "🔥 Direct from Estonia", heroTitle: "Barrel, oval and square outdoor saunas", heroText: "We build thermowood and spruce saunas according to your wishes. Different sizes, color combinations, layouts and delivery across Europe.", heroBtn1: "Request offer", heroBtn2: "View selection",
-        q1: "sauna types: barrel, oval, square", q2: "materials: thermowood or spruce", q3: "delivery across Europe", q4: "custom order and colors",
-        introEye: "Outdoorsauna", introTitle: "A sauna that fits your garden, summer house or rental property.", introText: "Our saunas are not only ready-made models. Choose the shape, material, color, layout, doors, windows, heater and extras. We build compact 2–4 person saunas and larger solutions.",
-        selectionEye: "Selection", selectionTitle: "Choose the sauna shape", selectionText: "All models can be made in different sizes, tones and equipment levels.",
-        barrelTitle: "Barrel sauna", barrelText: "Classic and popular choice. Fast heating, strong construction and a cozy round interior.", ovalTitle: "Oval sauna", ovalText: "More space and a modern look. Great for families, holiday homes and rentals.", squareTitle: "Square sauna", squareText: "A practical sauna with straight walls for easy bench, lounge and extras planning.",
-        roomy: "Spacious", modern: "Modern", customColors: "Colors", practical: "Practical", spacious: "Roomy", customOrder: "Custom",
-        materialsEye: "Materials and colors", materialsTitle: "Thermowood or spruce — your choice.", materialsText: "We offer both thermowood and spruce saunas. You can also choose different color combinations: natural wood, dark roof, light or dark finish, contrasting edges and frames.", thermoTitle: "Thermowood", thermoText: "Stable, durable and with a beautiful darker tone.", spruceTitle: "Spruce", spruceText: "Light, clean and classic Nordic look.", colorsTitle: "Color combinations", colorsText: "Choose finish, roof, trims, doors and window frames.",
-        customEye: "Custom order", customTitle: "We build the sauna by your size, color and layout.", customText: "Choose one or two rooms, windows, doors, heater and whether you need delivery and installation.", step1: "Send your wishes and location", step2: "We offer the solution and price", step3: "We build and arrange delivery",
-        availableEye: "Available now", availableTitle: "2-room barrel sauna", availableText: "Fully equipped and ready for immediate use.", a1: "✔️ Size: 4.2m length / Ø 2.1m", a2: "✔️ Lounge room + sauna room", a3: "✔️ Harvia heater", a4: "✔️ Delivery across Europe", availableBtn: "Request offer",
-        galleryEye: "Gallery", galleryTitle: "Real photos of our saunas", galleryText: "Exterior, interior, production and delivery.",
-        contactEye: "Contact", contactTitle: "Request an offer", contactText: "Tell us what sauna you want: barrel, oval or square; thermowood or spruce; size, colors and location.", sendBtn: "Send request", footerText: "Barrel, oval and square saunas direct from manufacturer. Delivery across Europe.",
-        namePh: "Your name", phonePh: "Phone", emailPh: "E-mail", locationPh: "Location / country", messagePh: "Write your wishes..."
-      },
-      fi: {}, sv: {}
-    };
-    translations.fi = {...translations.en, navSelection:"Valikoima", navMaterials:"Materiaalit", navCustom:"Mittatilaus", navGallery:"Galleria", navOffer:"Pyydä tarjous", heroTitle:"Tynnyri-, ovaali- ja neliösaunat", heroBtn1:"Pyydä tarjous", heroBtn2:"Katso valikoima", contactTitle:"Pyydä tarjous", sendBtn:"Lähetä"};
-    translations.sv = {...translations.en, navSelection:"Utbud", navMaterials:"Material", navCustom:"Specialbeställning", navGallery:"Galleri", navOffer:"Be om offert", heroTitle:"Tunn-, oval- och fyrkantiga bastur", heroBtn1:"Be om offert", heroBtn2:"Se utbud", contactTitle:"Be om offert", sendBtn:"Skicka"};
-
-    const menuToggle = document.querySelector('.menu-toggle');
-    const navbar = document.querySelector('.navbar');
-    if (menuToggle && navbar) {
-      menuToggle.addEventListener('click', () => {
-        const isOpen = navbar.classList.toggle('menu-open');
-        menuToggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
-      document.querySelectorAll('.navlinks a').forEach(link => {
-        link.addEventListener('click', () => {
-          navbar.classList.remove('menu-open');
-          menuToggle.setAttribute('aria-expanded', 'false');
-        });
-      });
-    }
-
-    document.querySelectorAll('.lang').forEach(btn => {
-      btn.addEventListener('click', () => {
-        const lang = btn.dataset.lang;
-        document.querySelectorAll('.lang').forEach(b => b.classList.remove('active'));
-        btn.classList.add('active');
-        document.documentElement.lang = lang;
-        document.querySelectorAll('[data-i18n]').forEach(el => {
-          const key = el.dataset.i18n;
-          if (translations[lang][key]) el.textContent = translations[lang][key];
-        });
-        document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-          const key = el.dataset.i18nPlaceholder;
-          if (translations[lang][key]) el.placeholder = translations[lang][key];
-        });
-      });
-    });
-  </script>
+  <script src="script.js"></script>
 </body>
 </html>

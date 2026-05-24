@@ -493,7 +493,7 @@ figcaption {
 }
 .timeline-card img {
   height:430px;
-  width:100%;
+  width:50%;
   object-fit:cover
 }
 .timeline-card div:not(.step) {
@@ -595,6 +595,14 @@ input:focus,select:focus,textarea:focus {
   font-size:14px;
   text-align:center
 }
+
+.keris-img{
+  height:340px;
+  width:80%;
+  object-fit:cover;
+  object-position:center 70%;
+}
+
 /* Tahvli ja väiksema ekraani vaade */
 @media(max-width:980px) {
   .mobile-menu {

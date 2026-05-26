@@ -19,7 +19,7 @@ function showPage(id){
   document.getElementById('mainNav').classList.remove('open');
   window.scrollTo({top:0,behavior:'smooth'});
 }
-// Avab/sulgeb mobiilis menüü.
+// Avab/sulgeb mobiilis menüü
 function toggleMenu(){document.getElementById('mainNav').classList.toggle('open')}
 // Vahetab kogu lehe keele data-i18n väärtuste järgi.
 function setLanguage(lang){

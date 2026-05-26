@@ -8,7 +8,7 @@
   - :root all on põhivärvid. Muuda neid, kui tahad kogu lehe värvipaletti muuta.
   - .hero muudab avalehe suurt pilti ja kõrgust.
   - .product-card muudab toodete kaarte.
-  - @media plokid on telefoni/tahvli vaate jaoks.
+  - @media plokid on telefoni/tahvli vaate jaoks
 */
 * {
   box-sizing:border-box;

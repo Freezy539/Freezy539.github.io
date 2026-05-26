@@ -124,7 +124,11 @@
 
       <div class="product-grid">
         <article class="product-card featured">
-          <img src="assets/ovaalsaun-valmis.jpg" class="product-main-img" alt="2-ruumiline torusaun">
+          <div class="product-carousel" data-images="assets/ovaalsaun-valmis.jpg|assets/eri_ovaal.jpg|assets/keris-sisu.jpg|assets/sisu-lavad.jpg" data-alt="2-ruumiline torusaun">
+            <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
+            <img src="assets/ovaalsaun-valmis.jpg" class="product-main-img" alt="2-ruumiline torusaun">
+            <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
+          </div>
           <div class="product-body">
             <div class="badge" data-i18n="product1_badge">Populaarne</div>
             <h2 data-i18n="product1_title">2-ruumiline torusaun</h2>
@@ -141,7 +145,11 @@
         </article>
 
         <article class="product-card">
-          <img src="assets/ovaalsaun.jpg" alt="2-ruumiline ovaalsaun">
+          <div class="product-carousel" data-images="assets/ovaalsaun.jpg|assets/ovaalsaun-valmis.jpg|assets/sisu-lavad2.jpg|assets/harvia-keris.jpg" data-alt="2-ruumiline ovaalsaun">
+            <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
+            <img src="assets/ovaalsaun.jpg" alt="2-ruumiline ovaalsaun">
+            <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
+          </div>
           <div class="product-body">
             <div class="badge" data-i18n="product2_badge">Väga ruumikas</div>
             <h2 data-i18n="product2_title">2-ruumiline ovaalsaun</h2>
@@ -158,7 +166,11 @@
         </article>
 
         <article class="product-card">
-          <img src="assets/terassiga_torusaun.jpg" alt="Terrassiga torusaun">
+          <div class="product-carousel" data-images="assets/terassiga_torusaun.jpg|assets/saun-ohtul.jpg|assets/transport-auto.jpg|assets/transport-paigaldus.jpg" data-alt="Terrassiga torusaun">
+            <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
+            <img src="assets/terassiga_torusaun.jpg" alt="Terrassiga torusaun">
+            <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
+          </div>
           <div class="product-body">
             <div class="badge" data-i18n="product3_badge">Kompaktne</div>
             <h2 data-i18n="product3_title">Terrassiga torusaun</h2>
@@ -175,7 +187,11 @@
         </article>
 
         <article class="product-card">
-          <img src="assets/torusaun_1ruum.jpg" alt="Kandiline saun tootmises">
+          <div class="product-carousel" data-images="assets/torusaun_1ruum.jpg|assets/hero-torusaun.jpg|assets/tootmine-toru-uks.jpg|assets/sisu-lavad3.jpg" data-alt="1-ruumiline torusaun">
+            <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
+            <img src="assets/torusaun_1ruum.jpg" alt="1-ruumiline torusaun">
+            <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
+          </div>
           <div class="product-body">
             <div class="badge" data-i18n="product4_badge">Minimalistlik</div>
             <h2 data-i18n="product4_title">1-ruumiline torusaun</h2>
@@ -218,7 +234,7 @@
       </div>
 
       <div class="gallery-grid">
-        <figure><img src="assets/torusaun-valmis.jpg" alt="Valmis torusaun"><figcaption data-i18n="gal1">Erivärvi ovaalsaun</figcaption></figure>
+        <figure><img src="assets/eri_ovaal.jpg" alt="Valmis torusaun"><figcaption data-i18n="gal1">Erivärvi ovaalsaun</figcaption></figure>
         <figure><img src="assets/ovaalsaun-valmis.jpg" alt="Ovaalsaun"><figcaption data-i18n="gal2">2-ruumiline torusaun</figcaption></figure>
         <figure><img src="assets/keris-sisu.jpg" alt="Leiliruum Harvia kerisega"><figcaption data-i18n="gal3">Leiliruum Harvia kerisega</figcaption></figure>
         <figure><img src="assets/sisu-lavad.jpg" alt="Sauna lavad"><figcaption data-i18n="gal4">Lepast lavad</figcaption></figure>
@@ -330,6 +346,11 @@
 <footer class="footer">
   <p>© 2026 OutDoorSauna. Kõik õigused kaitstud.</p>
 </footer>
+
+<div class="image-lightbox" id="imageLightbox" aria-hidden="true">
+  <button class="lightbox-close" type="button" aria-label="Sulge suurem pilt">×</button>
+  <img src="" alt="">
+</div>
 
 <script src="script.js"></script>
 </body>

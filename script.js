@@ -47,3 +47,66 @@ function handleForm(e){
   ].join('\n');
   window.location.href='mailto:info@outdoorsauna.ee?subject=Sauna pakkumise taotlus&body='+encodeURIComponent(body);
 }
+
+function initProductCarousels(){
+  const lightbox=document.getElementById('imageLightbox');
+  const lightboxImg=lightbox ? lightbox.querySelector('img') : null;
+  const closeBtn=lightbox ? lightbox.querySelector('.lightbox-close') : null;
+
+  function openLightbox(src,alt){
+    if(!lightbox || !lightboxImg) return;
+    lightboxImg.src=src;
+    lightboxImg.alt=alt || '';
+    lightbox.classList.add('open');
+    lightbox.setAttribute('aria-hidden','false');
+    document.body.classList.add('lightbox-active');
+  }
+
+  function closeLightbox(){
+    if(!lightbox || !lightboxImg) return;
+    lightbox.classList.remove('open');
+    lightbox.setAttribute('aria-hidden','true');
+    document.body.classList.remove('lightbox-active');
+    lightboxImg.src='';
+  }
+
+  document.querySelectorAll('.product-carousel').forEach(carousel=>{
+    const images=(carousel.dataset.images || '').split('|').filter(Boolean);
+    const img=carousel.querySelector('img');
+    const prev=carousel.querySelector('.prev');
+    const next=carousel.querySelector('.next');
+    let index=0;
+
+    function showImage(nextIndex){
+      if(!images.length || !img) return;
+      index=(nextIndex + images.length) % images.length;
+      img.src=images[index];
+    }
+
+    prev.addEventListener('click',event=>{
+      event.stopPropagation();
+      showImage(index - 1);
+    });
+
+    next.addEventListener('click',event=>{
+      event.stopPropagation();
+      showImage(index + 1);
+    });
+
+    img.addEventListener('click',()=>openLightbox(img.src, carousel.dataset.alt || img.alt));
+  });
+
+  if(lightbox){
+    lightbox.addEventListener('click',event=>{
+      if(event.target===lightbox) closeLightbox();
+    });
+  }
+
+  if(closeBtn) closeBtn.addEventListener('click',closeLightbox);
+
+  document.addEventListener('keydown',event=>{
+    if(event.key==='Escape') closeLightbox();
+  });
+}
+
+document.addEventListener('DOMContentLoaded',initProductCarousels);

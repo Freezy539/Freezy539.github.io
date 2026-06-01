@@ -171,6 +171,15 @@ function initProductCarousels(){
     img.addEventListener('click',()=>openLightbox(img.src, carousel.dataset.alt || img.alt));
   });
 
+
+
+  document.querySelectorAll('.gallery-grid figure img').forEach(galleryImg=>{
+    galleryImg.style.cursor='zoom-in';
+    galleryImg.addEventListener('click',()=>{
+      openLightbox(galleryImg.src, galleryImg.alt || '');
+    });
+  });
+
   if(lightbox){
     lightbox.addEventListener('click',event=>{
       if(event.target===lightbox) closeLightbox();

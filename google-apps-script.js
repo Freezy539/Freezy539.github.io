@@ -43,7 +43,34 @@ function doPost(e) {
     const sheet = getOrCreateSheet_(ss);
     const requestNumber = getNextRequestNumber_(sheet);
     const requestId = 'Päring #' + requestNumber;
-    const receivedAt = new Date();
+    const now = new Date();
+
+    const weekdays = [
+      'Pühapäev',
+      'Esmaspäev',
+      'Teisipäev',
+      'Kolmapäev',
+      'Neljapäev',
+      'Reede',
+      'Laupäev'
+    ];
+
+    const months = [
+      'Jaanuar',
+      'Veebruar',
+      'Märts',
+      'Aprill',
+      'Mai',
+      'Juuni',
+      'Juuli',
+      'August',
+      'September',
+      'Oktoober',
+      'November',
+      'Detsember'
+    ];
+
+    const receivedAt = `${weekdays[now.getDay()]} I ${now.getDate()}. ${months[now.getMonth()]} I ${now.getFullYear()} I ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
 
     sheet.appendRow([
       requestId,
@@ -168,7 +195,7 @@ function sendCustomerAutoReply_(data, requestId) {
         </div>
         <div style="background:#fff;border-radius:18px;padding:28px;margin-top:14px">
           <h2 style="margin-top:0">Tere, ${escapeHtml_(data.name)}!</h2>
-          <p>Aitäh päringu eest. Sinu päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
+          <p>Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
           <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
           <p><b>Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
           <hr style="border:none;border-top:1px solid #eadccc;margin:24px 0">

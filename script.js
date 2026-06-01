@@ -35,7 +35,7 @@ function setLanguage(lang){
 // 1) Loo Google Apps Script projekt ja kleebi sinna failist google-apps-script.js kood.
 // 2) Deploy > New deployment > Web app.
 // 3) Pane saadud Web App URL siia jutumärkide vahele.
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUj2u-IDEJxz13wkqsE4RneV_yxNRJy1EPSDFQFxyWo0e-3HMGqtfKPc0E_5N1jFm1JQ/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzXcYdaGQCDae7W57zsKr3HXslnAhw23spQjh_e_r8roQI7pBmum5ea_lxfkj-AnL4P/exec";
 
 // Varuvariant, kui Google Scripti URL on veel lisamata.
 const FALLBACK_EMAIL = "kethontaevere1@gmail.com";

@@ -17,6 +17,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="OutDoorSauna valmistab toru-, ovaal- ja kandilisi välisaunu otse tootjalt. Küsi pakkumist termopuidust või kuusepuust saunale üle Eesti." />
+  <meta name="keywords" content="torusaun, ovaalsaun, välisaun, saun müük, termopuidust saun, saunad Eestis, OutDoorSauna" />
+  <meta name="robots" content="index, follow" />
+  <meta property="og:title" content="OutDoorSauna | Välisaunad otse tootjalt" />
+  <meta property="og:description" content="Kvaliteetsed toru-, ovaal- ja kandilised saunad. Transport üle Eesti ja Euroopa." />
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://outdoorsauna.ee/" />
+  <meta property="og:image" content="https://outdoorsauna.ee/assets/ovaalsaun-valmis.jpg" />
+  <link rel="canonical" href="https://outdoorsauna.ee/" />
   <title>OutDoorSauna | Toru-, ovaal- ja kandilised saunad</title>
   <link rel="stylesheet" href="style.css" />
 </head>
@@ -302,7 +311,7 @@
           </div>
         </div>
 
-        <!-- Taotluse vorm: praegu avab mailto e-kirja. Päris serveri jaoks tuleb muuta script.js faili handleForm funktsiooni. -->
+        <!-- Taotluse vorm: Google Sheetsi + Gmaili valmidus on script.js ja google-apps-script.js failides. -->
         <form class="quote-form" onsubmit="handleForm(event)">
           <h2 data-i18n="form_title">Taotluse vorm</h2>
           <label>
@@ -315,7 +324,7 @@
           </label>
           <label>
             <span data-i18n="form_email">E-mail</span>
-            <input type="email" name="email">
+            <input type="email" name="email" required>
           </label>
           <label>
             <span data-i18n="form_model">Soovitud saun</span>
@@ -328,15 +337,12 @@
             </select>
           </label>
           <label>
-            <span data-i18n="form_location">Asukoht</span>
-            <input type="text" name="location">
-          </label>
-          <label>
             <span data-i18n="form_message">Kirjelda soovi</span>
             <textarea name="message" rows="6" placeholder="Näiteks: soovin 2-ruumilist torusauna, termopuidust, transpordiga Harjumaale."></textarea>
           </label>
           <button class="btn primary full" type="submit" data-i18n="form_submit">Saada taotlus</button>
-          <p class="form-note" data-i18n="form_note">Vorm avab e-kirja sinu seadmes. Soovi korral saad selle hiljem päris serveriga ühendada.</p>
+          <p id="formStatus" class="form-status" aria-live="polite"></p>
+          <p class="form-note" data-i18n="form_note">Kui Google Sheetsi ühenduse URL on lisatud, salvestub päring tabelisse ja saadetakse Gmailile. Kuni URL puudub, avaneb e-kiri.</p>
         </form>
       </div>
     </section>

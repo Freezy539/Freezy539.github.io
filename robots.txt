@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://outdoorsauna.ee/sitemap.xml

@@ -1,0 +1,245 @@
+/*
+  OutDoorSauna päringuvorm: Google Sheets + Gmail + automaatvastus
+
+  KUIDAS KASUTADA:
+  1) Mine https://script.google.com ja loo uus projekt.
+  2) Kleebi see kood Code.gs faili.
+  3) Vajuta Run > setup. Luba õigused.
+  4) Ava loodud Google Sheet Drive'is. Link ilmub Executions/logidesse.
+  5) Deploy > New deployment > Web app.
+     Execute as: Me
+     Who has access: Anyone
+  6) Kopeeri Web App URL ja pane script.js failis GOOGLE_SCRIPT_URL väärtuseks.
+
+  NB! Kiri tuleb Gmailis tehniliselt sinu Google konto alt, sest Google ei luba veebilehel
+  suvalise kliendi e-maili aadressilt kirju saata. Kliendi e-mail läheb Reply-To väljale.
+*/
+
+const CONFIG = {
+  TO_EMAIL: 'kethontaevere1@gmail.com',
+  COMPANY_NAME: 'OutDoorSauna',
+  COMPANY_PHONE: '+372 56666076',
+  INSTAGRAM_URL: 'https://www.instagram.com/outdoorsaunaeu/',
+  TIKTOK_URL: 'https://www.tiktok.com/@outdoorsaunaeu',
+  WHATSAPP_URL: 'https://wa.me/37256666076',
+  SHEET_NAME: 'Päringud',
+  STATS_SHEET_NAME: 'Statistika',
+  FIRST_REQUEST_NUMBER: 120
+};
+
+function setup() {
+  const ss = getSpreadsheet_();
+  getOrCreateSheet_(ss);
+  updateStats_(ss);
+  Logger.log('Google Sheet valmis: ' + ss.getUrl());
+}
+
+function doPost(e) {
+  try {
+    const data = JSON.parse((e.postData && e.postData.contents) || '{}');
+    validate_(data);
+
+    const ss = getSpreadsheet_();
+    const sheet = getOrCreateSheet_(ss);
+    const requestNumber = getNextRequestNumber_(sheet);
+    const requestId = 'Päring #' + requestNumber;
+    const receivedAt = new Date();
+
+    sheet.appendRow([
+      requestId,
+      receivedAt,
+      data.name || '',
+      data.email || '',
+      data.phone || '',
+      data.model || '',
+      data.message || '',
+      'Uus',
+      data.source || '',
+      data.createdAt || ''
+    ]);
+
+    sendOwnerEmail_(data, requestId, receivedAt, ss.getUrl());
+    sendCustomerAutoReply_(data, requestId);
+    updateStats_(ss);
+
+    return json_({ ok: true, requestId: requestId });
+  } catch (err) {
+    return json_({ ok: false, error: String(err) });
+  }
+}
+
+function validate_(data) {
+  if (!data.name) throw new Error('Nimi puudub.');
+  if (!data.email) throw new Error('E-mail puudub.');
+  if (!data.phone) throw new Error('Telefon puudub.');
+}
+
+function getSpreadsheet_() {
+  const props = PropertiesService.getScriptProperties();
+  const existingId = props.getProperty('SPREADSHEET_ID');
+
+  if (existingId) {
+    return SpreadsheetApp.openById(existingId);
+  }
+
+  const ss = SpreadsheetApp.create('OutDoorSauna päringud');
+  props.setProperty('SPREADSHEET_ID', ss.getId());
+  return ss;
+}
+
+function getOrCreateSheet_(ss) {
+  let sheet = ss.getSheetByName(CONFIG.SHEET_NAME);
+  if (!sheet) sheet = ss.insertSheet(CONFIG.SHEET_NAME);
+
+  if (sheet.getLastRow() === 0) {
+    sheet.appendRow([
+      'Päringu nr',
+      'Aeg',
+      'Nimi',
+      'E-mail',
+      'Telefon',
+      'Sauna tüüp',
+      'Sõnum',
+      'Staatus',
+      'Lehe URL',
+      'Brauseri aeg'
+    ]);
+    sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
+    sheet.setFrozenRows(1);
+    sheet.autoResizeColumns(1, 10);
+  }
+  return sheet;
+}
+
+function getNextRequestNumber_(sheet) {
+  const lastRow = sheet.getLastRow();
+  if (lastRow < 2) return CONFIG.FIRST_REQUEST_NUMBER;
+
+  const values = sheet.getRange(2, 1, lastRow - 1, 1).getValues().flat();
+  const numbers = values
+    .map(v => String(v).match(/#(\d+)/))
+    .filter(Boolean)
+    .map(m => Number(m[1]));
+
+  if (!numbers.length) return CONFIG.FIRST_REQUEST_NUMBER;
+  return Math.max(...numbers) + 1;
+}
+
+function sendOwnerEmail_(data, requestId, receivedAt, sheetUrl) {
+  const subject = requestId + ' – uus sauna päring';
+  const htmlBody = `
+    <div style="font-family:Arial,sans-serif;line-height:1.5;color:#222">
+      <h2 style="margin:0 0 12px">${requestId}</h2>
+      <p><b>Aeg:</b> ${receivedAt}</p>
+      <p><b>Nimi:</b> ${escapeHtml_(data.name)}</p>
+      <p><b>E-mail:</b> ${escapeHtml_(data.email)}</p>
+      <p><b>Telefon:</b> ${escapeHtml_(data.phone)}</p>
+      <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
+      <p><b>Sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
+      <p><a href="${sheetUrl}">Ava Google Sheets tabel</a></p>
+    </div>
+  `;
+
+  MailApp.sendEmail({
+    to: CONFIG.TO_EMAIL,
+    subject: subject,
+    replyTo: data.email || '',
+    htmlBody: htmlBody,
+    body:
+      requestId + '\n\n' +
+      'Nimi: ' + (data.name || '') + '\n' +
+      'E-mail: ' + (data.email || '') + '\n' +
+      'Telefon: ' + (data.phone || '') + '\n' +
+      'Sauna tüüp: ' + (data.model || '') + '\n\n' +
+      'Sõnum:\n' + (data.message || '') + '\n\n' +
+      'Google Sheet: ' + sheetUrl
+  });
+}
+
+function sendCustomerAutoReply_(data, requestId) {
+  const subject = 'Aitäh päringu eest – ' + CONFIG.COMPANY_NAME + ' / Thank you for your request';
+
+  const htmlBody = `
+    <div style="margin:0;padding:0;background:#f5efe7;font-family:Arial,sans-serif;color:#2b1b12">
+      <div style="max-width:620px;margin:0 auto;padding:28px 16px">
+        <div style="background:#20140d;color:#fff;border-radius:18px;padding:28px">
+          <h1 style="margin:0 0 10px;font-size:26px">${CONFIG.COMPANY_NAME}</h1>
+          <p style="margin:0;color:#d9c2aa">${requestId}</p>
+        </div>
+        <div style="background:#fff;border-radius:18px;padding:28px;margin-top:14px">
+          <h2 style="margin-top:0">Tere, ${escapeHtml_(data.name)}!</h2>
+          <p>Aitäh päringu eest. Sinu päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
+          <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
+          <p><b>Sinu sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
+          <hr style="border:none;border-top:1px solid #eadccc;margin:24px 0">
+          <h2>Hello, ${escapeHtml_(data.name)}!</h2>
+          <p>Thank you for your request. We have received it successfully and will review it as soon as possible.</p>
+          <p><b>Sauna type:</b> ${escapeHtml_(data.model)}</p>
+          <div style="margin-top:26px">
+            <a href="${CONFIG.WHATSAPP_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">WhatsApp</a>
+            <a href="${CONFIG.INSTAGRAM_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">Instagram</a>
+            <a href="${CONFIG.TIKTOK_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">TikTok</a>
+          </div>
+          <p style="margin-top:24px;color:#6b5a4c">${CONFIG.COMPANY_NAME}<br>WhatsApp: ${CONFIG.COMPANY_PHONE}</p>
+        </div>
+      </div>
+    </div>
+  `;
+
+  MailApp.sendEmail({
+    to: data.email,
+    subject: subject,
+    htmlBody: htmlBody,
+    body:
+      'Tere, ' + (data.name || '') + '!\n\n' +
+      'Aitäh päringu eest. Sinu päring on edukalt vastu võetud.\n' +
+      requestId + '\n\n' +
+      'Hello, ' + (data.name || '') + '!\n\n' +
+      'Thank you for your request. We have received it successfully.\n\n' +
+      CONFIG.COMPANY_NAME + '\nWhatsApp: ' + CONFIG.COMPANY_PHONE
+  });
+}
+
+function updateStats_(ss) {
+  const sheet = getOrCreateSheet_(ss);
+  let stats = ss.getSheetByName(CONFIG.STATS_SHEET_NAME);
+  if (!stats) stats = ss.insertSheet(CONFIG.STATS_SHEET_NAME);
+
+  const lastRow = sheet.getLastRow();
+  const total = Math.max(0, lastRow - 1);
+  let newCount = 0;
+  let answeredCount = 0;
+  let doneCount = 0;
+
+  if (total > 0) {
+    const statuses = sheet.getRange(2, 8, total, 1).getValues().flat();
+    newCount = statuses.filter(v => String(v).toLowerCase() === 'uus').length;
+    answeredCount = statuses.filter(v => String(v).toLowerCase() === 'vastatud').length;
+    doneCount = statuses.filter(v => String(v).toLowerCase() === 'tehtud').length;
+  }
+
+  stats.clear();
+  stats.appendRow(['Näitaja', 'Väärtus']);
+  stats.appendRow(['Päringuid kokku', total]);
+  stats.appendRow(['Uued', newCount]);
+  stats.appendRow(['Vastatud', answeredCount]);
+  stats.appendRow(['Tehtud', doneCount]);
+  stats.appendRow(['Viimati uuendatud', new Date()]);
+  stats.getRange(1, 1, 1, 2).setFontWeight('bold');
+  stats.autoResizeColumns(1, 2);
+}
+
+function escapeHtml_(value) {
+  return String(value || '')
+    .replace(/&/g, '&amp;')
+    .replace(/</g, '&lt;')
+    .replace(/>/g, '&gt;')
+    .replace(/"/g, '&quot;')
+    .replace(/'/g, '&#039;');
+}
+
+function json_(obj) {
+  return ContentService
+    .createTextOutput(JSON.stringify(obj))
+    .setMimeType(ContentService.MimeType.JSON);
+}

@@ -31,21 +31,83 @@ function setLanguage(lang){
   document.getElementById('langEn').classList.toggle('active', lang==='en');
   document.documentElement.lang=lang;
 }
-// Taotluse vorm. Praegu teeb valmis e-kirja. Siia saad hiljem panna päris backend/serveri ühenduse.
-function handleForm(e){
-  e.preventDefault();
-  const data=new FormData(e.target);
-  const body=[
-    'Nimi: '+(data.get('name')||''),
-    'Telefon: '+(data.get('phone')||''),
-    'E-mail: '+(data.get('email')||''),
-    'Soovitud saun: '+(data.get('model')||''),
-    'Asukoht: '+(data.get('location')||''),
+// Google Sheetsi + Gmaili ühendus.
+// 1) Loo Google Apps Script projekt ja kleebi sinna failist google-apps-script.js kood.
+// 2) Deploy > New deployment > Web app.
+// 3) Pane saadud Web App URL siia jutumärkide vahele.
+const GOOGLE_SCRIPT_URL = "";
+
+// Varuvariant, kui Google Scripti URL on veel lisamata.
+const FALLBACK_EMAIL = "kethontaevere1@gmail.com";
+
+function setFormStatus(message, type){
+  const status = document.getElementById('formStatus');
+  if(!status) return;
+  status.textContent = message || '';
+  status.className = 'form-status' + (type ? ' ' + type : '');
+}
+
+function formDataToObject(form){
+  const data = new FormData(form);
+  return {
+    createdAt: new Date().toISOString(),
+    name: (data.get('name') || '').trim(),
+    phone: (data.get('phone') || '').trim(),
+    email: (data.get('email') || '').trim(),
+    model: (data.get('model') || '').trim(),
+    message: (data.get('message') || '').trim(),
+    source: window.location.href
+  };
+}
+
+function buildMailto(payload){
+  const body = [
+    'Nimi: ' + payload.name,
+    'Telefon: ' + payload.phone,
+    'E-mail: ' + payload.email,
+    'Soovitud saun: ' + payload.model,
     '',
     'Kirjeldus:',
-    data.get('message')||''
+    payload.message
   ].join('\n');
-  window.location.href='mailto:info@outdoorsauna.ee?subject=Sauna pakkumise taotlus&body='+encodeURIComponent(body);
+
+  return 'mailto:' + FALLBACK_EMAIL + '?subject=' + encodeURIComponent('Sauna pakkumise taotlus') + '&body=' + encodeURIComponent(body);
+}
+
+// Taotluse vorm.
+// Kui GOOGLE_SCRIPT_URL on lisatud, saadab andmed Google Sheetsi ja Gmailile.
+// Kui URL on tühi, avab varuvariandina e-kirja.
+async function handleForm(e){
+  e.preventDefault();
+  const form = e.target;
+  const submitButton = form.querySelector('button[type="submit"]');
+  const payload = formDataToObject(form);
+
+  if(!GOOGLE_SCRIPT_URL){
+    window.location.href = buildMailto(payload);
+    return;
+  }
+
+  try{
+    if(submitButton) submitButton.disabled = true;
+    setFormStatus('Saadan päringut...', '');
+
+    await fetch(GOOGLE_SCRIPT_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {'Content-Type': 'text/plain;charset=utf-8'},
+      body: JSON.stringify(payload)
+    });
+
+    form.reset();
+    setFormStatus('Päring saadetud! Sinu emailile saadetakse ka automaatne kinnitus.', 'success');
+  }catch(error){
+    console.error(error);
+    setFormStatus('Midagi läks valesti. Ava e-kiri ja saada päring käsitsi.', 'error');
+    window.location.href = buildMailto(payload);
+  }finally{
+    if(submitButton) submitButton.disabled = false;
+  }
 }
 
 function initProductCarousels(){

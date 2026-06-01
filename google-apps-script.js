@@ -21,7 +21,7 @@ const CONFIG = {
   COMPANY_PHONE: '+372 56999913',
   INSTAGRAM_URL: 'https://www.instagram.com/outdoorsaunaeu/',
   TIKTOK_URL: 'https://www.tiktok.com/@outdoorsaunaeu',
-  WHATSAPP_URL: 'https://wa.me/37256999913',
+  SITE_URL: 'https://freezy539.github.io',
   SHEET_NAME: 'Päringud',
   STATS_SHEET_NAME: 'Statistika',
   FIRST_REQUEST_NUMBER: 1
@@ -185,34 +185,46 @@ function sendOwnerEmail_(data, requestId, receivedAt, sheetUrl) {
 
 function sendCustomerAutoReply_(data, requestId) {
   const subject = 'Aitäh päringu eest – ' + CONFIG.COMPANY_NAME + ' / Thank you for your request';
-
   const htmlBody = `
-    <div style="margin:0;padding:0;background:#f5efe7;font-family:Arial,sans-serif;color:#2b1b12">
-      <div style="max-width:620px;margin:0 auto;padding:28px 16px">
-        <div style="background:#20140d;color:#fff;border-radius:18px;padding:28px">
-          <h1 style="margin:0 0 10px;font-size:26px">${CONFIG.COMPANY_NAME}</h1>
-          <p style="margin:0;color:#d9c2aa">${requestId}</p>
+    <div style="margin:0;padding:0;background:#f3eee8;font-family:Arial,Helvetica,sans-serif;color:#2b1b12">
+      <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">
+        Aitäh päringu eest. Teie päring on edukalt vastu võetud.
+      </div>
+
+      <div style="max-width:660px;margin:0 auto;padding:38px 14px">
+        <div style="background:#24160f;border-radius:24px 24px 0 0;padding:32px 32px 30px;color:#ffffff;border-bottom:4px solid #b98255">
+          <p style="margin:0 0 12px;color:#d8b18d;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Päring vastu võetud</p>
+          <h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.3px">${CONFIG.COMPANY_NAME}</h1>
+          <p style="margin:13px 0 0;color:#ead8c6;font-size:14px;line-height:1.5">Aitäh, et võtsite meiega ühendust. Vastame esimesel võimalusel.</p>
         </div>
-        <div style="background:#fff;border-radius:18px;padding:28px;margin-top:14px">
-          <h2 style="margin-top:0">Tere, ${escapeHtml_(data.name)}!</h2>
-          <p>Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
-          <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
-          <p><b>Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
-          <hr style="border:none;border-top:1px solid #eadccc;margin:24px 0">
-          <h2>Hello, ${escapeHtml_(data.name)}!</h2>
-          <p>Thank you for your request. We have received it successfully and will review it as soon as possible.</p>
-          <p><b>Sauna type:</b> ${escapeHtml_(data.model)}</p>
-          <div style="margin-top:26px">
-            <a href="${CONFIG.WHATSAPP_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">WhatsApp</a>
-            <a href="${CONFIG.INSTAGRAM_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">Instagram</a>
-            <a href="${CONFIG.TIKTOK_URL}" style="display:inline-block;background:#2b1b12;color:#fff;text-decoration:none;padding:12px 16px;border-radius:999px;margin:4px">TikTok</a>
+
+        <div style="background:#ffffff;border-left:1px solid #eaded0;border-right:1px solid #eaded0;padding:30px 32px 28px;box-shadow:0 18px 45px rgba(38,24,16,.10)">
+          <h2 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#2b1b12">Tere, ${escapeHtml_(data.name)}!</h2>
+          <p style="margin:0 0 20px;font-size:16px;line-height:1.65;color:#4b382b">Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
+
+          <div style="background:#fbf8f4;border:1px solid #eaded0;border-radius:18px;padding:20px 20px 18px;margin:24px 0">
+            <p style="margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9a6b45">Päringu kokkuvõte</p>
+            <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Päringu number:</b> ${requestId}</p>
+            <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
+            <p style="margin:0;font-size:15px;line-height:1.65;color:#4b382b"><b style="color:#2b1b12">Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
           </div>
-          <p style="margin-top:24px;color:#6b5a4c">${CONFIG.COMPANY_NAME}<br>WhatsApp: ${CONFIG.COMPANY_PHONE}</p>
+
+          <div style="height:1px;background:#eaded0;margin:28px 0"></div>
+
+          <h2 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#2b1b12">Hello, ${escapeHtml_(data.name)}!</h2>
+          <p style="margin:0 0 18px;font-size:16px;line-height:1.65;color:#4b382b">Thank you for your request. We have received it successfully and will review it as soon as possible.</p>
+          <p style="margin:0;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Sauna type:</b> ${escapeHtml_(data.model)}</p>
+        </div>
+
+        <div style="background:#fbf8f4;border:1px solid #eaded0;border-top:0;border-radius:0 0 24px 24px;padding:24px 32px 30px;text-align:center;box-shadow:0 18px 45px rgba(38,24,16,.10)">
+          <p style="margin:0 0 14px;color:#6f5543;font-size:14px;font-weight:700;letter-spacing:.3px">Jälgi meid / Follow us</p>
+          <a href="${CONFIG.INSTAGRAM_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">Instagram</a>
+          <a href="${CONFIG.TIKTOK_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">TikTok</a>
+          <p style="margin:22px 0 0;color:#6b5a4c;font-size:14px;line-height:1.65">${CONFIG.COMPANY_NAME}<br>Telefon: ${CONFIG.COMPANY_PHONE}</p>
         </div>
       </div>
     </div>
   `;
-
   MailApp.sendEmail({
     to: data.email,
     subject: subject,
@@ -223,7 +235,7 @@ function sendCustomerAutoReply_(data, requestId) {
       requestId + '\n\n' +
       'Hello, ' + (data.name || '') + '!\n\n' +
       'Thank you for your request. We have received it successfully.\n\n' +
-      CONFIG.COMPANY_NAME + '\nWhatsApp: ' + CONFIG.COMPANY_PHONE
+      CONFIG.COMPANY_NAME + '\nTelefon: ' + CONFIG.COMPANY_PHONE
   });
 }
 

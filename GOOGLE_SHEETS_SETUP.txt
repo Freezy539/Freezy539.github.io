@@ -39,3 +39,33 @@ HILJEM, KUI DOMEEN JA SERVER TULEVAD:
 - Muuda TO_EMAIL väärtus google-apps-script.js failis firma emailiks.
 - Muuda robots.txt ja sitemap.xml domeen vajadusel õigeks.
 - Kui tuleb info@outdoorsauna.ee email, saab selle panna päringute vastuvõtjaks.
+
+
+----------------------------------------
+HILJEM GMAILI / FIRMA EMAILI MUUTMINE
+----------------------------------------
+Kui tahad hiljem, et päringud tuleksid uuele Gmailile või firma emailile, tee nii:
+
+1. Ava Google Apps Script projekt, kuhu panid google-apps-script.js koodi.
+2. Leia koodi algusest CONFIG plokk.
+3. Muuda rida:
+   TO_EMAIL: 'kethontaevere1@gmail.com',
+
+   näiteks:
+   TO_EMAIL: 'info@outdoorsauna.ee',
+
+4. Vajuta ülevalt Save.
+5. Tee uus deployment:
+   Deploy > Manage deployments > pliiatsi ikoon/Edit > Version: New version > Deploy.
+6. Kui Web App URL jääb samaks, ei pea lehe script.js failis midagi muutma.
+7. Kui Google annab uue Web App URL-i, kopeeri see ja pane script.js failis siia:
+   const GOOGLE_SCRIPT_URL = "SINU_UUS_WEB_APP_URL";
+
+NB! Google saadab kirja tehniliselt selle Google konto alt, millega Apps Script töötab. Kliendi email pannakse Reply-To väljale, et saaksid Gmailis lihtsalt Reply vajutada.
+
+----------------------------------------
+PÄRINGU NUMBRID
+----------------------------------------
+Päringu numbrid algavad nüüd #1-st.
+Kui Google Sheets tabelis on juba vanad testpäringud sees, siis järgmine number tuleb olemasoleva suurima numbri järgi.
+Kui tahad päriselt uuesti #1-st alustada, kustuta Google Sheetsist vanad päringu read ära või loo Apps Scriptis uus tabel.

@@ -18,13 +18,13 @@
 const CONFIG = {
   TO_EMAIL: 'kethontaevere1@gmail.com',
   COMPANY_NAME: 'OutDoorSauna',
-  COMPANY_PHONE: '+372 56666076',
+  COMPANY_PHONE: '+372 56999913',
   INSTAGRAM_URL: 'https://www.instagram.com/outdoorsaunaeu/',
   TIKTOK_URL: 'https://www.tiktok.com/@outdoorsaunaeu',
-  WHATSAPP_URL: 'https://wa.me/37256666076',
+  WHATSAPP_URL: 'https://wa.me/37256999913',
   SHEET_NAME: 'Päringud',
   STATS_SHEET_NAME: 'Statistika',
-  FIRST_REQUEST_NUMBER: 120
+  FIRST_REQUEST_NUMBER: 1
 };
 
 function setup() {
@@ -170,7 +170,7 @@ function sendCustomerAutoReply_(data, requestId) {
           <h2 style="margin-top:0">Tere, ${escapeHtml_(data.name)}!</h2>
           <p>Aitäh päringu eest. Sinu päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
           <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
-          <p><b>Sinu sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
+          <p><b>Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
           <hr style="border:none;border-top:1px solid #eadccc;margin:24px 0">
           <h2>Hello, ${escapeHtml_(data.name)}!</h2>
           <p>Thank you for your request. We have received it successfully and will review it as soon as possible.</p>
@@ -192,7 +192,7 @@ function sendCustomerAutoReply_(data, requestId) {
     htmlBody: htmlBody,
     body:
       'Tere, ' + (data.name || '') + '!\n\n' +
-      'Aitäh päringu eest. Sinu päring on edukalt vastu võetud.\n' +
+      'Aitäh päringu eest. Teie päring on edukalt vastu võetud.\n' +
       requestId + '\n\n' +
       'Hello, ' + (data.name || '') + '!\n\n' +
       'Thank you for your request. We have received it successfully.\n\n' +

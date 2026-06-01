@@ -35,7 +35,7 @@ function setLanguage(lang){
 // 1) Loo Google Apps Script projekt ja kleebi sinna failist google-apps-script.js kood.
 // 2) Deploy > New deployment > Web app.
 // 3) Pane saadud Web App URL siia jutumärkide vahele.
-const GOOGLE_SCRIPT_URL = "";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzUj2u-IDEJxz13wkqsE4RneV_yxNRJy1EPSDFQFxyWo0e-3HMGqtfKPc0E_5N1jFm1JQ/exec";
 
 // Varuvariant, kui Google Scripti URL on veel lisamata.
 const FALLBACK_EMAIL = "kethontaevere1@gmail.com";
@@ -45,6 +45,12 @@ function setFormStatus(message, type){
   if(!status) return;
   status.textContent = message || '';
   status.className = 'form-status' + (type ? ' ' + type : '');
+}
+
+function setSubmitState(button, text, disabled){
+  if(!button) return;
+  button.disabled = !!disabled;
+  if(text) button.textContent = text;
 }
 
 function formDataToObject(form){
@@ -81,16 +87,18 @@ async function handleForm(e){
   e.preventDefault();
   const form = e.target;
   const submitButton = form.querySelector('button[type="submit"]');
+  const originalButtonText = submitButton ? submitButton.textContent : 'Saada taotlus';
   const payload = formDataToObject(form);
 
   if(!GOOGLE_SCRIPT_URL){
+    setFormStatus('E-kiri avaneb. Päringu saatmiseks vajuta seal Send/Saada.', 'info');
     window.location.href = buildMailto(payload);
     return;
   }
 
   try{
-    if(submitButton) submitButton.disabled = true;
-    setFormStatus('Saadan päringut...', '');
+    setSubmitState(submitButton, 'Palun oota...', true);
+    setFormStatus('', '');
 
     await fetch(GOOGLE_SCRIPT_URL, {
       method: 'POST',
@@ -100,13 +108,18 @@ async function handleForm(e){
     });
 
     form.reset();
-    setFormStatus('Päring saadetud! Sinu emailile saadetakse ka automaatne kinnitus.', 'success');
+    setSubmitState(submitButton, 'Saadetud ✓', true);
+    setFormStatus('Aitäh! Võtame teiega ühendust esimesel võimalusel.', 'success');
+
+    setTimeout(function(){
+      setSubmitState(submitButton, originalButtonText, false);
+      setFormStatus('', '');
+    }, 6000);
   }catch(error){
     console.error(error);
-    setFormStatus('Midagi läks valesti. Ava e-kiri ja saada päring käsitsi.', 'error');
+    setSubmitState(submitButton, originalButtonText, false);
+    setFormStatus('Vormi automaatne saatmine ei õnnestunud. Ava e-kiri ja vajuta Send/Saada.', 'error');
     window.location.href = buildMailto(payload);
-  }finally{
-    if(submitButton) submitButton.disabled = false;
   }
 }
 

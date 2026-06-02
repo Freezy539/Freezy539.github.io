@@ -35,7 +35,7 @@ function setLanguage(lang){
 // 1) Loo Google Apps Script projekt ja kleebi sinna failist google-apps-script.js kood.
 // 2) Deploy > New deployment > Web app.
 // 3) Pane saadud Web App URL siia jutumärkide vahele.
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwLVrkqCBhMA30WgYnp6jq1uGCKmuFDBetUgHyTEFhq6mRc8Cary8MO5A1gmiEcqrbO/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWUQTXKMOacFeykE0gk8t3CaBqAv_89zuEix_N7QebZ43chooWek6sZ29eA6ZeVwWN/exec";
 
 // Varuvariant, kui Google Scripti URL on veel lisamata.
 const FALLBACK_EMAIL = "kethontaevere1@gmail.com";
@@ -61,6 +61,8 @@ function formDataToObject(form){
     phone: (data.get('phone') || '').trim(),
     email: (data.get('email') || '').trim(),
     model: (data.get('model') || '').trim(),
+    transport: (data.get('transport') || '').trim(),
+    location: (data.get('location') || '').trim(),
     message: (data.get('message') || '').trim(),
     source: window.location.href
   };
@@ -110,6 +112,9 @@ async function handleForm(e){
     form.reset();
     setSubmitState(submitButton, 'Saadetud ✓', true);
     setFormStatus('Aitäh! Võtame teiega ühendust esimesel võimalusel.', 'success');
+    locationField.style.display = 'none';
+    locationInput.required = false;
+    locationInput.value = '';
 
     setTimeout(function(){
       setSubmitState(submitButton, originalButtonText, false);
@@ -194,3 +199,18 @@ function initProductCarousels(){
 }
 
 document.addEventListener('DOMContentLoaded',initProductCarousels);
+
+const transportSelect = document.getElementById('transport');
+const locationField = document.getElementById('locationField');
+const locationInput = document.getElementById('location');
+
+transportSelect.addEventListener('change', () => {
+  if (transportSelect.value === 'Jah' || transportSelect.value === 'Pole kindel') {
+    locationField.style.display = 'block';
+    locationInput.required = true;
+  } else {
+    locationField.style.display = 'none';
+    locationInput.required = false;
+    locationInput.value = '';
+  }
+});

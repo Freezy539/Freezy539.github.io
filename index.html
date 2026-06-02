@@ -336,6 +336,19 @@
               <option data-i18n="opt_custom">Muu</option>
             </select>
           </label>
+          <label class="full-field">
+            Kas soovite transporti?
+            <select name="transport" id="transport" required>
+              <option value="">Vali...</option>
+              <option value="Jah">Jah</option>
+              <option value="Ei">Ei</option>
+              <option value="Pole kindel">Pole kindel</option>
+            </select>
+          </label>          
+          <label id="locationField" class="full-field" style="display:none;">
+            <span>Asukoht</span>
+            <input type="text" name="location" id="location" placeholder="Näiteks Tallinn, Tartu, Pärnu">
+          </label>          
           <label>
             <span data-i18n="form_message">Kirjelda soovi</span>
             <textarea name="message" rows="6" placeholder="Näiteks: soovin 2-ruumilist torusauna, termopuidust, transpordiga Harjumaale."></textarea>

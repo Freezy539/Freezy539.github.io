@@ -46,5 +46,9 @@ anda sellele uus id ja lisada ülemisse menüüsse nupp:
 
 ## Vorm
 
-Kontaktivorm asub `index.html` faili lõpus. Praegu avab see kasutaja seadmes e-kirja.
-Päris veebimajutuses saab hiljem ühendada vormi serveri, Formspree, Netlify Forms või muu lahendusega.
+Kontaktivorm asub `index.html` faili lõpus.
+
+Vorm saadab päringu `script.js` faili kaudu Google Apps Scripti Web App URL-ile.
+Google Apps Script salvestab päringu Google Sheetsi tabelisse, saadab firma Gmailile teavituse ning kliendile automaatvastuse.
+
+Kui `GOOGLE_SCRIPT_URL` väärtus on `script.js` failis tühi, kasutatakse varuvariandina mailto-linki ehk avaneb kasutaja e-posti rakendus.

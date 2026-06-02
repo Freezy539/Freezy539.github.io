@@ -23,14 +23,12 @@ const CONFIG = {
   TIKTOK_URL: 'https://www.tiktok.com/@outdoorsaunaeu',
   SITE_URL: 'https://freezy539.github.io',
   SHEET_NAME: 'Päringud',
-  STATS_SHEET_NAME: 'Statistika',
   FIRST_REQUEST_NUMBER: 1
 };
 
 function setup() {
   const ss = getSpreadsheet_();
   getOrCreateSheet_(ss);
-  updateStats_(ss);
   Logger.log('Google Sheet valmis: ' + ss.getUrl());
 }
 
@@ -79,15 +77,12 @@ function doPost(e) {
       data.email || '',
       data.phone || '',
       data.model || '',
-      data.message || '',
-      'Uus',
-      data.source || '',
-      data.createdAt || ''
+      data.transport || '',
+      data.location || '',
+      data.message || ''
     ]);
-
     sendOwnerEmail_(data, requestId, receivedAt, ss.getUrl());
     sendCustomerAutoReply_(data, requestId);
-    updateStats_(ss);
 
     return json_({ ok: true, requestId: requestId });
   } catch (err) {
@@ -126,14 +121,13 @@ function getOrCreateSheet_(ss) {
       'E-mail',
       'Telefon',
       'Sauna tüüp',
+      'Transport',
+      'Asukoht',
       'Sõnum',
-      'Staatus',
-      'Lehe URL',
-      'Brauseri aeg'
     ]);
-    sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
+    sheet.getRange(1, 1, 1, 9).setFontWeight('bold');
     sheet.setFrozenRows(1);
-    sheet.autoResizeColumns(1, 10);
+    sheet.autoResizeColumns(1, 9);
   }
   return sheet;
 }
@@ -162,8 +156,35 @@ function sendOwnerEmail_(data, requestId, receivedAt, sheetUrl) {
       <p><b>E-mail:</b> ${escapeHtml_(data.email)}</p>
       <p><b>Telefon:</b> ${escapeHtml_(data.phone)}</p>
       <p><b>Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
+      <p><b>Transport:</b> ${escapeHtml_(data.transport)}</p>
+      <p><b>Asukoht:</b> ${escapeHtml_(data.location)}</p>
+      
       <p><b>Sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
-      <p><a href="${sheetUrl}">Ava Google Sheets tabel</a></p>
+      
+      <div style="margin-top:20px;margin-bottom:20px">
+        <a href="tel:${escapeHtml_(data.phone)}"
+           style="display:inline-block;
+                  background:#24160f;
+                  color:#ffffff;
+                  text-decoration:none;
+                  padding:12px 18px;
+                  border-radius:10px;
+                  font-weight:700;
+                  margin-right:10px;">
+          📞 Helista kliendile
+        </a>
+      
+        <a href="mailto:${escapeHtml_(data.email)}"
+           style="display:inline-block;
+                  background:#b98255;
+                  color:#ffffff;
+                  text-decoration:none;
+                  padding:12px 18px;
+                  border-radius:10px;
+                  font-weight:700;">
+          ✉️ Saada e-mail
+        </a>
+      </div>
     </div>
   `;
 
@@ -177,10 +198,10 @@ function sendOwnerEmail_(data, requestId, receivedAt, sheetUrl) {
       'Nimi: ' + (data.name || '') + '\n' +
       'E-mail: ' + (data.email || '') + '\n' +
       'Telefon: ' + (data.phone || '') + '\n' +
-      'Sauna tüüp: ' + (data.model || '') + '\n\n' +
-      'Sõnum:\n' + (data.message || '') + '\n\n' +
-      'Google Sheet: ' + sheetUrl
-  });
+      'Sauna tüüp: ' + (data.model || '') + '\n' +
+      'Transport: ' + (data.transport || '') + '\n' +
+      'Asukoht: ' + (data.location || '') + '\n\n' +
+      'Sõnum:\n' + (data.message || '')  });
 }
 
 function sendCustomerAutoReply_(data, requestId) {
@@ -195,7 +216,6 @@ function sendCustomerAutoReply_(data, requestId) {
         <div style="background:#24160f;border-radius:24px 24px 0 0;padding:32px 32px 30px;color:#ffffff;border-bottom:4px solid #b98255">
           <p style="margin:0 0 12px;color:#d8b18d;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Päring vastu võetud</p>
           <h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.3px">${CONFIG.COMPANY_NAME}</h1>
-          <p style="margin:13px 0 0;color:#ead8c6;font-size:14px;line-height:1.5">Aitäh, et võtsite meiega ühendust. Vastame esimesel võimalusel.</p>
         </div>
 
         <div style="background:#ffffff;border-left:1px solid #eaded0;border-right:1px solid #eaded0;padding:30px 32px 28px;box-shadow:0 18px 45px rgba(38,24,16,.10)">
@@ -203,8 +223,7 @@ function sendCustomerAutoReply_(data, requestId) {
           <p style="margin:0 0 20px;font-size:16px;line-height:1.65;color:#4b382b">Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
 
           <div style="background:#fbf8f4;border:1px solid #eaded0;border-radius:18px;padding:20px 20px 18px;margin:24px 0">
-            <p style="margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9a6b45">Päringu kokkuvõte</p>
-            <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Päringu number:</b> ${requestId}</p>
+            <p style="margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9a6b45">Kokkuvõte</p>
             <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
             <p style="margin:0;font-size:15px;line-height:1.65;color:#4b382b"><b style="color:#2b1b12">Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
           </div>
@@ -220,7 +239,6 @@ function sendCustomerAutoReply_(data, requestId) {
           <p style="margin:0 0 14px;color:#6f5543;font-size:14px;font-weight:700;letter-spacing:.3px">Jälgi meid / Follow us</p>
           <a href="${CONFIG.INSTAGRAM_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">Instagram</a>
           <a href="${CONFIG.TIKTOK_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">TikTok</a>
-          <p style="margin:22px 0 0;color:#6b5a4c;font-size:14px;line-height:1.65">${CONFIG.COMPANY_NAME}<br>Telefon: ${CONFIG.COMPANY_PHONE}</p>
         </div>
       </div>
     </div>
@@ -239,34 +257,6 @@ function sendCustomerAutoReply_(data, requestId) {
   });
 }
 
-function updateStats_(ss) {
-  const sheet = getOrCreateSheet_(ss);
-  let stats = ss.getSheetByName(CONFIG.STATS_SHEET_NAME);
-  if (!stats) stats = ss.insertSheet(CONFIG.STATS_SHEET_NAME);
-
-  const lastRow = sheet.getLastRow();
-  const total = Math.max(0, lastRow - 1);
-  let newCount = 0;
-  let answeredCount = 0;
-  let doneCount = 0;
-
-  if (total > 0) {
-    const statuses = sheet.getRange(2, 8, total, 1).getValues().flat();
-    newCount = statuses.filter(v => String(v).toLowerCase() === 'uus').length;
-    answeredCount = statuses.filter(v => String(v).toLowerCase() === 'vastatud').length;
-    doneCount = statuses.filter(v => String(v).toLowerCase() === 'tehtud').length;
-  }
-
-  stats.clear();
-  stats.appendRow(['Näitaja', 'Väärtus']);
-  stats.appendRow(['Päringuid kokku', total]);
-  stats.appendRow(['Uued', newCount]);
-  stats.appendRow(['Vastatud', answeredCount]);
-  stats.appendRow(['Tehtud', doneCount]);
-  stats.appendRow(['Viimati uuendatud', new Date()]);
-  stats.getRange(1, 1, 1, 2).setFontWeight('bold');
-  stats.autoResizeColumns(1, 2);
-}
 
 function escapeHtml_(value) {
   return String(value || '')

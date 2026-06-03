@@ -982,7 +982,7 @@ body.lightbox-active {
 
 @media(max-width:980px){
   .header-socials{
-    margin-left:auto;
+    margin-left:0;
   }
 }
 
@@ -1199,4 +1199,56 @@ body.lightbox-active {
 .lightbox-arrow:hover{
   background:linear-gradient(180deg, rgba(143,86,44,.96), rgba(103,60,31,.94));
   transform:translateY(-50%) scale(1.06);
+}
+
+
+
+
+/* Väike minimaalne keelevalik headeris */
+.language-mini{
+  display:flex;
+  align-items:center;
+}
+.language-select{
+  border:1px solid rgba(0,0,0,.10);
+  background:rgba(255,255,255,.62);
+  color:#332218;
+  border-radius:999px;
+  padding:8px 10px;
+  font-weight:900;
+  font-size:13px;
+  outline:none;
+  cursor:pointer;
+}
+.language-select:focus{
+  border-color:var(--wood);
+  box-shadow:0 0 0 3px rgba(199,122,53,.14);
+}
+@media(max-width:980px){
+  .language-mini{margin-left:0;}
+}
+@media(max-width:640px){
+  .language-select{
+    padding:7px 8px;
+    font-size:12px;
+  }
+}
+
+
+/* Headeri parempoolne osa: sotsiaalid + keelevalik */
+.header-tools{
+  display:flex;
+  align-items:center;
+  gap:12px;
+}
+@media(max-width:980px){
+  .header-tools{
+    margin-left:auto;
+    gap:8px;
+  }
+}
+@media(max-width:640px){
+  .header-tools{
+    gap:7px;
+  }
 }

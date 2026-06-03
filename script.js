@@ -35,7 +35,7 @@ function setLanguage(lang){
 // 1) Loo Google Apps Script projekt ja kleebi sinna failist google-apps-script.js kood.
 // 2) Deploy > New deployment > Web app.
 // 3) Pane saadud Web App URL siia jutumärkide vahele.
-const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbwWUQTXKMOacFeykE0gk8t3CaBqAv_89zuEix_N7QebZ43chooWek6sZ29eA6ZeVwWN/exec";
+const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycby5G-CFGKjiXDlYjNjxfvD67pkx0SMmEkFWZfkjSfK8SxG0SaNwOQHdfXQAu5ppXZOk/exec";
 
 // Varuvariant, kui Google Scripti URL on veel lisamata.
 const FALLBACK_EMAIL = "kethontaevere1@gmail.com";
@@ -98,6 +98,7 @@ async function handleForm(e){
     return;
   }
 
+
   try{
     setSubmitState(submitButton, 'Palun oota...', true);
     setFormStatus('', '');
@@ -109,12 +110,18 @@ async function handleForm(e){
       body: JSON.stringify(payload)
     });
 
+    showToast('✓ Päring edukalt saadetud');
+
     form.reset();
     setSubmitState(submitButton, 'Saadetud ✓', true);
     setFormStatus('Aitäh! Võtame teiega ühendust esimesel võimalusel.', 'success');
     locationField.style.display = 'none';
     locationInput.required = false;
     locationInput.value = '';
+
+    ['name', 'phone', 'email', 'model', 'transport', 'location', 'message'].forEach(fieldName => {
+    localStorage.removeItem('quote_' + fieldName);
+    });
 
     setTimeout(function(){
       setSubmitState(submitButton, originalButtonText, false);
@@ -133,14 +140,58 @@ function initProductCarousels(){
   const lightboxImg=lightbox ? lightbox.querySelector('img') : null;
   const closeBtn=lightbox ? lightbox.querySelector('.lightbox-close') : null;
 
-  function openLightbox(src,alt){
-    if(!lightbox || !lightboxImg) return;
-    lightboxImg.src=src;
-    lightboxImg.alt=alt || '';
-    lightbox.classList.add('open');
-    lightbox.setAttribute('aria-hidden','false');
-    document.body.classList.add('lightbox-active');
+const lightboxPrev = lightbox ? lightbox.querySelector('.lightbox-prev') : null;
+const lightboxNext = lightbox ? lightbox.querySelector('.lightbox-next') : null;
+const lightboxThumbs = lightbox ? lightbox.querySelector('.lightbox-thumbs') : null;
+
+let lightboxImages = [];
+let lightboxIndex = 0;
+let lightboxAlt = '';
+
+function updateLightbox(){
+  if(!lightboxImg || !lightboxImages.length) return;
+
+  lightboxImg.src = lightboxImages[lightboxIndex];
+  lightboxImg.alt = lightboxAlt || '';
+
+  if(lightboxThumbs){
+    lightboxThumbs.innerHTML = '';
+
+    lightboxImages.forEach((src, i)=>{
+      const thumb = document.createElement('img');
+      thumb.src = src;
+      thumb.alt = lightboxAlt || '';
+      thumb.classList.toggle('active', i === lightboxIndex);
+
+      thumb.addEventListener('click', ()=>{
+        lightboxIndex = i;
+        updateLightbox();
+      });
+
+      lightboxThumbs.appendChild(thumb);
+    });
   }
+}
+
+function openLightbox(images, startIndex, alt){
+  if(!lightbox || !lightboxImg) return;
+
+  lightboxImages = images;
+  lightboxIndex = startIndex || 0;
+  lightboxAlt = alt || '';
+
+  updateLightbox();
+
+  lightbox.classList.add('open');
+  lightbox.setAttribute('aria-hidden','false');
+  document.body.classList.add('lightbox-active');
+}
+
+function lightboxShow(nextIndex){
+  if(!lightboxImages.length) return;
+  lightboxIndex = (nextIndex + lightboxImages.length) % lightboxImages.length;
+  updateLightbox();
+}
 
   function closeLightbox(){
     if(!lightbox || !lightboxImg) return;
@@ -173,15 +224,32 @@ function initProductCarousels(){
       showImage(index + 1);
     });
 
-    img.addEventListener('click',()=>openLightbox(img.src, carousel.dataset.alt || img.alt));
+    if(lightboxPrev){
+  lightboxPrev.addEventListener('click', event=>{
+    event.stopPropagation();
+    lightboxShow(lightboxIndex - 1);
   });
+}
+
+if(lightboxNext){
+  lightboxNext.addEventListener('click', event=>{
+    event.stopPropagation();
+    lightboxShow(lightboxIndex + 1);
+  });
+}
+
+img.addEventListener('click',()=>{
+  openLightbox(images, index, carousel.dataset.alt || img.alt);
+});
+
+});
 
 
 
   document.querySelectorAll('.gallery-grid figure img').forEach(galleryImg=>{
     galleryImg.style.cursor='zoom-in';
     galleryImg.addEventListener('click',()=>{
-      openLightbox(galleryImg.src, galleryImg.alt || '');
+      openLightbox([galleryImg.src], 0, galleryImg.alt || '');
     });
   });
 
@@ -214,3 +282,43 @@ transportSelect.addEventListener('change', () => {
     locationInput.value = '';
   }
 });
+
+const quoteForm = document.querySelector('.quote-form');
+
+if (quoteForm) {
+  const fieldsToSave = ['name', 'phone', 'email', 'model', 'transport', 'location', 'message'];
+
+  fieldsToSave.forEach(fieldName => {
+    const field = quoteForm.querySelector(`[name="${fieldName}"]`);
+
+    if (!field) return;
+
+    const savedValue = localStorage.getItem('quote_' + fieldName);
+    if (savedValue) field.value = savedValue;
+
+    field.addEventListener('input', () => {
+      localStorage.setItem('quote_' + fieldName, field.value);
+    });
+
+    field.addEventListener('change', () => {
+      localStorage.setItem('quote_' + fieldName, field.value);
+    });
+  });
+}
+
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+
+  toast.textContent = message;
+  toast.classList.add('show');
+
+  setTimeout(() => {
+    toast.classList.remove('show');
+  }, 3500);
+}
+
+if (transportSelect.value === 'Jah' || transportSelect.value === 'Pole kindel') {
+  locationField.style.display = 'block';
+  locationInput.required = true;
+}

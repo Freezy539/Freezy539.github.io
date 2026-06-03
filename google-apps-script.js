@@ -69,6 +69,7 @@ function doPost(e) {
     ];
 
     const receivedAt = `${weekdays[now.getDay()]} I ${now.getDate()}. ${months[now.getMonth()]} I ${now.getFullYear()} I ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+    const language = detectLanguage_(data);
 
     sheet.appendRow([
       requestId,
@@ -79,6 +80,7 @@ function doPost(e) {
       data.model || '',
       data.transport || '',
       data.location || '',
+      language,
       data.message || ''
     ]);
     sendOwnerEmail_(data, requestId, receivedAt, ss.getUrl());
@@ -97,16 +99,7 @@ function validate_(data) {
 }
 
 function getSpreadsheet_() {
-  const props = PropertiesService.getScriptProperties();
-  const existingId = props.getProperty('SPREADSHEET_ID');
-
-  if (existingId) {
-    return SpreadsheetApp.openById(existingId);
-  }
-
-  const ss = SpreadsheetApp.create('OutDoorSauna päringud');
-  props.setProperty('SPREADSHEET_ID', ss.getId());
-  return ss;
+  return SpreadsheetApp.openById('1q0NmdEqdUF7ixl4NLj1cZgSckj5Q5ZG3SPbAecf0ih8');
 }
 
 function getOrCreateSheet_(ss) {
@@ -123,11 +116,11 @@ function getOrCreateSheet_(ss) {
       'Sauna tüüp',
       'Transport',
       'Asukoht',
+      'Keel',
       'Sõnum',
-    ]);
-    sheet.getRange(1, 1, 1, 9).setFontWeight('bold');
-    sheet.setFrozenRows(1);
-    sheet.autoResizeColumns(1, 9);
+  ]);
+    sheet.getRange(1, 1, 1, 10).setFontWeight('bold');
+    sheet.autoResizeColumns(1, 10);
   }
   return sheet;
 }
@@ -204,56 +197,145 @@ function sendOwnerEmail_(data, requestId, receivedAt, sheetUrl) {
       'Sõnum:\n' + (data.message || '')  });
 }
 
+
+function detectLanguage_(data) {
+  const text = (
+    (data.message || '') + ' ' +
+    (data.model || '') + ' ' +
+    (data.transport || '') + ' ' +
+    (data.location || '')
+  ).toLowerCase();
+
+  const scores = {
+    et: 0,
+    en: 0,
+    fi: 0,
+    sv: 0
+  };
+
+  const words = {
+    et: ['tere', 'soovin', 'sauna', 'pakkumist', 'transport', 'asukoht', 'hind', 'värv', 'puit', 'keris', 'võimalik', 'oleks'],
+    en: ['hello', 'hi', 'want', 'would', 'like', 'sauna', 'quote', 'price', 'transport', 'delivery', 'location', 'wood', 'color', 'colour'],
+    fi: ['hei', 'haluan', 'sauna', 'tarjous', 'hinta', 'kuljetus', 'sijainti', 'puu', 'väri', 'kiuas', 'mahdollista'],
+    sv: ['hej', 'vill', 'bastu', 'offert', 'pris', 'transport', 'leverans', 'plats', 'trä', 'färg', 'möjligt']
+  };
+
+  Object.keys(words).forEach(lang => {
+    words[lang].forEach(word => {
+      if (text.includes(word)) scores[lang]++;
+    });
+  });
+
+  let bestLang = 'et';
+  let bestScore = scores.et;
+
+  Object.keys(scores).forEach(lang => {
+    if (scores[lang] > bestScore) {
+      bestLang = lang;
+      bestScore = scores[lang];
+    }
+  });
+
+  return bestScore === 0 ? 'et' : bestLang;
+}
+
+function getAutoReplyText_(lang) {
+  const texts = {
+    et: {
+      subject: 'Aitäh päringu eest – ' + CONFIG.COMPANY_NAME,
+      received: 'Päring vastu võetud',
+      hello: 'Tere',
+      intro: 'Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.',
+      summary: 'Kokkuvõte',
+      saunaType: 'Sauna tüüp:',
+      message: 'Teie sõnum:',
+      follow: 'Jälgi meid',
+      replyInfo: 'Kui soovite midagi lisada, vastake lihtsalt sellele kirjale.'
+    },
+    en: {
+      subject: 'Thank you for your request – ' + CONFIG.COMPANY_NAME,
+      received: 'Request received',
+      hello: 'Hello',
+      intro: 'Thank you for your request. We have received it successfully and will review it as soon as possible.',
+      summary: 'Summary',
+      saunaType: 'Sauna type:',
+      message: 'Your message:',
+      follow: 'Follow us',
+      replyInfo: 'If you would like to add anything, simply reply to this email.'
+    },
+    fi: {
+      subject: 'Kiitos yhteydenotostasi – ' + CONFIG.COMPANY_NAME,
+      received: 'Pyyntö vastaanotettu',
+      hello: 'Hei',
+      intro: 'Kiitos yhteydenotostasi. Olemme vastaanottaneet pyyntösi ja palaamme asiaan mahdollisimman pian.',
+      summary: 'Yhteenveto',
+      saunaType: 'Saunan tyyppi:',
+      message: 'Viestisi:',
+      follow: 'Seuraa meitä',
+      replyInfo: 'Jos haluatte lisätä jotain, voitte vastata suoraan tähän sähköpostiin.'
+    },
+    sv: {
+      subject: 'Tack för din förfrågan – ' + CONFIG.COMPANY_NAME,
+      received: 'Förfrågan mottagen',
+      hello: 'Hej',
+      intro: 'Tack för din förfrågan. Vi har tagit emot den och återkommer så snart som möjligt.',
+      summary: 'Sammanfattning',
+      saunaType: 'Bastutyp:',
+      message: 'Ditt meddelande:',
+      follow: 'Följ oss',
+      replyInfo: 'Om du vill lägga till något kan du bara svara på detta e-postmeddelande.'
+    }
+  };
+
+  return texts[lang] || texts.et;
+}
+
+
 function sendCustomerAutoReply_(data, requestId) {
-  const subject = 'Aitäh päringu eest – ' + CONFIG.COMPANY_NAME + ' / Thank you for your request';
+  const lang = detectLanguage_(data);
+  const t = getAutoReplyText_(lang);
+
+  const subject = t.subject;
+
   const htmlBody = `
     <div style="margin:0;padding:0;background:#f3eee8;font-family:Arial,Helvetica,sans-serif;color:#2b1b12">
-      <div style="display:none;max-height:0;overflow:hidden;opacity:0;color:transparent">
-        Aitäh päringu eest. Teie päring on edukalt vastu võetud.
-      </div>
-
       <div style="max-width:660px;margin:0 auto;padding:38px 14px">
         <div style="background:#24160f;border-radius:24px 24px 0 0;padding:32px 32px 30px;color:#ffffff;border-bottom:4px solid #b98255">
-          <p style="margin:0 0 12px;color:#d8b18d;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase">Päring vastu võetud</p>
+          <p style="margin:0 0 12px;color:#d8b18d;font-size:12px;font-weight:700;letter-spacing:2px;text-transform:uppercase">${t.received}</p>
           <h1 style="margin:0;font-size:30px;line-height:1.15;font-weight:800;letter-spacing:-.3px">${CONFIG.COMPANY_NAME}</h1>
         </div>
 
         <div style="background:#ffffff;border-left:1px solid #eaded0;border-right:1px solid #eaded0;padding:30px 32px 28px;box-shadow:0 18px 45px rgba(38,24,16,.10)">
-          <h2 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#2b1b12">Tere, ${escapeHtml_(data.name)}!</h2>
-          <p style="margin:0 0 20px;font-size:16px;line-height:1.65;color:#4b382b">Aitäh päringu eest. Teie päring on edukalt vastu võetud ning vaatame selle esimesel võimalusel üle.</p>
+          <h2 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#2b1b12">${t.hello}, ${escapeHtml_(data.name)}!</h2>
+          <p style="margin:0 0 20px;font-size:16px;line-height:1.65;color:#4b382b">${t.intro}</p>
+          <p style="margin:0 0 20px;font-size:15px;line-height:1.6;color:#6b5544">${t.replyInfo}</p>
 
           <div style="background:#fbf8f4;border:1px solid #eaded0;border-radius:18px;padding:20px 20px 18px;margin:24px 0">
-            <p style="margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9a6b45">Kokkuvõte</p>
-            <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Sauna tüüp:</b> ${escapeHtml_(data.model)}</p>
-            <p style="margin:0;font-size:15px;line-height:1.65;color:#4b382b"><b style="color:#2b1b12">Teie sõnum:</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
+            <p style="margin:0 0 14px;font-size:12px;font-weight:800;letter-spacing:1.4px;text-transform:uppercase;color:#9a6b45">${t.summary}</p>
+            <p style="margin:0 0 10px;font-size:15px;color:#4b382b"><b style="color:#2b1b12">${t.saunaType}</b> ${escapeHtml_(data.model)}</p>
+            <p style="margin:0;font-size:15px;line-height:1.65;color:#4b382b"><b style="color:#2b1b12">${t.message}</b><br>${escapeHtml_(data.message).replace(/\n/g, '<br>')}</p>
           </div>
-
-          <div style="height:1px;background:#eaded0;margin:28px 0"></div>
-
-          <h2 style="margin:0 0 12px;font-size:22px;line-height:1.3;color:#2b1b12">Hello, ${escapeHtml_(data.name)}!</h2>
-          <p style="margin:0 0 18px;font-size:16px;line-height:1.65;color:#4b382b">Thank you for your request. We have received it successfully and will review it as soon as possible.</p>
-          <p style="margin:0;font-size:15px;color:#4b382b"><b style="color:#2b1b12">Sauna type:</b> ${escapeHtml_(data.model)}</p>
         </div>
 
         <div style="background:#fbf8f4;border:1px solid #eaded0;border-top:0;border-radius:0 0 24px 24px;padding:24px 32px 30px;text-align:center;box-shadow:0 18px 45px rgba(38,24,16,.10)">
-          <p style="margin:0 0 14px;color:#6f5543;font-size:14px;font-weight:700;letter-spacing:.3px">Jälgi meid / Follow us</p>
+          <p style="margin:0 0 14px;color:#6f5543;font-size:14px;font-weight:700;letter-spacing:.3px">${t.follow}</p>
           <a href="${CONFIG.INSTAGRAM_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">Instagram</a>
           <a href="${CONFIG.TIKTOK_URL}" style="display:inline-block;background:#24160f;color:#ffffff;text-decoration:none;padding:12px 20px;border-radius:999px;margin:5px;font-size:14px;font-weight:800;letter-spacing:.2px">TikTok</a>
         </div>
       </div>
     </div>
   `;
+
   MailApp.sendEmail({
     to: data.email,
     subject: subject,
     htmlBody: htmlBody,
     body:
-      'Tere, ' + (data.name || '') + '!\n\n' +
-      'Aitäh päringu eest. Teie päring on edukalt vastu võetud.\n' +
-      requestId + '\n\n' +
-      'Hello, ' + (data.name || '') + '!\n\n' +
-      'Thank you for your request. We have received it successfully.\n\n' +
-      CONFIG.COMPANY_NAME + '\nTelefon: ' + CONFIG.COMPANY_PHONE
+      t.hello + ', ' + (data.name || '') + '!\n\n' +
+      t.intro + '\n\n' +
+      t.summary + '\n' +
+      t.saunaType + ' ' + (data.model || '') + '\n\n' +
+      t.message + '\n' + (data.message || '')
   });
 }
 
@@ -271,4 +353,10 @@ function json_(obj) {
   return ContentService
     .createTextOutput(JSON.stringify(obj))
     .setMimeType(ContentService.MimeType.JSON);
+}
+
+function doGet(e) {
+  return ContentService
+    .createTextOutput('OutDoorSauna päringusüsteem töötab. Vorm saadab andmed POST päringuga.')
+    .setMimeType(ContentService.MimeType.TEXT);
 }

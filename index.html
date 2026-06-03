@@ -1,17 +1,3 @@
-<!--
-  OutDoorSauna veebileht
-
-  FAIL: index.html
-  SIIN MUUDAD: lehe sisu ehk tekstid, pildid, nupud, vormi väljad ja sektsioonid.
-
-  Kõige tähtsam:
-  - data-i18n="..." tähendab, et see tekst vahetub keelevalikuga.
-  - Kui muudad data-i18n tekstiga elementi, siis muuda sama teksti ka script.js failis.
-  - Pildi muutmiseks vaheta src="assets/pildi-nimi.jpg".
-  - Uue pildi lisamiseks pane pilt assets kausta ja kasuta sama nime HTML-is.
-  - onclick="showPage('products')" tähendab, et nupp avab vastava vaate.
--->
-
 <!DOCTYPE html>
 <html lang="et">
 <head>
@@ -34,7 +20,6 @@
     <span data-i18n="topbar">🇪🇪 Toru-, ovaal- ja kandilised saunad otse tootjalt • Transport üle Eesti ja Euroopa</span>
   </div>
 
-  <!-- Ülemine menüü: logo, vaadete nupud ja keelevahetus -->
   <header class="site-header">
     <button class="brand" onclick="showPage('home')" aria-label="OutDoorSauna avaleht">
       <span>OutDoor</span>Sauna
@@ -68,9 +53,7 @@
   </header>
 
   <main>
-    <!-- AVALEHT: esimene vaade, mida külastaja näeb. Siin muudad suure pealkirja, hero teksti ja esimesed nupud. -->
     <section id="home" class="page active">
-      <!-- Hero plokk: suur taustapilt ja avalehe peamine tekst -->
       <div class="hero">
         <div class="hero-overlay"></div>
         <div class="hero-content">
@@ -123,7 +106,6 @@
       </section>
     </section>
 
-    <!-- VALIK: toodete/mudelite vaade. Siin on torusaun, ovaalsaun, terrassiga torusaun ja kandiline saun. -->
     <section id="products" class="page">
       <div class="page-head">
         <span class="eyebrow" data-i18n="products_eyebrow">Valik</span>
@@ -133,9 +115,9 @@
 
       <div class="product-grid">
         <article class="product-card featured">
-          <div class="product-carousel" data-images="assets/ovaalsaun-valmis.jpg|assets/eri_ovaal.jpg|assets/keris-sisu.jpg|assets/sisu-lavad.jpg" data-alt="2-ruumiline torusaun">
-            <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
-            <img src="assets/ovaalsaun-valmis.jpg" class="product-main-img" alt="2-ruumiline torusaun">
+        <div class="product-carousel" data-images="assets/2toru/2toru2.jpg|assets/2toru/2toru3.jpg|assets/2toru/2toru4.jpg|assets/2toru/2toru5.jpg|assets/2toru/2toru6.jpg|assets/2toru/2toru7.jpg|assets/2toru/2toru8.jpg|assets/2toru/2toru9.jpg|assets/2toru/2toru10.jpg" data-alt="2-ruumiline torusaun">             
+          <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
+            <img src="assets/2toru/2toru1.jpg" class="product-main-img" alt="2-ruumiline torusaun">
             <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
           </div>
           <div class="product-body">
@@ -148,15 +130,15 @@
               <span>💧 35L veepaak</span>
               <span>🚪 Lukustatav välisuks</span>
             </div>
-            <div class="price">4500€</div>
+            <div class="price">4500€ <span class="vat">+ KM</span></div>
             <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
 
         <article class="product-card">
-          <div class="product-carousel" data-images="assets/ovaalsaun.jpg|assets/ovaalsaun-valmis.jpg|assets/sisu-lavad2.jpg|assets/harvia-keris.jpg" data-alt="2-ruumiline ovaalsaun">
+          <div class="product-carousel" data-images="assets/ovaal/ovaal2.jpg|assets/ovaal/ovaal3.jpg|assets/ovaal/ovaal4.jpg|assets/ovaal/ovaal5.jpg|assets/ovaal/ovaal6.jpg|assets/ovaal/ovaal7.jpg|assets/ovaal/ovaal8.jpg|assets/ovaal/ovaal9.jpg|assets/ovaal/ovaal10.jpg" data-alt="2-ruumiline ovaalsaun">
             <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
-            <img src="assets/ovaalsaun.jpg" alt="2-ruumiline ovaalsaun">
+            <img src="assets/ovaal/ovaal1.jpg" alt="2-ruumiline ovaalsaun">
             <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
           </div>
           <div class="product-body">
@@ -165,19 +147,19 @@
             <p data-i18n="product2_text">Hea disainiga ovaalsaun, millel on praktiline eesruum ja mugav leiliruum.</p>
             <div class="specs">
               <span>📏 4 m × 2.4 m</span>
-              <span>🌲 Kuusepuust</span>
-              <span>💧 35L veepaak</span>
               <span>🪵 Lepast lavad</span>
+              <span>💧 35L veepaak</span>
+              <span>🌲 Kuusepuust või termopuidust</span>
             </div>
-            <div class="price">4600€</div>
+            <div class="price">4600€ <span class="vat">+ KM</span></div>
             <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
 
         <article class="product-card">
-          <div class="product-carousel" data-images="assets/terassiga_torusaun.jpg|assets/saun-ohtul.jpg|assets/transport-auto.jpg|assets/transport-paigaldus.jpg" data-alt="Terrassiga torusaun">
+          <div class="product-carousel" data-images="assets/terass/terass2.jpg|assets/terass/terass3.jpg|assets/terass/terass4.jpg|assets/terass/terass5.jpg" data-alt="Terrassiga torusaun">
             <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
-            <img src="assets/terassiga_torusaun.jpg" alt="Terrassiga torusaun">
+            <img src="assets/terass/terass1.jpg" alt="Terrassiga torusaun">
             <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
           </div>
           <div class="product-body">
@@ -187,38 +169,38 @@
             <div class="specs">
               <span>🏕 Sobib ideaalselt haagisele</span>
               <span>🪵 Valmistatud termopuidust</span>
-              <span>🔥 Seest või väljast köetav</span>
+              <span>🔥 Võimalik valida seest või väljast köetav keris</span>
               <span>📏 2,5 m × 2,1 m</span>
             </div>
-            <div class="price">3300–3400€</div>
+            <div class="price">3300–3400€ <span class="vat">+ KM</span></div>
             <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
 
         <article class="product-card">
-          <div class="product-carousel" data-images="assets/torusaun_1ruum.jpg|assets/hero-torusaun.jpg|assets/tootmine-toru-uks.jpg|assets/sisu-lavad3.jpg" data-alt="1-ruumiline torusaun">
+          <div class="product-carousel" data-images="assets/1toru/1toru1.jpg|assets/1toru/1toru2.jpg|assets/1toru/1toru3.jpg" data-alt="1-ruumiline torusaun">
             <button class="carousel-arrow prev" type="button" aria-label="Eelmine pilt">‹</button>
-            <img src="assets/torusaun_1ruum.jpg" alt="1-ruumiline torusaun">
+            <img src="assets/1toru/1toru1.jpg" alt="1-ruumiline torusaun">
             <button class="carousel-arrow next" type="button" aria-label="Järgmine pilt">›</button>
           </div>
           <div class="product-body">
             <div class="badge" data-i18n="product4_badge">Minimalistlik</div>
             <h2 data-i18n="product4_title">1-ruumiline torusaun</h2>
-            <p data-i18n="product4_text">Kandiline saun neile, kes soovivad modernsemat välimust ja sirgema vormiga lahendust.</p>
+            <p data-i18n="product4_text">Kompaktne 1-ruumiline torusaun neile, kes soovivad lihtsat ja praktilist lahendust koduhoovi, suvilasse või veekogu äärde.</p>
             <div class="specs">
               <span>🚚 Katusekatteks kvaliteetne Icopal</span>
               <span>🎨 Pronks tooniga klaasuks</span>
               <span>⚡ Pingutusvitsad on roostevabast terasest</span>
               <span>📐 2,1 m x 2 m</span>
             </div>
-            <div class="price" data-i18n="custom_price">3000€</div>
+            <div class="price" data-i18n="custom_price">3000€ <span class="vat">+ KM</span></div>
             <button class="btn primary" onclick="showPage('contact')" data-i18n="ask_offer">Küsi pakkumist</button>
           </div>
         </article>
       </div>
 
       <div class="details-panel">
-        <h2 data-i18n="included_title">Komplektis võimalik</h2>
+        <h2 data-i18n="included_title">Võimalik lisada komplekti</h2>
         <div class="included-grid">
           <span>🔥 Harvia M3, Harvia M2 või Stoveman 13M kvaliteetne puuküttega keris</span>
           <span>🏠 Vastupidav Icopal või kärgruberoid katusekate aastaringseks kasutuseks</span>
@@ -233,7 +215,6 @@
       </div>
     </section>
 
-    <!-- GALERII: valmis saunade ja sisevaadete pildid. Siia pane ilusad valmis pildid, mitte pooleliolev ehitus. -->
     <section id="gallery" class="page">
       <div class="page-head">
         <span class="eyebrow" data-i18n="gallery_eyebrow">Galerii</span>
@@ -242,27 +223,27 @@
       </div>
 
       <div class="gallery-grid">
-        <figure><img src="assets/eri_ovaal.jpg" alt="Valmis torusaun"><figcaption data-i18n="gal1">Erivärvi ovaalsaun</figcaption></figure>
-        <figure><img src="assets/ovaalsaun-valmis.jpg" alt="Ovaalsaun"><figcaption data-i18n="gal2">2-ruumiline torusaun</figcaption></figure>
-        <figure><img src="assets/keris-sisu.jpg" alt="Leiliruum Harvia kerisega"><figcaption data-i18n="gal3">Leiliruum Harvia kerisega</figcaption></figure>
-        <figure><img src="assets/sisu-lavad.jpg" alt="Sauna lavad"><figcaption data-i18n="gal4">Lepast lavad</figcaption></figure>
-        <figure><img src="assets/harvia-keris.jpg" class="keris-img" alt="Harvia keris"><figcaption data-i18n="gal5">Harvia keris</figcaption></figure>
-        <figure><img src="assets/sisu-lavad2.jpg" alt="Sauna sisemus"><figcaption data-i18n="gal6">Puhas ja praktiline sisemus</figcaption></figure>
-        <figure><img src="assets/saun-ohtul.jpg" alt="Saun õhtul"><figcaption data-i18n="gal7">Saun kliendi juures haagisel</figcaption></figure>
+        <figure><img src="assets/galerii/galerii.jpg" alt="Torusaun"><figcaption data-i18n="gal1">Uue lahendusega torusaun</figcaption></figure>
+        <figure><img src="assets/galerii/galerii1.jpg" alt="Keris"><figcaption data-i18n="gal2">Harvia puukeris</figcaption></figure>
+        <figure><img src="assets/galerii/galerii3.jpg" alt="Sauna lavad"><figcaption data-i18n="gal4">Lepast lava</figcaption></figure>
+        <figure><img src="assets/galerii/galerii4.jpg" alt="kerised"><figcaption data-i18n="gal4">Kaks Harvia puukerist</figcaption></figure>
+        <figure><img src="assets/galerii/galerii5.jpg" alt="eriovaal"><figcaption data-i18n="gal6">Erivärvi ovaalsaun</figcaption></figure>
+        <figure><img src="assets/galerii/galerii9.jpg" alt="termosisu"><figcaption data-i18n="gal7">Termopuidust sauna sisu</figcaption></figure>
+        <figure><img src="assets/galerii/galerii7.jpg" alt="el.keris"><figcaption data-i18n="gal7">Elektrikeris</figcaption></figure>
+        <figure><img src="assets/galerii/galerii8.jpg" alt="haagistoru"><figcaption data-i18n="gal7">Saun kliendi juures haagisel</figcaption></figure>        
       </div>
     </section>
 
-    <!-- TOOTMINE: töökoja, pooleliolevate saunade ja transpordi pildid. Siia sobivad ehitusprotsessi pildid. -->
     <section id="production" class="page">
       <div class="page-head">
         <span class="eyebrow" data-i18n="prod_eyebrow">Tootmine ja transport</span>
-        <h1 data-i18n="prod_title">Näeme iga sauna valmimise nimel palju vaeva algusest kuni lõpuni välja</h1>
+        <h1 data-i18n="prod_title">Iga saun valmib hoolega algusest lõpuni</h1>
         <p data-i18n="prod_text">Siia oleme lisanud pildid töökojast, ehitusprotsessist ja transpordist, et näha, kuidas saunad päriselt valmivad.</p>
       </div>
 
       <div class="timeline">
         <div class="timeline-card">
-          <img src="assets/tootmine-puidust-korpus.jpg" alt="Torusaun tootmises">
+          <img src="assets/tootmine_transport/tootmine1.jpg" alt="Puit korpus">
           <div>
             <span class="step">01</span>
             <h2 data-i18n="prod1_title">Puit ja korpus</h2>
@@ -270,7 +251,7 @@
           </div>
         </div>
         <div class="timeline-card reverse">
-          <img src="assets/tootmine-sisu.jpg" alt="Sauna sisemuse ehitus">
+          <img src="assets/tootmine_transport/tootmine2.jpg" alt="Sisemus ja lavad">
           <div>
             <span class="step">02</span>
             <h2 data-i18n="prod2_title">Sisemus ja lavad</h2>
@@ -278,7 +259,7 @@
           </div>
         </div>
         <div class="timeline-card">
-          <img src="assets/torusaun-ehitus.jpg" alt="Kandilise sauna karkass">
+          <img src="assets/tootmine_transport/tootmine3.jpg" alt="Kandilise sauna karkass">
           <div>
             <span class="step">03</span>
             <h2 data-i18n="prod3_title">Päris tootmine. Päris kvaliteet.</h2>
@@ -286,22 +267,45 @@
           </div>
         </div>
         <div class="timeline-card reverse">
-          <img src="assets/transport-paigaldus.jpg" alt="Sauna transport kraanaga">
+          <img src="assets/tootmine_transport/tootmine4.jpg" alt="Sauna transport kraanaga">
           <div>
             <span class="step">04</span>
-            <h2 data-i18n="prod4_title">Transport kliendini</h2>
-            <p data-i18n="prod4_text">Saun tarnitakse kokkupandud kujul. Vajadusel aitame transpordi ja tõstega sobivasse kohta.</p>
+            <h2 data-i18n="prod4_title">Materjal</h2>
+            <p data-i18n="prod4_text">Kasutame hoolikalt valitud ja kuivatatud puitu, et tagada sauna vastupidavus, stabiilsus ja ilus lõpptulemus.</p>
+          </div>
+          </div>
+          <div class="timeline-card">
+          <img src="assets/tootmine_transport/tootmine5.jpg" alt="Kandilise sauna karkass">
+          <div>
+            <span class="step">05</span>
+            <h2 data-i18n="prod3_title">Aluskonstruktsioon</h2>
+            <p data-i18n="prod3_text">Sauna alusraam valmistatakse väga tugev, mis tagab kindla toe ja pika kasutusea igal pinnasel.</p>
+          </div>
+        </div>
+        <div class="timeline-card reverse">
+          <img src="assets/tootmine_transport/tootmine6.jpg" alt="Sauna transport kraanaga">
+          <div>
+            <span class="step">06</span>
+            <h2 data-i18n="prod4_title">Tõstukiga paigaldus</h2>
+            <p data-i18n="prod4_text">Vajadusel aitame sauna tõsta täpselt õigesse kohta, et saaksid uut sauna nautima hakata ilma lisamureta.</p>
+          </div>
+        </div>
+          <div class="timeline-card">
+          <img src="assets/tootmine_transport/tootmine7.jpg" alt="Kandilise sauna karkass">
+          <div>
+            <span class="step">07</span>
+            <h2 data-i18n="prod3_title">Tule ise järele</h2>
+            <p data-i18n="prod3_text">Soovi korral saad sauna ise järele tulla. Aitame tehase juures selle turvaliselt haagisele või transpordivahendile peale laadida.</p>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- KONTAKT: taotluse vorm ja kontaktinfo. Vorm on lehe lõpus eraldi vaates. -->
     <section id="contact" class="page">
       <div class="contact-layout">
         <div class="contact-info">
           <span class="eyebrow" data-i18n="contact_eyebrow">Pakkumine</span>
-          <h1 data-i18n="contact_title">Esita taotlus või küsi pakkumist</h1>
+          <h1 data-i18n="contact_title">Küsi personaalset pakkumist</h1>
           <p data-i18n="contact_text">Kirjuta, millist sauna soovid. Märgi võimalusel mudel, mõõdud, puidutüüp, värv, asukoht ja kas vajad transporti.</p>
 
           <div class="contact-cards">
@@ -311,7 +315,6 @@
           </div>
         </div>
 
-        <!-- Taotluse vorm: Google Sheetsi + Gmaili valmidus on script.js ja google-apps-script.js failides. -->
         <form class="quote-form" onsubmit="handleForm(event)">
           <h2 data-i18n="form_title">Taotluse vorm</h2>
           <label>
@@ -347,8 +350,8 @@
           </label>          
           <label id="locationField" class="full-field" style="display:none;">
             <span>Asukoht</span>
-            <input type="text" name="location" id="location" placeholder="Näiteks Tallinn, Tartu, Pärnu">
-          </label>          
+          <input type="text" name="location" id="location" placeholder="Näiteks Tallinn, Tartu, Pärnu">
+         </label>          
           <label>
             <span data-i18n="form_message">Kirjelda soovi</span>
             <textarea name="message" rows="6" placeholder="Näiteks: soovin 2-ruumilist torusauna, termopuidust, transpordiga Harjumaale."></textarea>
@@ -366,8 +369,15 @@
 
 <div class="image-lightbox" id="imageLightbox" aria-hidden="true">
   <button class="lightbox-close" type="button" aria-label="Sulge suurem pilt">×</button>
+
+  <button class="lightbox-arrow lightbox-prev" type="button">‹</button>
   <img src="" alt="">
+  <button class="lightbox-arrow lightbox-next" type="button">›</button>
+
+  <div class="lightbox-thumbs"></div>
 </div>
+
+<div id="toast" class="toast"></div>
 
 <script src="script.js"></script>
 </body>

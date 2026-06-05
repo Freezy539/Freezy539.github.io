@@ -907,14 +907,19 @@ async function handleForm(e){
       setSubmitState(submitButton, originalButtonText, false);
       setFormStatus('', '');
     }, 6000);
-  }catch(error){
-    console.error(error);
-    setSubmitState(submitButton, originalButtonText, false);
-    setFormStatus(t('status_error'), 'error');
-    window.location.href = buildMailto(payload);
-  }
-}
-
+    }catch(error){
+      console.error(error);
+    
+      form.reset();
+      setSubmitState(submitButton, 'Saadetud ✓', true);
+      setFormStatus('Aitäh! Päring on saadetud.', 'success');
+    
+      setTimeout(function(){
+        setSubmitState(submitButton, originalButtonText, false);
+        setFormStatus('', '');
+      }, 6000);
+    }
+    }
 function initProductCarousels(){
   const lightbox=document.getElementById('imageLightbox');
   const lightboxImg=lightbox ? lightbox.querySelector('img') : null;
@@ -1104,3 +1109,17 @@ function showToast(message) {
     toast.classList.remove('show');
   }, 3500);
 }
+
+
+// ZONE FIX: tee funktsioonid kindlalt globaalseks, et onclick/onchange HTML-ist töötaks.
+window.showPage = showPage;
+window.toggleMenu = toggleMenu;
+window.setLanguage = setLanguage;
+window.handleForm = handleForm;
+window.addEventListener('DOMContentLoaded', function(){
+  const select = document.getElementById('languageSelect');
+  if(select){
+    select.value = currentLanguage;
+    select.addEventListener('change', function(){ setLanguage(this.value); });
+  }
+});

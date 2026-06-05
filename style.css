@@ -154,7 +154,6 @@ nav {
   background:#160f0a;
 }
 
-/* Hero pilt on HTML-is <img>, et brauser leiaks selle kohe ja PageSpeed LCP paraneks */
 .hero-bg {
   position:absolute;
   inset:0;
@@ -166,9 +165,9 @@ nav {
 }
 /* TUME FILTER PILDILE */
 .hero-overlay {
+  z-index:1;
   position:absolute;
   inset:0;
-  z-index:1;
   background:
   linear-gradient(
   90deg,
@@ -940,11 +939,12 @@ body.lightbox-active {
 
   .hero{
     min-height:78vh;
-    padding:120px 7% 90px;
-  }
 
-  .hero-bg{
-    object-position:10% center;
+    background-size:cover;
+
+    background-position:10% center;
+
+    padding:120px 7% 90px;
   }
 
 }

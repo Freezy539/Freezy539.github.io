@@ -143,25 +143,32 @@ nav {
     transform:none
   }
 }
-/* Avalehe suur taustapildi plokk */
+/* Avalehe suur pildiplokk */
 .hero {
   min-height:calc(100vh - 108px);
   position:relative;
-  /* TAUSTAPILT */
-  background:
-  url("assets/ovaalsaun-valmis.webp");
-  background-size:100%;
-  background-position:center center;
-  background-repeat:no-repeat;
   display:flex;
   align-items:center;
   padding:90px 6%;
   overflow:hidden;
+  background:#160f0a;
+}
+
+/* Hero pilt on HTML-is <img>, et brauser leiaks selle kohe ja PageSpeed LCP paraneks */
+.hero-bg {
+  position:absolute;
+  inset:0;
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  object-position:center center;
+  z-index:0;
 }
 /* TUME FILTER PILDILE */
 .hero-overlay {
   position:absolute;
   inset:0;
+  z-index:1;
   background:
   linear-gradient(
   90deg,
@@ -173,6 +180,7 @@ nav {
 /* HERO SISU */
 .hero-content {
   position:relative;
+  z-index:2;
   max-width:790px;
   color:white;
   animation:fadeUp 1s ease;
@@ -932,12 +940,11 @@ body.lightbox-active {
 
   .hero{
     min-height:78vh;
-
-    background-size:cover;
-
-    background-position:10% center;
-
     padding:120px 7% 90px;
+  }
+
+  .hero-bg{
+    object-position:10% center;
   }
 
 }

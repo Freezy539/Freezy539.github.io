@@ -22,6 +22,7 @@
 <meta content="https://outdoorsauna.ee/" property="og:url"/>
 <meta content="https://outdoorsauna.ee/assets/ovaalsaun-valmis.webp" property="og:image"/>
 <link href="https://outdoorsauna.ee/" rel="canonical"/>
+<link rel="preload" as="image" href="assets/ovaalsaun-valmis.webp" fetchpriority="high"/>
 <title data-i18n="meta_title">OutDoorSauna | Toru-, ovaal- ja kandilised saunad</title>
 <link href="style.css?v=20260603-2" rel="stylesheet"/>
 </head>
@@ -68,6 +69,7 @@
 <main>
 <section class="page active" id="home">
 <div class="hero">
+<img class="hero-bg" src="assets/ovaalsaun-valmis.webp" alt="OutDoorSauna välisaun" fetchpriority="high" decoding="async"/>
 <div class="hero-overlay"></div>
 <div class="hero-content">
 <div class="pill" data-i18n="hero_pill">🔥 Otse tootjalt Tartumaalt</div>
@@ -371,6 +373,6 @@
 <div class="lightbox-thumbs"></div>
 </div>
 <div class="toast" id="toast"></div>
-<script src="script.js?v=20260603-2"></script>
+<script src="script.js?v=20260603-2" defer></script>
 </body>
 </html>

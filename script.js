@@ -165,7 +165,13 @@ const translations = {
     "mail_model": "Soovitud saun",
     "mail_transport": "Transport",
     "mail_location": "Asukoht",
-    "mail_description": "Kirjeldus"
+    "mail_description": "Kirjeldus",
+    "gal10": "Valgustusega torusaun, mis on valmistatud eritellimusel",
+    "gal11": "Tellija soovide järgi valmistatud valgustusega torusaun",
+    "prod8_title": "Turvaline peale laadimine",
+    "prod8_text": "Valmis saun tõstetakse kraanaga ettevaatlikult transpordivahendile. Kasutame turvalisi tõstevahendeid, et saun jõuaks kliendini täpselt samas seisukorras nagu meie töökojast lahkudes.",
+    "prod9_title": "Valmis saun kliendile",
+    "prod9_text": "Toimetame saunad turvaliselt klientideni üle Eesti ning kokkuleppel ka Euroopasse."
   },
   "en": {
     "meta_title": "OutDoorSauna | Barrel, oval and square saunas",
@@ -204,7 +210,7 @@ const translations = {
     "home_li2": "Durable spruce and thermowood saunas",
     "home_li3": "Available in different sizes, colours and layouts",
     "home_li4": "Transport and installation assistance across Estonia and Europe",
-    "products_eyebrow": "Valik",
+    "products_eyebrow": "Models",
     "products_title": "Choose a sauna or ask for a custom solution",
     "products_text": "The models below give an overview of our main solutions. Every sauna can be customised according to your wishes.",
     "product1_badge": "Popular",
@@ -223,7 +229,7 @@ const translations = {
     "vat": "+ VAT",
     "spec1_1": "📏 3.8 m × 2.1 m",
     "spec1_2": "🔥 Harvia M3 heater",
-    "spec_water": "💧 35L veepaak",
+    "spec_water": "💧 35L water tank",
     "spec1_4": "🚪 Lockable exterior door",
     "spec2_1": "📏 4 m × 2.4 m",
     "spec2_2": "🪵 Alder benches",
@@ -233,7 +239,7 @@ const translations = {
     "spec3_3": "🔥 Choice of internal or external wood-fired heater",
     "spec3_4": "📏 2,5 m × 2,1 m",
     "spec4_1": "🚚 Quality Icopal roofing",
-    "spec4_2": "🎨 Bronze-tinted glass door",
+    "spec4_2": "🎨 Custom size available on request",
     "spec4_3": "⚡ Stainless steel tightening bands",
     "spec4_4": "📐 2,1 m x 2 m",
     "included_title": "Available additions",
@@ -246,7 +252,7 @@ const translations = {
     "inc7": "🌬 Ventilation openings for better air exchange and pleasant steam",
     "inc8": "🪟 Tempered bronze-tinted glass door",
     "inc9": "🔐 Strong lockable exterior door with three keys",
-    "gallery_eyebrow": "Galerii",
+    "gallery_eyebrow": "Gallery",
     "gallery_title": "Completed projects and interiors",
     "gallery_text": "Take a closer look at our sauna designs, interior views and finish options.",
     "gal1": "Barrel sauna with a new solution",
@@ -288,7 +294,7 @@ const translations = {
     "about_h3": "Delivery across Estonia",
     "about_h3_text": "The sauna is delivered assembled and ready to use.",
     "about_caption": "Photo from our production or a completed sauna",
-    "contact_eyebrow": "Pakkumine",
+    "contact_eyebrow": "Offer",
     "contact_title": "Request a personal offer",
     "contact_text": "Write what kind of sauna you would like. If possible, include the model, dimensions, wood type, colour, location and whether you need transport.",
     "contact_loc": "We are located near Tartu, in Reola",
@@ -327,7 +333,13 @@ const translations = {
     "mail_model": "Desired sauna",
     "mail_transport": "Transport",
     "mail_location": "Location",
-    "mail_description": "Description"
+    "mail_description": "Description",
+    "gal10": "Custom-made barrel sauna with lighting",
+    "gal11": "Barrel sauna with lighting, built according to the customer’s wishes",
+    "prod8_title": "Safe loading",
+    "prod8_text": "The finished sauna is carefully lifted onto the transport vehicle with a crane. We use safe lifting equipment so the sauna reaches the client in exactly the same condition as when it leaves our workshop.",
+    "prod9_title": "Finished sauna delivered to the client",
+    "prod9_text": "We deliver saunas safely to clients across Estonia and, by agreement, across Europe."
   },
   "ru": {
     "meta_title": "OutDoorSauna | Бани-бочки, овальные и прямоугольные бани",
@@ -385,7 +397,7 @@ const translations = {
     "vat": "+ НДС",
     "spec1_1": "📏 3.8 m × 2.1 m",
     "spec1_2": "🔥 Печь Harvia M3",
-    "spec_water": "💧 35L veepaak",
+    "spec_water": "💧 Бак для воды 35 л",
     "spec1_4": "🚪 Запираемая наружная дверь",
     "spec2_1": "📏 4 m × 2.4 m",
     "spec2_2": "🪵 Полки из ольхи",
@@ -395,19 +407,19 @@ const translations = {
     "spec3_3": "🔥 Можно выбрать печь с топкой изнутри или снаружи",
     "spec3_4": "📏 2,5 m × 2,1 m",
     "spec4_1": "🚚 Качественная кровля Icopal",
-    "spec4_2": "🎨 Бронзовая стеклянная дверь",
+    "spec4_2": "🎨 По желанию можно заказать свой размер",
     "spec4_3": "⚡ Обручи из нержавеющей стали",
     "spec4_4": "📐 2,1 m x 2 m",
     "included_title": "Можно добавить в комплект",
-    "inc1": "🔥 Quality wood-fired Harvia M3, Harvia M2 or Stoveman 13M heater",
-    "inc2": "🏠 Durable Icopal or bitumen shingle roofing for year-round use",
-    "inc3": "💧 Durable stainless-steel water tank for convenient use",
-    "inc4": "⚡ Option for a modern and convenient electric heater",
-    "inc5": "🪨 Quality sauna stones for softer, better steam",
-    "inc6": "🧱 Heat-resistant and fire-safe protective boards around the heater",
-    "inc7": "🌬 Ventilation openings for better air exchange and pleasant steam",
-    "inc8": "🪟 Tempered bronze-tinted glass door",
-    "inc9": "🔐 Strong lockable exterior door with three keys",
+    "inc1": "🔥 Качественная дровяная печь Harvia M3, Harvia M2 или Stoveman 13M",
+    "inc2": "🏠 Прочная кровля Icopal или битумная черепица для круглогодичного использования",
+    "inc3": "💧 Прочный бак для воды из нержавеющей стали для удобного использования",
+    "inc4": "⚡ Возможность выбрать современную и удобную электрическую печь",
+    "inc5": "🪨 Качественные камни для более мягкого и приятного пара",
+    "inc6": "🧱 Жаростойкие и пожаробезопасные защитные плиты вокруг печи",
+    "inc7": "🌬 Вентиляционные отверстия для лучшего воздухообмена и приятного пара",
+    "inc8": "🪟 Закаленная стеклянная дверь бронзового оттенка",
+    "inc9": "🔐 Прочная запираемая наружная дверь с тремя ключами",
     "gallery_eyebrow": "Галерея",
     "gallery_title": "Готовые проекты и интерьер",
     "gallery_text": "Посмотрите дизайн наших бань, виды интерьера и варианты отделки.",
@@ -489,7 +501,13 @@ const translations = {
     "mail_model": "Желаемая баня",
     "mail_transport": "Доставка",
     "mail_location": "Местоположение",
-    "mail_description": "Описание"
+    "mail_description": "Описание",
+    "gal10": "Баня-бочка с подсветкой, изготовленная по индивидуальному заказу",
+    "gal11": "Баня-бочка с подсветкой, изготовленная по пожеланиям заказчика",
+    "prod8_title": "Безопасная погрузка",
+    "prod8_text": "Готовую баню аккуратно поднимают краном на транспортное средство. Мы используем безопасные подъемные средства, чтобы баня дошла до клиента в таком же состоянии, как при отправке из нашей мастерской.",
+    "prod9_title": "Готовая баня клиенту",
+    "prod9_text": "Мы безопасно доставляем бани клиентам по всей Эстонии и по договоренности также в Европу."
   },
   "sv": {
     "meta_title": "OutDoorSauna | Tunn-, oval- och fyrkantiga bastur",
@@ -534,7 +552,7 @@ const translations = {
     "product1_badge": "Populär",
     "product1_title": "2-rums tunnbastu",
     "product1_text": "En rymlig tunnbastu med ett praktiskt förrum och basturum. Passar bra för familjen eller en grupp vänner.",
-    "product2_badge": "Very spacious",
+    "product2_badge": "Mycket rymlig",
     "product2_title": "2-rums oval bastu",
     "product2_text": "En välplanerad oval bastu med praktiskt förrum och bekvämt basturum.",
     "product3_badge": "Kompakt",
@@ -557,7 +575,7 @@ const translations = {
     "spec3_3": "🔥 Möjlighet att välja inifrån- eller utifråneldad kamin",
     "spec3_4": "📏 2,5 m × 2,1 m",
     "spec4_1": "🚚 Kvalitativ Icopal-takbeläggning",
-    "spec4_2": "🎨 Bronsfärgad glasdörr",
+    "spec4_2": "🎨 Egen storlek kan beställas på begäran",
     "spec4_3": "⚡ Spännband i rostfritt stål",
     "spec4_4": "📐 2,1 m x 2 m",
     "included_title": "Möjliga tillval",
@@ -651,7 +669,13 @@ const translations = {
     "mail_model": "Önskad bastu",
     "mail_transport": "Transport",
     "mail_location": "Plats",
-    "mail_description": "Beskrivning"
+    "mail_description": "Beskrivning",
+    "gal10": "Specialtillverkad tunnbastu med belysning",
+    "gal11": "Tunnbastu med belysning tillverkad enligt kundens önskemål",
+    "prod8_title": "Säker lastning",
+    "prod8_text": "Den färdiga bastun lyfts försiktigt med kran på transportfordonet. Vi använder säkra lyftredskap så att bastun når kunden i samma skick som när den lämnar vår verkstad.",
+    "prod9_title": "Färdig bastu till kunden",
+    "prod9_text": "Vi levererar bastur säkert till kunder i hela Estland och enligt överenskommelse även till Europa."
   },
   "fi": {
     "meta_title": "OutDoorSauna | Tynnyri-, ovaali- ja suorakulmaiset saunat",
@@ -719,7 +743,7 @@ const translations = {
     "spec3_3": "🔥 Valittavissa sisältä tai ulkoa lämmitettävä kiuas",
     "spec3_4": "📏 2,5 m × 2,1 m",
     "spec4_1": "🚚 Laadukas Icopal-kate",
-    "spec4_2": "🎨 Pronssinsävyinen lasiovi",
+    "spec4_2": "🎨 Halutessasi voit tilata myös omilla mitoilla",
     "spec4_3": "⚡ Ruostumattomasta teräksestä valmistetut kiristysvanteet",
     "spec4_4": "📐 2,1 m x 2 m",
     "included_title": "Mahdolliset lisävarusteet",
@@ -813,7 +837,13 @@ const translations = {
     "mail_model": "Toivottu sauna",
     "mail_transport": "Kuljetus",
     "mail_location": "Sijainti",
-    "mail_description": "Kuvaus"
+    "mail_description": "Kuvaus",
+    "gal10": "Mittatilaustyönä valmistettu valaistu tynnyrisauna",
+    "gal11": "Asiakkaan toiveiden mukaan valmistettu valaistu tynnyrisauna",
+    "prod8_title": "Turvallinen lastaus",
+    "prod8_text": "Valmis sauna nostetaan nosturilla varovasti kuljetusajoneuvon päälle. Käytämme turvallisia nostovälineitä, jotta sauna saapuu asiakkaalle samassa kunnossa kuin se lähti työpajaltamme.",
+    "prod9_title": "Valmis sauna asiakkaalle",
+    "prod9_text": "Toimitamme saunat turvallisesti asiakkaille koko Viroon ja sopimuksen mukaan myös Eurooppaan."
   }
 };
 
@@ -840,7 +870,34 @@ function toggleLanguageMenu(){
   if(menu) menu.classList.toggle('open');
 }
 
+
+function ensureTranslationKeys(){
+  const textKeyMap = {
+    "Valgustusega torusaun, mis on valmistatud eritellimusel": "gal10",
+    "Tellija soovide järgi valmistatud valgustusega torusaun": "gal11",
+    "Turvaline peale laadimine": "prod8_title",
+    "Valmis saun tõstetakse kraanaga ettevaatlikult transpordivahendile. Kasutame turvalisi tõstevahendeid, et saun jõuaks kliendini täpselt samas seisukorras nagu meie töökojast lahkudes.": "prod8_text",
+    "Valmis saun kliendile": "prod9_title",
+    "Toimetame saunad turvaliselt klientideni üle Eesti ning kokkuleppel ka Euroopasse.": "prod9_text"
+  };
+
+  document.querySelectorAll('figcaption, .timeline-card h2, .timeline-card p').forEach(el => {
+    if(el.dataset.i18n && el.dataset.i18n !== 'gal9') return;
+    const key = textKeyMap[el.textContent.trim()];
+    if(key) el.setAttribute('data-i18n', key);
+  });
+
+  document.querySelectorAll('.lightbox-prev').forEach(el => {
+    if(!el.hasAttribute('data-i18n-aria-label')) el.setAttribute('data-i18n-aria-label', 'prev_image');
+  });
+
+  document.querySelectorAll('.lightbox-next').forEach(el => {
+    if(!el.hasAttribute('data-i18n-aria-label')) el.setAttribute('data-i18n-aria-label', 'next_image');
+  });
+}
+
 function setLanguage(lang){
+  ensureTranslationKeys();
   if(!translations[lang]) lang='et';
   currentLanguage = lang;
   localStorage.setItem('siteLanguage', lang);

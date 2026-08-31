@@ -4,6 +4,7 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="theme-color" content="#f4f6f8">
+  <meta name="color-scheme" content="light dark">
   <title>Koos Kooli</title>
   <link rel="stylesheet" href="assets/styles.css">
 </head>
@@ -11,38 +12,47 @@
 <div class="app">
   <input class="mode-toggle" type="checkbox" id="modeToggle">
 
-  <div class="topbar">
+  <header class="topbar">
     <div class="brand">KOOS KOOLI<small>üks auto, kaks tunniplaani</small></div>
-    <label class="modebtn" for="modeToggle">
-      <span class="show-normal">Tavaline tunniplaan</span>
-      <span class="show-car">Tagasi koos-sõidu vaatesse</span>
-    </label>
-  </div>
+    <div class="top-actions">
+      <label class="modebtn" for="modeToggle">
+        <span class="show-normal">Tunniplaan</span>
+        <span class="show-car">Koos-sõit</span>
+      </label>
+      <button class="menubtn" id="menuBtn" type="button" aria-label="Ava lisafunktsioonid" aria-expanded="false">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+  </header>
 
   <section id="carMode">
     <div class="hero card">
-      <h1>Millal on mõistlik koos kooli minna?</h1>
-      <p>Võrdleme SRT526 ja LOG26 tunde. Kohe on näha, kumb alustab varem, kumb lõpetab hiljem ja kui kaua keegi peab ootama.</p>
+      <div>
+        <h1>Millal on mõistlik koos kooli minna?</h1>
+        <p>Võrdleme SRT526 ja LOG26 tunde. Kohe on näha, kumb alustab varem, kumb lõpetab hiljem ja kui kaua keegi peab ootama.</p>
+      </div>
       <div class="chips">
         <span class="chip">SRT526</span>
         <span class="chip">LOG26</span>
         <span class="chip">1 auto</span>
+        <span class="chip live-chip"><i></i> VOCO live</span>
       </div>
     </div>
 
     <div class="day-control">
-      <button class="navbtn" id="prevDay" aria-label="Eelmine päev">‹</button>
+      <button class="navbtn" id="prevDay" aria-label="Eelmine koolipäev">‹</button>
       <button class="datebox" id="dateBox" type="button"></button>
-      <button class="navbtn" id="nextDay" aria-label="Järgmine päev">›</button>
+      <button class="navbtn" id="nextDay" aria-label="Järgmine koolipäev">›</button>
+      <input type="date" id="datePicker" class="visually-hidden" tabindex="-1">
     </div>
 
-    <div id="loading" class="message card">Laen tunniplaani…</div>
+    <div id="loading" class="message card"><span class="spinner"></span> Laen VOCO tunniplaani…</div>
     <div id="errorBox" class="message error card" hidden></div>
 
     <div id="carContent" hidden>
       <div class="summary">
         <div class="stat card">
-          <div class="label">Mis kell võiks kodust välja minna</div>
+          <div class="label">Soovituslik väljasõit</div>
           <div class="big" id="depart">—</div>
           <div class="small" id="departText">—</div>
         </div>
@@ -57,7 +67,7 @@
           <div class="small" id="eveningWait">—</div>
         </div>
         <div class="stat card">
-          <div class="label">Kas ajad sobivad hästi?</div>
+          <div class="label">Kui hästi ajad sobivad?</div>
           <div class="big" id="scoreBig">—</div>
           <div class="small" id="scoreText">—</div>
           <span class="status" id="statusPill">—</span>
@@ -69,7 +79,7 @@
           <div class="timeline-head">
             <div>
               <div class="title">Mõlema grupi päev kõrvuti</div>
-              <div class="sub">Nii on kohe näha, kumb alustab varem ja kumb lõpetab hiljem.</div>
+              <div class="sub">Ühe pilguga on näha, kus tekib ootamist.</div>
             </div>
             <div class="legend">
               <span><i class="dot srt"></i>SRT526</span>
@@ -82,7 +92,6 @@
         <div class="ai-card card">
           <div class="title">Päeva kokkuvõte</div>
           <div class="sub" id="aiDay">—</div>
-
           <div class="ai-box">
             <b id="aiTitle">—</b>
             <p id="aiText">—</p>
@@ -91,9 +100,8 @@
             <b>Mida võiks teha</b>
             <p id="aiTip">—</p>
           </div>
-
           <div class="score">
-            <span>Kui hästi päev kokku sobib</span>
+            <span>Koos-sõidu sobivus</span>
             <b id="aiScore">—</b>
           </div>
         </div>
@@ -104,15 +112,14 @@
   <section id="normalMode" class="normal">
     <div class="search-card card">
       <div class="title">Tavaline tunniplaan</div>
-      <div class="sub">Otsi VOCO gruppi ja vaata terve nädala tunniplaani.</div>
-
+      <div class="sub">Vali grupp ja vaata terve nädala tunniplaani.</div>
       <div class="search-row">
         <div class="search-wrap" id="searchWrap">
-          <input id="groupSearch" class="search" autocomplete="off" placeholder="Otsi gruppi, näiteks SRT526 või LOG26">
+          <input id="groupSearch" class="search" autocomplete="off" inputmode="search" placeholder="Otsi gruppi, näiteks SRT526">
           <span class="search-icon">⌕</span>
           <div class="results" id="results"></div>
         </div>
-        <button class="selectbtn" id="openGroup">Ava</button>
+        <button class="selectbtn" id="openGroup">Vali</button>
       </div>
     </div>
 
@@ -128,12 +135,73 @@
           <div class="title" id="groupTitle">SRT526</div>
           <div class="sub">Nädalavaade</div>
         </div>
+        <span class="live-badge">VOCO live</span>
       </div>
       <div class="week-grid" id="weekGrid"></div>
-      <div class="normal-note" id="sourceNote"></div>
+      <div class="mobile-week" id="mobileWeekList"></div>
+      <div class="normal-note" id="sourceNote">Andmed tulevad VOCO-st.</div>
     </div>
   </section>
 </div>
+
+<div class="menu-backdrop" id="menuBackdrop" hidden></div>
+<aside class="menu-panel" id="menuPanel" aria-hidden="true">
+  <div class="menu-head">
+    <div>
+      <div class="menu-eyebrow">LISAFUNKTSIOONID</div>
+      <h2>Menüü</h2>
+    </div>
+    <button class="closebtn" id="closeMenu" type="button" aria-label="Sulge menüü">×</button>
+  </div>
+
+  <nav class="menu-tabs" aria-label="Lisafunktsioonid">
+    <button class="menu-tab active" data-panel="changes" type="button"><span class="tab-icon">↺</span><span>Muudatused</span><b class="count-badge" id="changeBadge" hidden>0</b></button>
+    <button class="menu-tab" data-panel="tomorrow" type="button"><span class="tab-icon">◔</span><span>Kui karm homme on?</span></button>
+    <button class="menu-tab" data-panel="bestworst" type="button"><span class="tab-icon">↕</span><span>Parim / halvim päev</span></button>
+    <button class="menu-tab" data-panel="appearance" type="button"><span class="tab-icon">◐</span><span>Välimus</span></button>
+  </nav>
+
+  <div class="menu-content">
+    <section class="menu-section active" data-section="changes">
+      <div class="section-head">
+        <div><h3>Muudatused</h3><p>Võrdleme uut VOCO tunniplaani viimati nähtud versiooniga.</p></div>
+        <button class="textbtn" id="clearChanges" type="button">Tühjenda</button>
+      </div>
+      <div id="changesList" class="changes-list"></div>
+      <div class="menu-note">Muudatus ilmub siia pärast seda, kui leht on vähemalt korra sama nädala tunniplaani salvestanud ja VOCO-s on hiljem midagi teistmoodi.</div>
+    </section>
+
+    <section class="menu-section" data-section="tomorrow">
+      <div class="section-head"><div><h3>Kui karm homme on?</h3><p>Hinnang põhineb algusajal, päeva pikkusel, tundide arvul ja kahe grupi ajavahel.</p></div></div>
+      <div class="tomorrow-score card-soft">
+        <div class="meter"><div class="meter-fill" id="tomorrowMeter"></div></div>
+        <div class="big-score"><b id="tomorrowScore">—/10</b><span id="tomorrowLabel">Laen…</span></div>
+        <p id="tomorrowText">—</p>
+      </div>
+      <div id="tomorrowGroups" class="mini-stats"></div>
+    </section>
+
+    <section class="menu-section" data-section="bestworst">
+      <div class="section-head"><div><h3>Parim / halvim koolipäev</h3><p>Vaatame selle nädala päevi mõlema grupi peale kokku.</p></div></div>
+      <div class="ranking-grid">
+        <div class="rank-card best"><span>PARIM</span><b id="bestDay">—</b><p id="bestText">—</p></div>
+        <div class="rank-card worst"><span>HALVIM</span><b id="worstDay">—</b><p id="worstText">—</p></div>
+      </div>
+      <div id="weekRanking" class="week-ranking"></div>
+    </section>
+
+    <section class="menu-section" data-section="appearance">
+      <div class="section-head"><div><h3>Välimus</h3><p>Valik salvestatakse sellesse seadmesse.</p></div></div>
+      <div class="theme-options" role="radiogroup" aria-label="Välimus">
+        <button class="theme-option" data-theme-value="light" type="button"><span class="theme-preview light-preview"></span><b>Hele</b><small>Alati hele</small></button>
+        <button class="theme-option" data-theme-value="dark" type="button"><span class="theme-preview dark-preview"></span><b>Tume</b><small>Alati tume</small></button>
+        <button class="theme-option" data-theme-value="system" type="button"><span class="theme-preview system-preview"></span><b>Automaatne</b><small>Järgib telefoni/arvutit</small></button>
+      </div>
+    </section>
+  </div>
+</aside>
+
+<div class="toast" id="toast" hidden></div>
 <script src="assets/app.js" defer></script>
 </body>
 </html>

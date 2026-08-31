@@ -9,6 +9,8 @@ const GROUP_B = "LOG26";
 const SNAPSHOT_KEY = "kooskooli.scheduleSnapshots.v2";
 const CHANGE_KEY = "kooskooli.changeHistory.v2";
 const THEME_KEY = "kooskooli.theme";
+const DATA_CACHE_KEY = "kooskooli.weekData.v1";
+const inflightWeeks = new Map();
 
 const $ = (s) => document.querySelector(s);
 const $$ = (s) => [...document.querySelectorAll(s)];
@@ -19,7 +21,9 @@ const state = {
   selectedGroups: [GROUP_A],
   weekCache: new Map(),
   currentCompare: null,
-  menuWeek: null
+  menuWeek: null,
+  weekLoadId: 0,
+  compareLoadId: 0
 };
 
 function ymd(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
@@ -39,22 +43,68 @@ function escapeHtml(v){ return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;"
 function readJson(key,fallback){ try{ return JSON.parse(localStorage.getItem(key)) ?? fallback; }catch{return fallback;} }
 function writeJson(key,value){ try{ localStorage.setItem(key,JSON.stringify(value)); }catch{} }
 
-async function apiWeek(group,week,{force=false}={}){
-  const key=`${group}|${week}`;
-  if(!force && state.weekCache.has(key)) return state.weekCache.get(key);
+function readWeekDisk(group,week){
+  const all=readJson(DATA_CACHE_KEY,{});
+  const hit=all[`${group}|${week}`];
+  if(!hit || !Array.isArray(hit.lessons)) return null;
+  return {group,week,lessons:hit.lessons,raw:null,stale:true,savedAt:hit.savedAt||0};
+}
+function writeWeekDisk(data){
+  const all=readJson(DATA_CACHE_KEY,{});
+  all[`${data.group}|${data.week}`]={lessons:data.lessons.map(snapshotLesson),savedAt:Date.now()};
+  const entries=Object.entries(all).sort((a,b)=>(b[1]?.savedAt||0)-(a[1]?.savedAt||0)).slice(0,24);
+  writeJson(DATA_CACHE_KEY,Object.fromEntries(entries));
+}
+function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
+
+async function fetchWeekFresh(group,week){
   const url=new URL(`${API_BASE}/api/tunniplaan`);
   url.searchParams.set("grupp",group);
   url.searchParams.set("nadal",week);
-  const r=await fetch(url,{cache:"no-store"});
-  const text=await r.text();
-  let raw;
-  try{ raw=JSON.parse(text); }catch{ throw new Error("VOCO vastus ei olnud loetav JSON."); }
-  if(!r.ok) throw new Error(raw?.error||`Tunniplaani laadimine ebaõnnestus (${r.status}).`);
-  const lessons=normalizePayload(raw,group).sort(sortLessons);
-  const data={group,week,lessons,raw};
-  state.weekCache.set(key,data);
-  detectChanges(group,week,lessons);
-  return data;
+  let lastError;
+  for(let attempt=0;attempt<2;attempt++){
+    const controller=new AbortController();
+    const timeout=setTimeout(()=>controller.abort(),7000);
+    try{
+      const r=await fetch(url,{cache:"no-store",signal:controller.signal});
+      const text=await r.text();
+      let raw;
+      try{ raw=JSON.parse(text); }catch{ throw new Error("VOCO vastus ei olnud loetav JSON."); }
+      if(!r.ok) throw new Error(raw?.error||`Tunniplaani laadimine ebaõnnestus (${r.status}).`);
+      const lessons=normalizePayload(raw,group).sort(sortLessons);
+      const data={group,week,lessons,raw,stale:false};
+      state.weekCache.set(`${group}|${week}`,data);
+      writeWeekDisk(data);
+      detectChanges(group,week,lessons);
+      return data;
+    }catch(e){
+      lastError=e?.name==="AbortError"?new Error("VOCO vastus võttis liiga kaua aega."):e;
+      if(attempt===0) await sleep(450);
+    }finally{ clearTimeout(timeout); }
+  }
+  throw lastError||new Error("Tunniplaani laadimine ebaõnnestus.");
+}
+
+async function apiWeek(group,week,{force=false}={}){
+  const key=`${group}|${week}`;
+  if(!force && state.weekCache.has(key)) return state.weekCache.get(key);
+  if(!force){
+    const disk=readWeekDisk(group,week);
+    if(disk){ state.weekCache.set(key,disk); return disk; }
+  }
+  if(inflightWeeks.has(key)) return inflightWeeks.get(key);
+  const job=fetchWeekFresh(group,week).finally(()=>inflightWeeks.delete(key));
+  inflightWeeks.set(key,job);
+  try{ return await job; }
+  catch(e){
+    const fallback=readWeekDisk(group,week);
+    if(fallback){ state.weekCache.set(key,fallback); return fallback; }
+    throw e;
+  }
+}
+
+async function refreshWeekInBackground(group,week){
+  try{ await fetchWeekFresh(group,week); }catch{}
 }
 
 function sortLessons(a,b){ return a.date.localeCompare(b.date) || (mins(a.start)||0)-(mins(b.start)||0) || a.title.localeCompare(b.title); }
@@ -173,15 +223,20 @@ function renderChanges(){
 }
 
 async function loadCompare(){
-  $("#loading").hidden=false; $("#errorBox").hidden=true; $("#carContent").hidden=true;
+  const loadId=++state.compareLoadId;
+  $("#loading").hidden=false; $("#errorBox").hidden=true;
   try{
     const week=startOfWeek(state.date);
     const [aWeek,bWeek]=await Promise.all([apiWeek(GROUP_A,week),apiWeek(GROUP_B,week)]);
+    if(loadId!==state.compareLoadId) return;
     const a=aWeek.lessons.filter(x=>x.date===state.date), b=bWeek.lessons.filter(x=>x.date===state.date);
     state.currentCompare={date:state.date,a,b}; renderCompare(state.currentCompare); $("#carContent").hidden=false;
     state.menuWeek={week,a:aWeek.lessons,b:bWeek.lessons}; renderMenuStats();
-  }catch(e){ $("#errorBox").textContent=e.message; $("#errorBox").hidden=false; }
-  finally{ $("#loading").hidden=true; }
+    refreshWeekInBackground(GROUP_A,week); refreshWeekInBackground(GROUP_B,week);
+  }catch(e){
+    if(loadId!==state.compareLoadId) return;
+    $("#errorBox").textContent=e.message; $("#errorBox").hidden=false;
+  }finally{ if(loadId===state.compareLoadId) $("#loading").hidden=true; }
 }
 
 function renderCompare(data){
@@ -285,13 +340,27 @@ function renderGroupResults(q=""){
   $$("#results [data-group]").forEach(btn=>btn.addEventListener("click",()=>{ensureSelected(btn.dataset.group);$("#groupSearch").value="";$("#searchWrap").classList.remove("open");}));
 }
 async function loadWeek(){
-  $("#weekGrid").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
-  $("#mobileWeekList").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
+  const loadId=++state.weekLoadId;
+  const groups=state.selectedGroups.length?state.selectedGroups:[GROUP_A];
+  const cached=groups.map(g=>state.weekCache.get(`${g}|${state.weekStart}`)||readWeekDisk(g,state.weekStart));
+  const hasAllCached=cached.every(Boolean);
+  if(hasAllCached){
+    cached.forEach(d=>state.weekCache.set(`${d.group}|${d.week}`,d));
+    renderWeek(cached);
+  }else{
+    $("#weekGrid").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
+    $("#mobileWeekList").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
+  }
   try{
-    const groups=state.selectedGroups.length?state.selectedGroups:[GROUP_A];
-    const datasets=await Promise.all(groups.map(g=>apiWeek(g,state.weekStart)));
+    const datasets=await Promise.all(groups.map(g=>fetchWeekFresh(g,state.weekStart).catch(()=>apiWeek(g,state.weekStart))));
+    if(loadId!==state.weekLoadId) return;
     renderWeek(datasets);
   }catch(e){
+    if(loadId!==state.weekLoadId) return;
+    if(hasAllCached){
+      $("#sourceNote").textContent="Näitan viimati salvestatud tunniplaani. VOCO värskendus ebaõnnestus ajutiselt.";
+      return;
+    }
     const msg=`<div class="week-loading error-text">${escapeHtml(e.message)}</div>`;
     $("#weekGrid").innerHTML=msg; $("#mobileWeekList").innerHTML=msg;
   }

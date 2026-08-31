@@ -7,6 +7,10 @@ const GROUPS = {
 
 const GROUP_A = "SRT526";
 const GROUP_B = "LOG26";
+const PEOPLE = {
+  SRT526: "Kethon",
+  LOG26: "Adriana"
+};
 const SNAPSHOT_KEY = "kooskooli.scheduleSnapshots.v2";
 const CHANGE_KEY = "kooskooli.changeHistory.v2";
 const THEME_KEY = "kooskooli.theme";
@@ -132,6 +136,10 @@ function escapeHtml(v){
       "'":"&#039;"
     }[c])
   );
+}
+
+function personName(group){
+  return PEOPLE[group] || group;
 }
 
 function readJson(key,fallback){
@@ -1318,11 +1326,11 @@ function renderCompare(data){
       ? "—"
       : (
           first>firstB
-            ? GROUP_A
+            ? personName(GROUP_A)
             : (
                 firstB>first
-                  ? GROUP_B
-                  : "—"
+                  ? personName(GROUP_B)
+                  : "Mitte kumbki"
               )
         );
 
@@ -1331,11 +1339,11 @@ function renderCompare(data){
       ? "—"
       : (
           last<lastB
-            ? GROUP_A
+            ? personName(GROUP_A)
             : (
                 lastB<last
-                  ? GROUP_B
-                  : "—"
+                  ? personName(GROUP_B)
+                  : "Mitte kumbki"
               )
         );
 
@@ -1370,14 +1378,14 @@ function renderCompare(data){
       : hm(
           Math.max(
             0,
-            earliest-25
+            earliest-15
           )
         );
 
   $("#departText").textContent=
     earliest===null
       ? "Sõitu pole vaja planeerida."
-      : `25 min enne kõige varasemat tundi (${hm(earliest)}).`;
+      : `Arvestatud kuni 15 min sõiduks · esimene tund ${hm(earliest)}.`;
 
   $("#morningWho").textContent=
     morningWho;
@@ -1428,15 +1436,15 @@ function renderCompare(data){
   ){
     const who=
       first===null
-        ? GROUP_B
-        : GROUP_A;
+        ? personName(GROUP_B)
+        : personName(GROUP_A);
 
     scoreText="Ainult ühel on tunnid.";
     statusText="lihtne";
     statusClass="good";
-    aiTitle=`Ainult ${who} on koolis`;
-    aiText="Ühist mineku- ja tulekuaega pole vaja sobitada.";
-    aiTip=`Sõit saab käia ${who} päeva järgi.`;
+    aiTitle=`Täna on kool ainult ${who}l`;
+    aiText="Täna ei pea kahe erineva tunniplaani järgi sõitu sättima.";
+    aiTip=`Sõitke lihtsalt ${who} tunniplaani järgi.`;
 
   }else if(
     morning<=20 &&
@@ -1445,9 +1453,9 @@ function renderCompare(data){
     scoreText="Ajad sobivad hästi.";
     statusText="hea päev";
     statusClass="good";
-    aiTitle="Koos minna on hea variant";
-    aiText="Mõlema grupi koolipäev algab ja lõpeb üsna samal ajal.";
-    aiTip="Minge koos ja tulge koos tagasi.";
+    aiTitle="Koos sõit sobib hästi";
+    aiText="Kethoni ja Adriana päev algab ning lõpeb piisavalt lähestikku.";
+    aiTip="Minge koos kooli ja tulge pärast tunde sama autoga tagasi.";
 
   }else{
     scoreText=
@@ -1467,16 +1475,16 @@ function renderCompare(data){
 
     aiTitle=
       morning>60
-        ? "Hommikul on ajad üsna erinevad"
-        : "Päevad ei lähe päris kokku";
+        ? "Hommikul tekib pikem ajavahe"
+        : "Ajad ei lähe päris kokku";
 
     aiText=
-      `Hommikul on alguse vahe ${fmtMin(morning)} ja pärast kooli lõpu vahe ${fmtMin(evening)}.`;
+      `Hommikul on Kethoni ja Adriana algusaegade vahe ${fmtMin(morning)} ning pärast tunde lõppude vahe ${fmtMin(evening)}.`;
 
     aiTip=
       morning>90
-        ? "Varasema algusega grupp võiks hommikul eraldi minna. Tagasisõitu saab veel eraldi vaadata."
-        : "Kui ootamine ei sega, võib koos minna. Muidu tasub üks ots eraldi teha.";
+        ? "Kui nii pikk ootamine ei sobi, tasub hommikune sõit eraldi teha. Tagasi saab vajadusel koos tulla."
+        : "Koos sõit on täiesti tehtav. Kui see ooteaeg tüütuks muutub, võib ainult ühe otsa eraldi teha.";
   }
 
   $("#scoreText").textContent=
@@ -1551,15 +1559,15 @@ function renderTimeline(a,b,m){
 
   const start=
     Math.floor(
-      (rawStart-30)/30
+      (rawStart-45)/30
     )*30;
 
   const end=
     Math.ceil(
-      (rawEnd+30)/30
+      (rawEnd+45)/30
     )*30;
 
-  const pxPerMinute=0.95;
+  const pxPerMinute=1.08;
 
   const H=
     Math.max(
@@ -1639,9 +1647,12 @@ function renderTimeline(a,b,m){
           y(en)-y(st)
         )+"px";
 
+      const owner=cls==="srt" ? personName(GROUP_A) : personName(GROUP_B);
+
       el.innerHTML=
-        `<div class="time">
-          ${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}
+        `<div class="lesson-top">
+          <span class="owner">${escapeHtml(owner)}</span>
+          <span class="time">${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</span>
         </div>
 
         <div class="name">
@@ -1691,7 +1702,7 @@ function renderTimeline(a,b,m){
 
     w.innerHTML=
       `<span>
-        ${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)}
+        ${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)} enne oma tundi
       </span>`;
 
     host.appendChild(w);

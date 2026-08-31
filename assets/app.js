@@ -7,10 +7,7 @@ const GROUPS = {
 
 const GROUP_A = "SRT526";
 const GROUP_B = "LOG26";
-const PEOPLE = {
-  SRT526: "Kethon",
-  LOG26: "Adriana"
-};
+const PERSON_NAMES = { SRT526: "Kethon", LOG26: "Adriana" };
 const SNAPSHOT_KEY = "kooskooli.scheduleSnapshots.v2";
 const CHANGE_KEY = "kooskooli.changeHistory.v2";
 const THEME_KEY = "kooskooli.theme";
@@ -136,10 +133,6 @@ function escapeHtml(v){
       "'":"&#039;"
     }[c])
   );
-}
-
-function personName(group){
-  return PEOPLE[group] || group;
 }
 
 function readJson(key,fallback){
@@ -1326,11 +1319,11 @@ function renderCompare(data){
       ? "—"
       : (
           first>firstB
-            ? personName(GROUP_A)
+            ? GROUP_A
             : (
                 firstB>first
-                  ? personName(GROUP_B)
-                  : "Mitte kumbki"
+                  ? GROUP_B
+                  : "—"
               )
         );
 
@@ -1339,11 +1332,11 @@ function renderCompare(data){
       ? "—"
       : (
           last<lastB
-            ? personName(GROUP_A)
+            ? GROUP_A
             : (
                 lastB<last
-                  ? personName(GROUP_B)
-                  : "Mitte kumbki"
+                  ? GROUP_B
+                  : "—"
               )
         );
 
@@ -1385,10 +1378,10 @@ function renderCompare(data){
   $("#departText").textContent=
     earliest===null
       ? "Sõitu pole vaja planeerida."
-      : `Arvestatud kuni 15 min sõiduks · esimene tund ${hm(earliest)}.`;
+      : `Arvestatud on umbes 10–15 min sõiduga. Varaseim tund algab ${hm(earliest)}.`;
 
   $("#morningWho").textContent=
-    morningWho;
+    morningWho === "—" ? "—" : personName(morningWho);
 
   $("#morningWait").textContent=
     first===null||firstB===null
@@ -1396,7 +1389,7 @@ function renderCompare(data){
       : fmtMin(morning);
 
   $("#eveningWho").textContent=
-    eveningWho;
+    eveningWho === "—" ? "—" : personName(eveningWho);
 
   $("#eveningWait").textContent=
     last===null||lastB===null
@@ -1436,15 +1429,15 @@ function renderCompare(data){
   ){
     const who=
       first===null
-        ? personName(GROUP_B)
-        : personName(GROUP_A);
+        ? GROUP_B
+        : GROUP_A;
 
     scoreText="Ainult ühel on tunnid.";
     statusText="lihtne";
     statusClass="good";
-    aiTitle=`Täna on kool ainult ${who}l`;
-    aiText="Täna ei pea kahe erineva tunniplaani järgi sõitu sättima.";
-    aiTip=`Sõitke lihtsalt ${who} tunniplaani järgi.`;
+    aiTitle=`Ainult ${who} on koolis`;
+    aiText="Ühist mineku- ja tulekuaega pole vaja sobitada.";
+    aiTip=`Sõit saab käia ${who} päeva järgi.`;
 
   }else if(
     morning<=20 &&
@@ -1453,9 +1446,9 @@ function renderCompare(data){
     scoreText="Ajad sobivad hästi.";
     statusText="hea päev";
     statusClass="good";
-    aiTitle="Koos sõit sobib hästi";
-    aiText="Kethoni ja Adriana päev algab ning lõpeb piisavalt lähestikku.";
-    aiTip="Minge koos kooli ja tulge pärast tunde sama autoga tagasi.";
+    aiTitle="Koos minna on hea variant";
+    aiText="Mõlema grupi koolipäev algab ja lõpeb üsna samal ajal.";
+    aiTip="Minge koos ja tulge koos tagasi.";
 
   }else{
     scoreText=
@@ -1475,16 +1468,16 @@ function renderCompare(data){
 
     aiTitle=
       morning>60
-        ? "Hommikul tekib pikem ajavahe"
-        : "Ajad ei lähe päris kokku";
+        ? "Hommikul on ajad üsna erinevad"
+        : "Päevad ei lähe päris kokku";
 
     aiText=
-      `Hommikul on Kethoni ja Adriana algusaegade vahe ${fmtMin(morning)} ning pärast tunde lõppude vahe ${fmtMin(evening)}.`;
+      `Hommikul on alguse vahe ${fmtMin(morning)} ja pärast kooli lõpu vahe ${fmtMin(evening)}.`;
 
     aiTip=
       morning>90
-        ? "Kui nii pikk ootamine ei sobi, tasub hommikune sõit eraldi teha. Tagasi saab vajadusel koos tulla."
-        : "Koos sõit on täiesti tehtav. Kui see ooteaeg tüütuks muutub, võib ainult ühe otsa eraldi teha.";
+        ? "Varasema algusega grupp võiks hommikul eraldi minna. Tagasisõitu saab veel eraldi vaadata."
+        : "Kui ootamine ei sega, võib koos minna. Muidu tasub üks ots eraldi teha.";
   }
 
   $("#scoreText").textContent=
@@ -1559,15 +1552,15 @@ function renderTimeline(a,b,m){
 
   const start=
     Math.floor(
-      (rawStart-45)/30
+      (rawStart-30)/30
     )*30;
 
   const end=
     Math.ceil(
-      (rawEnd+45)/30
+      (rawEnd+30)/30
     )*30;
 
-  const pxPerMinute=1.08;
+  const pxPerMinute=0.95;
 
   const H=
     Math.max(
@@ -1647,12 +1640,9 @@ function renderTimeline(a,b,m){
           y(en)-y(st)
         )+"px";
 
-      const owner=cls==="srt" ? personName(GROUP_A) : personName(GROUP_B);
-
       el.innerHTML=
-        `<div class="lesson-top">
-          <span class="owner">${escapeHtml(owner)}</span>
-          <span class="time">${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</span>
+        `<div class="time">
+          ${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}
         </div>
 
         <div class="name">
@@ -1702,7 +1692,7 @@ function renderTimeline(a,b,m){
 
     w.innerHTML=
       `<span>
-        ${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)} enne oma tundi
+        ${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)}
       </span>`;
 
     host.appendChild(w);
@@ -1712,6 +1702,8 @@ function renderTimeline(a,b,m){
 /* =========================
    TUNNIPLAANI VAADE
    ========================= */
+
+function personName(code){ return PERSON_NAMES[code] || code; }
 
 function groupMeta(code){
   return GROUPS[code] || {

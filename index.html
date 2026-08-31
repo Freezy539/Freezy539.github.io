@@ -33,7 +33,7 @@
   <input class="mode-toggle" type="checkbox" id="modeToggle">
 
   <header class="topbar">
-    <div class="brand">KOOS KOOLI<small>Kethon + Adriana · üks auto</small></div>
+    <div class="brand">KOOS KOOLI<small>üks auto, kaks tunniplaani</small></div>
     <div class="top-actions">
       <label class="modebtn" for="modeToggle">
         <span class="show-normal">Tunniplaan</span>
@@ -48,13 +48,13 @@
   <section id="carMode">
     <div class="hero card">
       <div>
-        <h1>Kas läheme koos või eraldi?</h1>
-        <p>Siin on Kethoni ja Adriana koolipäev ühes vaates. Koolini kulub autoga tavaliselt 10–15 minutit, seega näed kohe, millal kodust välja sõita ja kas kellelgi tekib ootamist.</p>
+        <h1>Millal on mõistlik koos kooli minna?</h1>
+        <p>Kethoni ja Adriana koolipäev kõrvuti. Näed kohe, mis kell välja sõita, kelle tunnid algavad varem ja kas pärast kooli tuleb oodata.</p>
       </div>
       <div class="chips">
-        <span class="chip person-chip"><b>Kethon</b><small>SRT526</small></span>
-        <span class="chip person-chip"><b>Adriana</b><small>LOG26</small></span>
-        <span class="chip">🚗 10–15 min kooli</span>
+        <span class="chip">Kethon · SRT526</span>
+        <span class="chip">Adriana · LOG26</span>
+        <span class="chip">1 auto</span>
         <span class="chip live-chip"><i></i> VOCO live</span>
       </div>
     </div>
@@ -72,22 +72,22 @@
     <div id="carContent" hidden>
       <div class="summary">
         <div class="stat card">
-          <div class="label">Millal kodust välja?</div>
+          <div class="label">Soovituslik väljasõit</div>
           <div class="big" id="depart">—</div>
           <div class="small" id="departText">—</div>
         </div>
         <div class="stat card">
-          <div class="label">Kes peab hommikul ootama?</div>
+          <div class="label">Hommikul ootab</div>
           <div class="big" id="morningWho">—</div>
           <div class="small" id="morningWait">—</div>
         </div>
         <div class="stat card">
-          <div class="label">Kes ootab pärast tunde?</div>
+          <div class="label">Pärast kooli ootab</div>
           <div class="big" id="eveningWho">—</div>
           <div class="small" id="eveningWait">—</div>
         </div>
         <div class="stat card">
-          <div class="label">Kas ühe autoga on mugav?</div>
+          <div class="label">Kui hästi ajad sobivad?</div>
           <div class="big" id="scoreBig">—</div>
           <div class="small" id="scoreText">—</div>
           <span class="status" id="statusPill">—</span>
@@ -98,31 +98,26 @@
         <div class="timeline-card card">
           <div class="timeline-head">
             <div>
-              <div class="title">Kethoni ja Adriana koolipäev</div>
-              <div class="sub">Kellaaeg vasakul näitab päeva kulgu. Sinine on Kethon, roheline Adriana.</div>
+              <div class="title">Kethoni ja Adriana tunnid</div>
+              <div class="sub">Vasakul Kethon, paremal Adriana. Kellaaeg jookseb ülevalt alla.</div>
             </div>
             <div class="legend">
-              <span><i class="dot srt"></i>Kethon <small>SRT526</small></span>
-              <span><i class="dot log"></i>Adriana <small>LOG26</small></span>
+              <span><i class="dot srt"></i>Kethon · SRT526</span>
+              <span><i class="dot log"></i>Adriana · LOG26</span>
             </div>
-          </div>
-          <div class="timeline-columns" aria-hidden="true">
-            <span class="time-col">KELL</span>
-            <span class="person-col srt-col"><b>Kethon</b><small>SRT526</small></span>
-            <span class="person-col log-col"><b>Adriana</b><small>LOG26</small></span>
           </div>
           <div class="timeline" id="timeline"></div>
         </div>
 
         <div class="ai-card card">
-          <div class="title">Kas koos sõit tasub ära?</div>
+          <div class="title">Päeva kokkuvõte</div>
           <div class="sub" id="aiDay">—</div>
           <div class="ai-box">
             <b id="aiTitle">—</b>
             <p id="aiText">—</p>
           </div>
           <div class="ai-box">
-            <b>Meie jaoks kõige mõistlikum</b>
+            <b>Mida võiks teha</b>
             <p id="aiTip">—</p>
           </div>
           <div class="score">

@@ -146,7 +146,7 @@ async function fetchWeekFresh(group,week){
   let lastError;
   for(let attempt=0;attempt<2;attempt++){
     const controller=new AbortController();
-    const timeout=setTimeout(()=>controller.abort(),7000);
+    const timeout=setTimeout(()=>controller.abort(),20000);
     try{
       const r=await fetch(url,{cache:"no-store",signal:controller.signal,headers:authHeaders()});
       const text=await r.text();

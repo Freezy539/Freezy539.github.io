@@ -10,6 +10,7 @@ const SNAPSHOT_KEY = "kooskooli.scheduleSnapshots.v2";
 const CHANGE_KEY = "kooskooli.changeHistory.v2";
 const THEME_KEY = "kooskooli.theme";
 const DATA_CACHE_KEY = "kooskooli.weekData.v1";
+const DEVICE_TOKEN_KEY = "kooskooli.deviceToken.v1";
 const inflightWeeks = new Map();
 
 const $ = (s) => document.querySelector(s);
@@ -57,6 +58,57 @@ function writeWeekDisk(data){
 }
 function sleep(ms){ return new Promise(r=>setTimeout(r,ms)); }
 
+function getDeviceToken(){
+  try{ return localStorage.getItem(DEVICE_TOKEN_KEY) || ""; }catch{ return ""; }
+}
+function setDeviceToken(token){
+  try{ localStorage.setItem(DEVICE_TOKEN_KEY, token); }catch{}
+}
+function clearDeviceToken(){
+  try{ localStorage.removeItem(DEVICE_TOKEN_KEY); }catch{}
+}
+function authHeaders(extra={}){
+  const token=getDeviceToken();
+  return token ? {...extra, Authorization:`Bearer ${token}`} : extra;
+}
+async function checkDeviceAuth(){
+  const token=getDeviceToken();
+  if(!token) return null;
+  try{
+    const r=await fetch(`${API_BASE}/auth/check`,{headers:{Authorization:`Bearer ${token}`},cache:"no-store"});
+    if(!r.ok){ if(r.status===401) clearDeviceToken(); return null; }
+    const data=await r.json();
+    return data?.authenticated ? data.device : null;
+  }catch{
+    return {id:null,name:"Salvestatud seade",offline:true};
+  }
+}
+async function activateDevice(name,adminKey){
+  const r=await fetch(`${API_BASE}/auth/activate`,{
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body:JSON.stringify({name,adminKey})
+  });
+  let data={};
+  try{ data=await r.json(); }catch{}
+  if(!r.ok) throw new Error(data?.error || `Seadme lubamine ebaõnnestus (${r.status}).`);
+  if(!data?.token) throw new Error("Server ei tagastanud seadme võtit.");
+  setDeviceToken(data.token);
+  return data;
+}
+function showAuthGate(message=""){
+  const gate=$("#authGate");
+  gate.hidden=false;
+  $("#authError").hidden=!message;
+  $("#authError").textContent=message;
+  document.body.classList.add("auth-locked");
+  setTimeout(()=>$("#deviceName")?.focus(),50);
+}
+function hideAuthGate(){
+  $("#authGate").hidden=true;
+  document.body.classList.remove("auth-locked");
+}
+
 async function fetchWeekFresh(group,week){
   const url=new URL(`${API_BASE}/api/tunniplaan`);
   url.searchParams.set("grupp",group);
@@ -66,7 +118,7 @@ async function fetchWeekFresh(group,week){
     const controller=new AbortController();
     const timeout=setTimeout(()=>controller.abort(),7000);
     try{
-      const r=await fetch(url,{cache:"no-store",signal:controller.signal});
+      const r=await fetch(url,{cache:"no-store",signal:controller.signal,headers:authHeaders()});
       const text=await r.text();
       let raw;
       try{ raw=JSON.parse(text); }catch{ throw new Error("VOCO vastus ei olnud loetav JSON."); }
@@ -450,5 +502,38 @@ $("#clearChanges").addEventListener("click",()=>{writeJson(CHANGE_KEY,[]);render
 $$("[data-theme-value]").forEach(x=>x.addEventListener("click",()=>setTheme(x.dataset.themeValue)));
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if((localStorage.getItem(THEME_KEY)||"system")==="system")applyTheme("system");});
 
-applyTheme(localStorage.getItem(THEME_KEY)||"system");
-state.date=nextSchoolDate(); state.weekStart=startOfWeek(state.date); renderComparePicker(); renderGroupResults(); renderChanges(); loadWeek(); loadCompare();
+async function startApp(){
+  applyTheme(localStorage.getItem(THEME_KEY)||"system");
+  state.date=nextSchoolDate();
+  state.weekStart=startOfWeek(state.date);
+  renderComparePicker();
+  renderGroupResults();
+  renderChanges();
+  loadWeek();
+  loadCompare();
+}
+
+$("#authForm").addEventListener("submit",async e=>{
+  e.preventDefault();
+  const name=$("#deviceName").value.trim();
+  const adminKey=$("#adminKey").value;
+  const btn=$("#allowDeviceBtn");
+  $("#authError").hidden=true;
+  if(!name || !adminKey){ showAuthGate("Sisesta seadme nimi ja admini võti."); return; }
+  btn.disabled=true; btn.textContent="Luban…";
+  try{
+    await activateDevice(name,adminKey);
+    $("#adminKey").value="";
+    hideAuthGate();
+    await startApp();
+  }catch(err){
+    showAuthGate(err?.message || "Seadme lubamine ebaõnnestus.");
+  }finally{ btn.disabled=false; btn.textContent="Luba see seade"; }
+});
+
+(async function bootstrap(){
+  applyTheme(localStorage.getItem(THEME_KEY)||"system");
+  const device=await checkDeviceAuth();
+  if(device){ hideAuthGate(); await startApp(); }
+  else showAuthGate();
+})();

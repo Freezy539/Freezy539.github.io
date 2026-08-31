@@ -9,6 +9,26 @@
   <link rel="stylesheet" href="assets/styles.css">
 </head>
 <body>
+<div class="auth-gate" id="authGate" hidden>
+  <div class="auth-card">
+    <div class="auth-lock">🔒</div>
+    <div class="auth-eyebrow">PRIVAATNE LEHT</div>
+    <h1>See seade pole veel lubatud</h1>
+    <p>Luba see brauser ühe korra. Edaspidi avaneb tunniplaan siin automaatselt.</p>
+    <form id="authForm" autocomplete="off">
+      <label>Seadme nimi
+        <input id="deviceName" maxlength="80" placeholder="Näiteks: Minu telefon" required>
+      </label>
+      <label>Admini võti
+        <input id="adminKey" type="password" placeholder="••••••••••••" required>
+      </label>
+      <div class="auth-error" id="authError" hidden></div>
+      <button id="allowDeviceBtn" type="submit">Luba see seade</button>
+    </form>
+    <small>Admini võtit ei salvestata sellesse brauserisse. Salvestatakse ainult selle seadme eraldi ligipääsutoken.</small>
+  </div>
+</div>
+
 <div class="app">
   <input class="mode-toggle" type="checkbox" id="modeToggle">
 

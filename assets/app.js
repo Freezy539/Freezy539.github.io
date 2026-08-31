@@ -74,14 +74,37 @@ function authHeaders(extra={}){
 }
 async function checkDeviceAuth(){
   const token=getDeviceToken();
-  if(!token) return null;
+
   try{
-    const r=await fetch(`${API_BASE}/auth/check`,{headers:{Authorization:`Bearer ${token}`},cache:"no-store"});
-    if(!r.ok){ if(r.status===401) clearDeviceToken(); return null; }
+    const headers = token
+      ? {Authorization:`Bearer ${token}`}
+      : {};
+
+    const r=await fetch(`${API_BASE}/auth/check`,{
+      headers,
+      cache:"no-store"
+    });
+
+    if(!r.ok){
+      if(r.status===401 && token){
+        clearDeviceToken();
+      }
+      return null;
+    }
+
     const data=await r.json();
     return data?.authenticated ? data.device : null;
+
   }catch{
-    return {id:null,name:"Salvestatud seade",offline:true};
+    if(token){
+      return {
+        id:null,
+        name:"Salvestatud seade",
+        offline:true
+      };
+    }
+
+    return null;
   }
 }
 async function activateDevice(name,adminKey){

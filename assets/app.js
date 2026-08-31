@@ -72,39 +72,45 @@ function authHeaders(extra={}){
   const token=getDeviceToken();
   return token ? {...extra, Authorization:`Bearer ${token}`} : extra;
 }
+function logUnauthorizedVisitOnce(){
+  const token=getDeviceToken();
+  if(token) return;
+
+  const key="kooskooli.unauthorizedVisitLogged.v1";
+  try{
+    if(sessionStorage.getItem(key)) return;
+    sessionStorage.setItem(key,"1");
+  }catch{}
+
+  fetch(`${API_BASE}/auth/visit`,{
+    method:"POST",
+    cache:"no-store",
+    keepalive:true
+  }).catch(()=>{});
+}
+
 async function checkDeviceAuth(){
   const token=getDeviceToken();
+  if(!token){
+    logUnauthorizedVisitOnce();
+    return null;
+  }
 
   try{
-    const headers = token
-      ? {Authorization:`Bearer ${token}`}
-      : {};
-
     const r=await fetch(`${API_BASE}/auth/check`,{
-      headers,
+      headers:{Authorization:`Bearer ${token}`},
       cache:"no-store"
     });
 
     if(!r.ok){
-      if(r.status===401 && token){
-        clearDeviceToken();
-      }
+      if(r.status===401) clearDeviceToken();
       return null;
     }
 
     const data=await r.json();
     return data?.authenticated ? data.device : null;
-
   }catch{
-    if(token){
-      return {
-        id:null,
-        name:"Salvestatud seade",
-        offline:true
-      };
-    }
-
-    return null;
+    return {id:null,name:"Salvestatud seade",offline:true};
   }
 }
 async function activateDevice(name,adminKey){

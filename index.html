@@ -180,6 +180,7 @@
     <button class="menu-tab active" data-panel="changes" type="button"><span class="tab-icon">↺</span><span>Muudatused</span><b class="count-badge" id="changeBadge" hidden>0</b></button>
     <button class="menu-tab" data-panel="tomorrow" type="button"><span class="tab-icon">◔</span><span>Kui karm homme on?</span></button>
     <button class="menu-tab" data-panel="bestworst" type="button"><span class="tab-icon">↕</span><span>Parim / halvim päev</span></button>
+    <button class="menu-tab admin-only" data-panel="devices" id="devicesTab" type="button" hidden><span class="tab-icon">▣</span><span>Seadmed</span></button>
     <button class="menu-tab" data-panel="appearance" type="button"><span class="tab-icon">◐</span><span>Välimus</span></button>
   </nav>
 
@@ -210,6 +211,18 @@
         <div class="rank-card worst"><span>HALVIM</span><b id="worstDay">—</b><p id="worstText">—</p></div>
       </div>
       <div id="weekRanking" class="week-ranking"></div>
+    </section>
+
+    <section class="menu-section admin-only" data-section="devices" id="devicesSection" hidden>
+      <div class="section-head">
+        <div><h3>Seadmed</h3><p>Siin näed, millised brauserid on lehele lubatud. Admin-seadet ennast siit blokeerida ei saa.</p></div>
+        <button class="textbtn" id="refreshDevices" type="button">Värskenda</button>
+      </div>
+      <div class="device-summary" id="deviceSummary"></div>
+      <div class="devices-list" id="devicesList">
+        <div class="empty-state"><span>…</span><b>Laen seadmeid</b><p>Kohe näed lubatud ja blokeeritud seadmeid.</p></div>
+      </div>
+      <div class="menu-note">“Viimati kasutatud” uueneb siis, kui seade kontrollib ligipääsu või küsib tunniplaani.</div>
     </section>
 
     <section class="menu-section" data-section="appearance">

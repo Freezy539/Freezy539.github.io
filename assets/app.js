@@ -24,7 +24,8 @@ const state = {
   currentCompare: null,
   menuWeek: null,
   weekLoadId: 0,
-  compareLoadId: 0
+  compareLoadId: 0,
+  currentDevice: null
 };
 
 function ymd(d){ return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
@@ -479,9 +480,84 @@ async function renderTomorrow(){
   }catch(e){ $("#tomorrowLabel").textContent="Ei saanud laadida";$("#tomorrowText").textContent=e.message; }
 }
 
+function parseSqlUtc(value){
+  if(!value) return null;
+  const s=String(value).trim();
+  if(!s) return null;
+  const normalized=s.includes("T") ? s : s.replace(" ","T")+"Z";
+  const d=new Date(normalized);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+function formatDeviceTime(value){
+  const d=parseSqlUtc(value);
+  if(!d) return "—";
+  return new Intl.DateTimeFormat("et-EE",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"}).format(d);
+}
+function setAdminUi(device){
+  state.currentDevice=device||null;
+  const admin=Number(device?.is_admin)===1 || device?.is_admin===true;
+  $$(".admin-only").forEach(el=>{ el.hidden=!admin; });
+}
+async function fetchAdminDevices(){
+  const r=await fetch(`${API_BASE}/admin/devices`,{headers:authHeaders(),cache:"no-store"});
+  let data={};
+  try{data=await r.json();}catch{}
+  if(!r.ok) throw new Error(data?.error||`Seadmete laadimine ebaõnnestus (${r.status}).`);
+  return Array.isArray(data.devices)?data.devices:[];
+}
+async function loadDevices(){
+  const host=$("#devicesList");
+  const summary=$("#deviceSummary");
+  if(!host||!summary) return;
+  host.innerHTML='<div class="empty-state"><span>…</span><b>Laen seadmeid</b><p>Kohe näed lubatud ja blokeeritud seadmeid.</p></div>';
+  try{
+    const devices=await fetchAdminDevices();
+    const active=devices.filter(d=>Number(d.active)===1).length;
+    const blocked=devices.length-active;
+    summary.innerHTML=`<div><b>${devices.length}</b><span>Kokku</span></div><div><b>${active}</b><span>Lubatud</span></div><div><b>${blocked}</b><span>Blokeeritud</span></div>`;
+    if(!devices.length){
+      host.innerHTML='<div class="empty-state"><span>✓</span><b>Seadmeid pole</b><p>Andmebaasis ei ole veel ühtegi seadet.</p></div>';
+      return;
+    }
+    host.innerHTML=devices.map(d=>{
+      const isAdmin=Number(d.is_admin)===1;
+      const isActive=Number(d.active)===1;
+      const current=state.currentDevice?.id!=null && Number(state.currentDevice.id)===Number(d.id);
+      const status=isActive?'<span class="device-status active">Lubatud</span>':'<span class="device-status blocked">Blokeeritud</span>';
+      const badge=isAdmin?'<span class="device-badge">ADMIN</span>':'';
+      const currentBadge=current?'<span class="device-badge current">SEE SEADE</span>':'';
+      const action=isAdmin
+        ? '<button class="device-action" type="button" disabled>Admin</button>'
+        : isActive
+          ? `<button class="device-action danger" data-device-action="disable" data-device-id="${Number(d.id)}" type="button">Blokeeri</button>`
+          : `<button class="device-action" data-device-action="enable" data-device-id="${Number(d.id)}" type="button">Luba uuesti</button>`;
+      return `<article class="device-card">
+        <div class="device-card-top"><div><div class="device-name">${escapeHtml(d.name||`Seade ${d.id}`)}</div><div class="device-badges">${badge}${currentBadge}</div></div>${status}</div>
+        <div class="device-meta"><div><span>Lisatud</span><b>${formatDeviceTime(d.created_at)}</b></div><div><span>Viimati kasutatud</span><b>${formatDeviceTime(d.last_seen)}</b></div></div>
+        <div class="device-card-actions">${action}</div>
+      </article>`;
+    }).join("");
+  }catch(err){
+    host.innerHTML=`<div class="empty-state"><span>!</span><b>Seadmeid ei saanud laadida</b><p>${escapeHtml(err?.message||"Tundmatu viga")}</p></div>`;
+    summary.innerHTML="";
+  }
+}
+async function setDeviceActive(id,enable,button){
+  if(button){button.disabled=true;button.textContent=enable?"Luban…":"Blokeerin…";}
+  try{
+    const r=await fetch(`${API_BASE}/admin/device/${enable?"enable":"disable"}`,{
+      method:"POST",headers:authHeaders({"Content-Type":"application/json"}),cache:"no-store",body:JSON.stringify({id:Number(id)})
+    });
+    let data={};try{data=await r.json();}catch{}
+    if(!r.ok) throw new Error(data?.error||"Toiming ebaõnnestus.");
+    showToast(enable?"Seade lubatud":"Seade blokeeritud");
+    await loadDevices();
+  }catch(err){showToast(err?.message||"Toiming ebaõnnestus"); if(button)button.disabled=false;}
+}
+
 function openMenu(panel="changes"){$("#menuBackdrop").hidden=false;requestAnimationFrame(()=>{$("#menuBackdrop").classList.add("open");$("#menuPanel").classList.add("open");});$("#menuPanel").setAttribute("aria-hidden","false");$("#menuBtn").setAttribute("aria-expanded","true");document.body.classList.add("menu-open");switchMenu(panel);renderChanges();if(panel!=="appearance")renderMenuStats();}
 function closeMenu(){$("#menuBackdrop").classList.remove("open");$("#menuPanel").classList.remove("open");$("#menuPanel").setAttribute("aria-hidden","true");$("#menuBtn").setAttribute("aria-expanded","false");document.body.classList.remove("menu-open");setTimeout(()=>{$("#menuBackdrop").hidden=true;},220);}
-function switchMenu(panel){ $$(".menu-tab").forEach(x=>x.classList.toggle("active",x.dataset.panel===panel)); $$(".menu-section").forEach(x=>x.classList.toggle("active",x.dataset.section===panel)); if(panel==="tomorrow")renderTomorrow(); if(panel==="bestworst")renderMenuStats(); }
+function switchMenu(panel){ $$(".menu-tab").forEach(x=>x.classList.toggle("active",x.dataset.panel===panel)); $$(".menu-section").forEach(x=>x.classList.toggle("active",x.dataset.section===panel)); if(panel==="tomorrow")renderTomorrow(); if(panel==="bestworst")renderMenuStats(); if(panel==="devices")loadDevices(); }
 function applyTheme(value){ const actual=value==="system"?(matchMedia("(prefers-color-scheme: dark)").matches?"dark":"light"):value;document.documentElement.dataset.theme=actual;$$('[data-theme-value]').forEach(x=>x.classList.toggle("selected",x.dataset.themeValue===value));const meta=document.querySelector('meta[name="theme-color"]');if(meta)meta.content=actual==="dark"?"#0e1013":"#f4f6f8"; }
 function setTheme(value){localStorage.setItem(THEME_KEY,value);applyTheme(value);}
 function showToast(text){const t=$("#toast");t.textContent=text;t.hidden=false;requestAnimationFrame(()=>t.classList.add("show"));clearTimeout(showToast.timer);showToast.timer=setTimeout(()=>{t.classList.remove("show");setTimeout(()=>t.hidden=true,200);},2800);}
@@ -500,6 +576,12 @@ $("#menuBtn").addEventListener("click",()=>openMenu("changes"));$("#closeMenu").
 $$(".menu-tab").forEach(x=>x.addEventListener("click",()=>switchMenu(x.dataset.panel)));
 $("#clearChanges").addEventListener("click",()=>{writeJson(CHANGE_KEY,[]);renderChanges();showToast("Muudatuste ajalugu tühjendatud");});
 $$("[data-theme-value]").forEach(x=>x.addEventListener("click",()=>setTheme(x.dataset.themeValue)));
+$("#refreshDevices")?.addEventListener("click",loadDevices);
+$("#devicesList")?.addEventListener("click",e=>{
+  const btn=e.target.closest("[data-device-action]");
+  if(!btn)return;
+  setDeviceActive(btn.dataset.deviceId,btn.dataset.deviceAction==="enable",btn);
+});
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if((localStorage.getItem(THEME_KEY)||"system")==="system")applyTheme("system");});
 
 async function startApp(){
@@ -524,6 +606,8 @@ $("#authForm").addEventListener("submit",async e=>{
   try{
     await activateDevice(name,adminKey);
     $("#adminKey").value="";
+    const device=await checkDeviceAuth();
+    setAdminUi(device);
     hideAuthGate();
     await startApp();
   }catch(err){
@@ -534,6 +618,6 @@ $("#authForm").addEventListener("submit",async e=>{
 (async function bootstrap(){
   applyTheme(localStorage.getItem(THEME_KEY)||"system");
   const device=await checkDeviceAuth();
-  if(device){ hideAuthGate(); await startApp(); }
-  else showAuthGate();
+  if(device){ setAdminUi(device); hideAuthGate(); await startApp(); }
+  else { setAdminUi(null); showAuthGate(); }
 })();

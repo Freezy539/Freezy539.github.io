@@ -112,14 +112,16 @@
   <section id="normalMode" class="normal">
     <div class="search-card card">
       <div class="title">Tavaline tunniplaan</div>
-      <div class="sub">Vali grupp ja vaata terve nädala tunniplaani.</div>
+      <div class="sub">Vali üks või mitu gruppi. Mitme grupi puhul kuvatakse tunnid ühes vaates, et erinevusi oleks lihtne võrrelda.</div>
+      <div class="compare-label">Võrdle gruppe</div>
+      <div class="compare-picker" id="comparePicker"></div>
       <div class="search-row">
         <div class="search-wrap" id="searchWrap">
           <input id="groupSearch" class="search" autocomplete="off" inputmode="search" placeholder="Otsi gruppi, näiteks SRT526">
           <span class="search-icon">⌕</span>
           <div class="results" id="results"></div>
         </div>
-        <button class="selectbtn" id="openGroup">Vali</button>
+        <button class="selectbtn" id="openGroup">Lisa grupp</button>
       </div>
     </div>
 
@@ -133,7 +135,7 @@
       <div class="week-title">
         <div>
           <div class="title" id="groupTitle">SRT526</div>
-          <div class="sub">Nädalavaade</div>
+          <div class="sub" id="compareHint">Nädalavaade</div>
         </div>
         <span class="live-badge">VOCO live</span>
       </div>

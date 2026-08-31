@@ -16,6 +16,7 @@ const state = {
   date: null,
   weekStart: null,
   group: GROUP_A,
+  selectedGroups: [GROUP_A],
   weekCache: new Map(),
   currentCompare: null,
   menuWeek: null
@@ -213,43 +214,119 @@ function renderCompare(data){
 
 function renderTimeline(a,b,m){
   const host=$("#timeline"); host.innerHTML=""; const all=[...a,...b];
-  if(!all.length){ host.innerHTML=`<div class="timeline-empty"><b>Vaba päev</b><span>Tunde ei ole.</span></div>`; return; }
-  const starts=all.map(x=>mins(x.start)).filter(Number.isFinite), ends=all.map(x=>mins(x.end||x.start)+30).filter(Number.isFinite);
-  const minStart=Math.min(8*60,...starts),maxEnd=Math.max(16*60,...ends),start=Math.floor(minStart/60)*60,end=Math.ceil(maxEnd/60)*60,total=end-start,H=390,y=x=>((x-start)/total)*H;
-  for(let t=start;t<=end;t+=120){ const pos=y(t); const h=document.createElement("div");h.className="hour";h.style.top=(pos-5)+"px";h.textContent=hm(t);const l=document.createElement("div");l.className="line";l.style.top=pos+"px";host.append(h,l); }
-  const add=(arr,cls)=>arr.forEach(e=>{ const st=mins(e.start),en=mins(e.end||e.start)+(!e.end?45:0);const el=document.createElement("div");el.className="lesson "+cls;el.style.top=Math.max(0,y(st))+"px";el.style.height=Math.max(42,y(en)-y(st))+"px";el.innerHTML=`<div class="time">${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</div><div class="name">${escapeHtml(e.title)}</div><div class="room">${escapeHtml(e.room||e.teacher||"")}</div>`;host.appendChild(el); });
-  add(a,"srt");add(b,"log");
-  if(m.morning>30&&m.first!==null&&m.firstB!==null){ const x=Math.min(m.first,m.firstB),z=Math.max(m.first,m.firstB);const w=document.createElement("div");w.className="wait";w.style.top=y(x)+"px";w.style.height=Math.max(26,y(z)-y(x))+"px";w.innerHTML=`<span>${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)}</span>`;host.appendChild(w); }
+  if(!all.length){ host.style.height="300px"; host.innerHTML=`<div class="timeline-empty"><b>Vaba päev</b><span>Tunde ei ole.</span></div>`; return; }
+
+  const starts=all.map(x=>mins(x.start)).filter(Number.isFinite);
+  const ends=all.map(x=>mins(x.end||x.start)+(!x.end?45:0)).filter(Number.isFinite);
+  const rawStart=Math.min(...starts), rawEnd=Math.max(...ends);
+  const start=Math.floor((rawStart-30)/30)*30;
+  const end=Math.ceil((rawEnd+30)/30)*30;
+  const pxPerMinute=0.95;
+  const H=Math.max(300,Math.round((end-start)*pxPerMinute));
+  const y=x=>((x-start)/(end-start))*H;
+  host.style.height=`${H}px`;
+
+  for(let t=start;t<=end;t+=30){
+    const pos=y(t);
+    const isHour=t%60===0;
+    const h=document.createElement("div");
+    h.className="time-axis-label"+(isHour?" major":" minor");
+    h.style.top=(pos-7)+"px";
+    h.textContent=hm(t);
+    const l=document.createElement("div");
+    l.className="time-axis-line"+(isHour?" major":" minor");
+    l.style.top=pos+"px";
+    host.append(h,l);
+  }
+
+  const add=(arr,cls)=>arr.forEach(e=>{
+    const st=mins(e.start), en=mins(e.end||e.start)+(!e.end?45:0);
+    const el=document.createElement("div");
+    el.className="lesson "+cls;
+    el.style.top=Math.max(0,y(st))+"px";
+    el.style.height=Math.max(44,y(en)-y(st))+"px";
+    el.innerHTML=`<div class="time">${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</div><div class="name">${escapeHtml(e.title)}</div><div class="room">${escapeHtml(e.room||e.teacher||"")}</div>`;
+    host.appendChild(el);
+  });
+  add(a,"srt"); add(b,"log");
+
+  if(m.morning>30&&m.first!==null&&m.firstB!==null){
+    const x=Math.min(m.first,m.firstB),z=Math.max(m.first,m.firstB);
+    const w=document.createElement("div");
+    w.className="wait";
+    w.style.top=y(x)+"px";
+    w.style.height=Math.max(26,y(z)-y(x))+"px";
+    w.innerHTML=`<span>${escapeHtml(m.morningWho)} ootab ${fmtMin(m.morning)}</span>`;
+    host.appendChild(w);
+  }
 }
 
+function groupMeta(code){ return GROUPS[code] || {name:code}; }
+function ensureSelected(code){
+  const set=new Set(state.selectedGroups);
+  if(set.has(code)){
+    if(set.size>1) set.delete(code);
+  }else set.add(code);
+  state.selectedGroups=[...set];
+  state.group=state.selectedGroups[0]||GROUP_A;
+  renderComparePicker();
+  loadWeek();
+}
+function renderComparePicker(){
+  const host=$("#comparePicker");
+  if(!host) return;
+  host.innerHTML=Object.keys(GROUPS).map(code=>`<label class="compare-choice ${state.selectedGroups.includes(code)?"selected":""}"><input type="checkbox" value="${code}" ${state.selectedGroups.includes(code)?"checked":""}><span class="compare-check">✓</span><span><b>${code}</b><small>${escapeHtml(groupMeta(code).name||"")}</small></span></label>`).join("");
+  host.querySelectorAll('input[type="checkbox"]').forEach(inp=>inp.addEventListener("change",()=>ensureSelected(inp.value)));
+}
 function renderGroupResults(q=""){
-  const up=q.trim().toUpperCase(); const groups=Object.entries(GROUPS).map(([code,x])=>({code,...x})).filter(g=>!up||g.code.includes(up)||(g.name||"").toUpperCase().includes(up));
-  $("#results").innerHTML=groups.length?groups.map(g=>`<button class="result" type="button" data-group="${g.code}"><span class="result-code">${g.code}</span><span class="result-name">${escapeHtml(g.name)}</span></button>`).join(""):`<div class="no-result">Sellist gruppi ei leidnud.</div>`;
-  $$("#results [data-group]").forEach(btn=>btn.addEventListener("click",()=>chooseGroup(btn.dataset.group)));
+  const up=q.trim().toUpperCase();
+  const groups=Object.entries(GROUPS).map(([code,x])=>({code,...x})).filter(g=>!up||g.code.includes(up)||(g.name||"").toUpperCase().includes(up));
+  $("#results").innerHTML=groups.length?groups.map(g=>`<button class="result" type="button" data-group="${g.code}"><span class="result-left"><span class="result-toggle ${state.selectedGroups.includes(g.code)?"on":""}">${state.selectedGroups.includes(g.code)?"✓":"+"}</span><span class="result-code">${g.code}</span></span><span class="result-name">${escapeHtml(g.name)}</span></button>`).join(""):`<div class="no-result">Sellist gruppi ei leidnud.</div>`;
+  $$("#results [data-group]").forEach(btn=>btn.addEventListener("click",()=>{ensureSelected(btn.dataset.group);$("#groupSearch").value="";$("#searchWrap").classList.remove("open");}));
 }
-function chooseGroup(code){ state.group=code; $("#groupSearch").value=code; $("#searchWrap").classList.remove("open"); loadWeek(); }
 async function loadWeek(){
-  $("#weekGrid").innerHTML=`<div class="week-loading">Laen tunniplaani…</div>`; $("#mobileWeekList").innerHTML=`<div class="week-loading">Laen tunniplaani…</div>`;
-  try{ const data=await apiWeek(state.group,state.weekStart); renderWeek(data); }
-  catch(e){ const msg=`<div class="week-loading error-text">${escapeHtml(e.message)}</div>`;$("#weekGrid").innerHTML=msg;$("#mobileWeekList").innerHTML=msg; }
+  $("#weekGrid").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
+  $("#mobileWeekList").innerHTML=`<div class="week-loading">Laen tunniplaane…</div>`;
+  try{
+    const groups=state.selectedGroups.length?state.selectedGroups:[GROUP_A];
+    const datasets=await Promise.all(groups.map(g=>apiWeek(g,state.weekStart)));
+    renderWeek(datasets);
+  }catch(e){
+    const msg=`<div class="week-loading error-text">${escapeHtml(e.message)}</div>`;
+    $("#weekGrid").innerHTML=msg; $("#mobileWeekList").innerHTML=msg;
+  }
 }
-function renderWeek(data){
-  $("#groupTitle").textContent=data.group; const start=parseYmd(data.week),end=parseYmd(addDays(data.week,6));
+function renderWeek(datasets){
+  const groups=datasets.map(d=>d.group);
+  const lessons=datasets.flatMap(d=>d.lessons.map(l=>({...l,group:d.group})));
+  $("#groupTitle").textContent=groups.join(" + ");
+  $("#compareHint").textContent=groups.length>1?`${groups.length} gruppi on samas vaates — värvid näitavad, kelle tund on kelle oma.`:"Vali veel üks grupp, kui tahad tunniplaane kõrvutada.";
+  const start=parseYmd(state.weekStart),end=parseYmd(addDays(state.weekStart,6));
   $("#weekLabel").innerHTML=`<div>${start.getDate()}. ${start.toLocaleString("et-EE",{month:"short"})} – ${end.getDate()}. ${end.toLocaleString("et-EE",{month:"short"})}<span>${start.getFullYear()}</span></div>`;
-  const days=[0,1,2,3,4].map(i=>addDays(data.week,i));
-  const bounds=[...new Set(data.lessons.flatMap(l=>[l.start,l.end]).filter(Boolean))].sort((a,b)=>mins(a)-mins(b));
+  const days=[0,1,2,3,4].map(i=>addDays(state.weekStart,i));
   const slots=[];
-  for(const l of data.lessons){ if(!slots.some(s=>s[0]===l.start&&s[1]===l.end))slots.push([l.start,l.end]); }
+  for(const l of lessons){ if(!slots.some(s=>s[0]===l.start&&s[1]===l.end))slots.push([l.start,l.end]); }
   slots.sort((a,b)=>mins(a[0])-mins(b[0]));
   const fallback=[["08:30","10:00"],["10:15","11:45"],["11:55","14:00"],["14:10","15:40"],["15:50","17:20"]];
   const rows=slots.length?slots:fallback;
   let html=`<div class="cell head">Kell</div>${days.map(d=>`<div class="cell head">${cap(new Intl.DateTimeFormat("et-EE",{weekday:"long"}).format(parseYmd(d)))}<small>${parseYmd(d).getDate()}.${parseYmd(d).getMonth()+1}</small></div>`).join("")}`;
-  rows.forEach(slot=>{ html+=`<div class="cell timecell">${escapeHtml(slot[0])}<br>–<br>${escapeHtml(slot[1]||"")}</div>`; days.forEach(day=>{const events=data.lessons.filter(e=>e.date===day&&mins(e.start)<=(mins(slot[1])||mins(slot[0])+90)&&mins(e.end||e.start)>=mins(slot[0])&&e.start===slot[0]);html+=`<div class="cell">${events.map(e=>eventHtml(e)).join("")}</div>`;}); });
+  rows.forEach(slot=>{
+    html+=`<div class="cell timecell"><b>${escapeHtml(slot[0])}</b><span>${escapeHtml(slot[1]||"")}</span></div>`;
+    days.forEach(day=>{
+      const events=lessons.filter(e=>e.date===day&&e.start===slot[0]).sort((a,b)=>groups.indexOf(a.group)-groups.indexOf(b.group));
+      html+=`<div class="cell compare-cell">${events.map(e=>eventHtml(e,groups.length>1)).join("")}</div>`;
+    });
+  });
   $("#weekGrid").innerHTML=html;
-  $("#mobileWeekList").innerHTML=days.map(day=>{const events=data.lessons.filter(e=>e.date===day);return `<section class="mobile-day"><div class="mobile-day-head"><b>${cap(new Intl.DateTimeFormat("et-EE",{weekday:"long"}).format(parseYmd(day)))}</b><span>${parseYmd(day).getDate()}.${parseYmd(day).getMonth()+1}</span></div>${events.length?events.map(e=>`<div class="mobile-event"><time>${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</time><div><b>${escapeHtml(e.title)}</b><span>${[e.room,e.teacher].filter(Boolean).map(escapeHtml).join(" · ")}</span></div></div>`).join(""):`<div class="mobile-free">Vaba</div>`}</section>`;}).join("");
+  $("#mobileWeekList").innerHTML=days.map(day=>{
+    const events=lessons.filter(e=>e.date===day).sort((a,b)=>(mins(a.start)-mins(b.start))||groups.indexOf(a.group)-groups.indexOf(b.group));
+    return `<section class="mobile-day"><div class="mobile-day-head"><b>${cap(new Intl.DateTimeFormat("et-EE",{weekday:"long"}).format(parseYmd(day)))}</b><span>${parseYmd(day).getDate()}.${parseYmd(day).getMonth()+1}</span></div>${events.length?events.map(e=>`<div class="mobile-event group-${e.group.toLowerCase()}"><time>${escapeHtml(e.start)}${e.end?`–${escapeHtml(e.end)}`:""}</time><div><span class="mobile-group">${escapeHtml(e.group)}</span><b>${escapeHtml(e.title)}</b><span>${[e.room,e.teacher].filter(Boolean).map(escapeHtml).join(" · ")}</span></div></div>`).join(""):`<div class="mobile-free">Vaba</div>`}</section>`;
+  }).join("");
   $("#sourceNote").textContent="Andmed tulevad VOCO-st Cloudflare Workeri kaudu.";
 }
-function eventHtml(e){ return `<div class="event"><b>${escapeHtml(e.title)}</b><small>${e.start}${e.end?`–${e.end}`:""}${e.room?` · ${escapeHtml(e.room)}`:""}${e.teacher?` · ${escapeHtml(e.teacher)}`:""}</small></div>`; }
+function eventHtml(e,showGroup=false){
+  return `<div class="event group-${e.group.toLowerCase()}">${showGroup?`<span class="event-group">${escapeHtml(e.group)}</span>`:""}<b>${escapeHtml(e.title)}</b><small>${e.start}${e.end?`–${e.end}`:""}${e.room?` · ${escapeHtml(e.room)}`:""}${e.teacher?` · ${escapeHtml(e.teacher)}`:""}</small></div>`;
+}
 
 function dayMetrics(date,aAll,bAll){
   const a=aAll.filter(x=>x.date===date),b=bAll.filter(x=>x.date===date),all=[...a,...b];
@@ -305,4 +382,4 @@ $$("[data-theme-value]").forEach(x=>x.addEventListener("click",()=>setTheme(x.da
 matchMedia("(prefers-color-scheme: dark)").addEventListener?.("change",()=>{if((localStorage.getItem(THEME_KEY)||"system")==="system")applyTheme("system");});
 
 applyTheme(localStorage.getItem(THEME_KEY)||"system");
-state.date=nextSchoolDate(); state.weekStart=startOfWeek(state.date); renderGroupResults(); renderChanges(); loadWeek(); loadCompare();
+state.date=nextSchoolDate(); state.weekStart=startOfWeek(state.date); renderComparePicker(); renderGroupResults(); renderChanges(); loadWeek(); loadCompare();
